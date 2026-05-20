@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
+import SmoothScroll from "../components/SmoothScroll";
+import CommandPaletteLoader from "../components/CommandPaletteLoader";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -40,7 +42,11 @@ export default function RootLayout({
       lang="en"
       className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} h-full`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <CommandPaletteLoader />
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }
+

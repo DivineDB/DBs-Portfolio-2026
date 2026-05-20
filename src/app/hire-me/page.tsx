@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PopupModal } from "react-calendly";
 import { useState } from "react";
 import Link from "next/link";
+import PageFooter from "@/components/PageFooter";
 import {
   SiFigma,
   SiGo,
@@ -55,9 +56,9 @@ export default function HireMePage() {
       <div className="pointer-events-none fixed inset-x-0 top-0 z-40 border-t border-dashed border-[#2A4756]" />
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-b border-dashed border-[#2A4756]" />
 
-      <div className="h-screen w-full overflow-y-scroll overscroll-contain snap-y snap-mandatory no-scrollbar">
+      <div>
         {/* Section 1: Hero */}
-        <section id="top" className="snap-start snap-always h-screen px-6 md:px-12">
+        <section id="top" className="h-screen px-6 md:px-12">
           <MotionInView className="relative mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-green-500" />
@@ -154,7 +155,7 @@ export default function HireMePage() {
         </section>
 
         {/* Section 2: Interactive Tech Stack */}
-        <section className="snap-start snap-always h-screen px-6 md:px-12">
+        <section className="h-screen px-6 md:px-12">
           <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
             <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
               My <HighlightBox className="font-gilroyBold tracking-tight">Tech Stack</HighlightBox>
@@ -186,7 +187,7 @@ export default function HireMePage() {
         </section>
 
         {/* Section 3: Why Hire Me */}
-        <section className="snap-start snap-always h-screen px-6 md:px-12">
+        <section className="h-screen px-6 md:px-12">
           <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
             <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
               Why must you <HighlightBox className="font-gilroyBold tracking-tight">hire me?</HighlightBox>
@@ -220,7 +221,7 @@ export default function HireMePage() {
         </section>
 
         {/* Section 4: Preferences */}
-        <section className="snap-start snap-always h-screen px-6 md:px-12">
+        <section className="h-screen px-6 md:px-12">
           <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
             <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
               My <HighlightBox className="font-gilroyBold tracking-tight">Preferences</HighlightBox>
@@ -257,25 +258,7 @@ export default function HireMePage() {
           </MotionInView>
         </section>
 
-        {/* Footer section */}
-        <section className="snap-start snap-always px-6 md:px-12">
-          <MotionInView className="mx-auto w-full max-w-[1000px] py-12">
-            <footer className="flex w-full items-center justify-between border-t border-dashed border-[#2A4756] pt-8 text-sm font-gilroyBold">
-              <nav className="flex gap-8">
-                <Link href="/about" className="transition hover:text-[#2A4756]/80">
-                  About me
-                </Link>
-                <Link href="/work" className="transition hover:text-[#2A4756]/80">
-                  My work
-                </Link>
-                <Link href="/other-things" className="transition hover:text-[#2A4756]/80">
-                  Other things
-                </Link>
-              </nav>
-              <p className="font-gilroyRegular text-[#2A4756]/40">© 2026 | Divyansh Baghel.</p>
-            </footer>
-          </MotionInView>
-        </section>
+        <PageFooter />
       </div>
 
       {/* Calendly PopupModal (react-calendly) */}

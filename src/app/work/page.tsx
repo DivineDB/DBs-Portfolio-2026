@@ -4,29 +4,30 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
+import PageFooter from "@/components/PageFooter";
 
 export default function WorkPage() {
   return (
-    <main className="h-screen w-full snap-y snap-mandatory overflow-y-auto overflow-x-hidden bg-bg font-gilroyRegular text-text_primary no-scrollbar">
+    <main className="w-full bg-bg font-gilroyRegular text-text_primary">
       
       {/* Hero Section */}
-      <section className="relative flex h-screen w-full snap-start flex-col items-center justify-center px-6 md:px-12">
+      <section className="relative flex h-screen w-full flex-col items-center justify-center px-6 md:px-12">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-6">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl"
+            className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl will-change-transform"
           >
             <HighlightBox>Selected Work</HighlightBox>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="max-w-2xl text-lg text-text_primary/70 md:text-xl"
+            className="max-w-2xl text-lg text-text_primary/70 md:text-xl will-change-transform"
           >
             A collection of interfaces and architectures. Bridging the gap between high-fidelity design systems and production-ready code.
           </motion.p>
@@ -37,6 +38,7 @@ export default function WorkPage() {
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="will-change-transform"
           >
             <ArrowDown size={18} strokeWidth={1.5} />
           </motion.div>
@@ -44,14 +46,14 @@ export default function WorkPage() {
       </section>
 
       {/* Featured Project 1: Scout */}
-      <section className="relative flex h-screen w-full snap-start flex-col justify-center px-6 md:px-12">
+      <section className="relative flex h-screen w-full flex-col justify-center px-6 md:px-12">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col gap-6 lg:col-span-5"
+            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
           >
             <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">AI-NATIVE PIPELINE</p>
             <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">Scout</h2>
@@ -76,9 +78,9 @@ export default function WorkPage() {
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7"
+            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
           >
             {/* Abstract geometric visual */}
             <div className="absolute inset-0 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
@@ -99,14 +101,14 @@ export default function WorkPage() {
       </section>
 
       {/* Featured Project 2: POS Panel */}
-      <section className="relative flex h-screen w-full snap-start flex-col justify-center px-6 md:px-12">
+      <section className="relative flex h-screen w-full flex-col justify-center px-6 md:px-12">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col gap-6 lg:col-span-5"
+            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
           >
             <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">RETAIL DASHBOARD</p>
             <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">POS Panel</h2>
@@ -124,9 +126,9 @@ export default function WorkPage() {
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7"
+            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
           >
             {/* Abstract geometric visual dot-matrix UI */}
             <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
@@ -147,14 +149,14 @@ export default function WorkPage() {
       </section>
 
       {/* More Builds */}
-      <section className="relative flex h-screen w-full snap-start flex-col items-center justify-center px-6 md:px-12">
+      <section className="relative flex h-screen w-full flex-col items-center justify-center px-6 md:px-12">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             transition={{ duration: 0.8 }}
-            className="font-gilroyBold text-4xl text-text_primary md:text-5xl"
+            className="font-gilroyBold text-4xl text-text_primary md:text-5xl will-change-transform"
           >
             <HighlightBox>More Builds</HighlightBox>
           </motion.h2>
@@ -188,25 +190,7 @@ export default function WorkPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="relative flex min-h-[30vh] w-full snap-start flex-col justify-end px-6 md:px-12">
-        <div className="mx-auto w-full max-w-[1000px]">
-          <motion.footer
-            initial={{ opacity: 0, y: 48 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="flex w-full justify-between border-t border-dashed border-text_primary/40 pt-8 pb-12 text-sm font-gilroyBold"
-          >
-            <nav className="flex gap-8">
-              <Link href="/about" className="hover:opacity-70 transition-opacity">About me</Link>
-              <Link href="/other-things" className="hover:opacity-70 transition-opacity">Other things</Link>
-              <Link href="/hire-me" className="hover:opacity-70 transition-opacity">Contact</Link>
-            </nav>
-            <p className="font-gilroyRegular text-text_primary/40">© 2026 | Divyansh Baghel.</p>
-          </motion.footer>
-        </div>
-      </section>
+      <PageFooter />
 
     </main>
   );
