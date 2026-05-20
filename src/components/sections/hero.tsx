@@ -13,7 +13,6 @@ export function Hero() {
 
   useEffect(() => {
     setIsMounted(true);
-
     const updateTime = () => {
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Kolkata",
@@ -23,17 +22,20 @@ export function Hero() {
       };
       setTime(new Intl.DateTimeFormat("en-US", options).format(new Date()));
     };
-
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="flex h-screen w-screen select-none items-center justify-center bg-[#F8EDD1]">
-      <div className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-1 items-center gap-8 px-12 py-16 md:px-20 lg:grid-cols-12">
-        <div className="flex h-full flex-col py-4 lg:col-span-5">
-          <div className="flex flex-1 flex-col justify-center items-start gap-2">
+    <section className="h-screen w-full overflow-hidden bg-[#F8EDD1] select-none flex flex-col justify-between box-border p-8 md:p-12">
+
+      {/* ── Central grid: text + building ─────────────────────────── */}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 items-center gap-8 min-h-0">
+
+        {/* Left: hero text */}
+        <div className="flex flex-col justify-start pt-[4vh] h-full md:col-span-5">
+          <div className="flex flex-col items-start gap-2">
             <p className="font-gilroyRegular text-lg text-black/25">Hey, I&apos;m</p>
             <h1 className="flex flex-row items-baseline gap-3 flex-wrap font-gilroyBold text-5xl tracking-tight text-text_primary md:text-6xl animate-fade-in">
               <span>Divyansh</span>
@@ -46,73 +48,38 @@ export function Hero() {
             </h1>
             <p className="font-gilroyRegular text-xl text-black/25">Design Engineer</p>
 
-            <nav className="mt-8 flex gap-4 font-gilroyRegular">
+            {/* Action links — editorial text-only style */}
+            <nav className="mt-6 flex gap-8 font-gilroyRegular">
               <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
+                className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
               >
                 Resume
+                <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
               </a>
               <Link
                 href="/hire-me"
-                className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
+                className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
               >
                 Contact
+                <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             </nav>
           </div>
-
-          <footer className="mt-auto flex flex-col gap-3">
-            <motion.button
-              onClick={() => setShowLocation(!showLocation)}
-              whileHover={{ scale: 1.05, backgroundColor: "#E6F0C2" }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-flex w-fit cursor-pointer items-center justify-center rounded-full bg-[#F0F5E1] px-5 py-2.5 border-none outline-none will-change-transform"
-            >
-              <AnimatePresence mode="wait">
-                {showLocation ? (
-                  <motion.span
-                    key="location"
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    className="text-lg font-medium tracking-wide text-slate-800 will-change-transform"
-                  >
-                    Gwalior, IN
-                  </motion.span>
-                ) : isMounted ? (
-                  <motion.span
-                    key="time"
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    className="text-lg font-medium tracking-wide text-slate-800 will-change-transform"
-                  >
-                    {time}&nbsp;IST
-                  </motion.span>
-                ) : (
-                  <span key="placeholder" className="text-lg font-medium tracking-wide text-transparent select-none" aria-hidden="true">
-                    00:00 IST
-                  </span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-            <p className="text-xs text-black/25">© 2026 | Divyansh Baghel.</p>
-          </footer>
         </div>
 
-        <div className="relative flex h-full w-full items-end justify-center pt-8 lg:col-span-7 lg:justify-end">
-          <div className="relative aspect-[588/970] h-[95vh] w-auto mb-4">
+        {/* Right: building illustration */}
+        <div className="relative w-full h-full flex items-end justify-end md:col-span-7 overflow-visible">
+          <div className="relative aspect-[588/970] h-[110%] w-auto max-w-none translate-y-4">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"
               fill
               priority
-              className="object-contain object-bottom"
-              style={{ filter: "drop-shadow(-20px 20px 0px rgba(0,0,0,0.12))" }}
+              className="object-contain object-bottom select-none"
+              style={{ filter: "drop-shadow(-24px 24px 0px rgba(0,0,0,0.14))" }}
             />
             <Image
               src="/images/boy.svg"
@@ -162,6 +129,49 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {/* ── Bottom row: clock pinned in screen bounds ──────────────── */}
+      <div className="w-full flex justify-between items-end h-[8vh] shrink-0">
+        <div className="flex flex-col gap-1">
+          <motion.button
+            onClick={() => setShowLocation(!showLocation)}
+            whileHover={{ scale: 1.05, backgroundColor: "#E6F0C2" }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="inline-flex items-center justify-center rounded-full bg-[#F0F5E1] px-5 py-2 text-base font-medium tracking-wide text-slate-800 border-none outline-none shadow-none will-change-transform"
+          >
+            <AnimatePresence mode="wait">
+              {showLocation ? (
+                <motion.span
+                  key="location"
+                  initial={{ y: 8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -8, opacity: 0 }}
+                  className="will-change-transform"
+                >
+                  Gwalior, IN
+                </motion.span>
+              ) : isMounted ? (
+                <motion.span
+                  key="time"
+                  initial={{ y: 8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -8, opacity: 0 }}
+                  className="will-change-transform"
+                >
+                  {time}&nbsp;IST
+                </motion.span>
+              ) : (
+                <span key="placeholder" className="text-transparent select-none" aria-hidden="true">
+                  00:00 IST
+                </span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+          <p className="text-xs text-black/25">© 2026 | Divyansh Baghel.</p>
+        </div>
+      </div>
+
     </section>
   );
 }

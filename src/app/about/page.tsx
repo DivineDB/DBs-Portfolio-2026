@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import Link from "next/link";
+import PageFooter from "@/components/PageFooter";
+
+const LiveWeather = dynamic(() => import("@/components/LiveWeather"), { ssr: false });
 
 const TABS = ["Story", "TL;DR"] as const;
 type Tab = (typeof TABS)[number];
 
 const GREETINGS = ["Hello,", "Namaste,", "Hola,", "Ciao,", "Bonjour,", "Konnichiwa,"] as const;
 
-const OPEN_METEO_URL =
-  "https://api.open-meteo.com/v1/forecast?latitude=18.5204&longitude=73.8567&current=temperature_2m,weather_code,is_day";
 
 const STORY_BODY_CLASS =
   "flex min-h-[880px] max-w-[800px] flex-col gap-8 font-satoshi text-lg font-normal leading-relaxed text-[#4A5568]";
@@ -40,32 +42,6 @@ const childVariants: Variants = {
   },
 };
 
-/** WMO buckets: 0–1 clear, 2–3 partly cloudy, 45+ overcast/rain; emoji follows `is_day`. */
-function getWeatherFromWmo(code: number, isDay: number) {
-  const day = isDay === 1;
-
-  if (code >= 0 && code <= 1) {
-    return day
-      ? { condition: "clear skies", emoji: "☀️" }
-      : { condition: "mostly clear night skies", emoji: "🌙" };
-  }
-  if (code >= 2 && code <= 3) {
-    return day
-      ? { condition: "partly cloudy", emoji: "🌤️" }
-      : { condition: "partly cloudy", emoji: "☁️" };
-  }
-  if (code >= 45) {
-    const rainy = code >= 51 && code <= 67;
-    const condition = rainy ? "rainy" : "overcast";
-    return day
-      ? { condition, emoji: "🌧️" }
-      : { condition, emoji: "☁️" };
-  }
-
-  return day
-    ? { condition: "clear skies", emoji: "☀️" }
-    : { condition: "mostly clear night skies", emoji: "🌙" };
-}
 
 type HighlightProps = {
   children: React.ReactNode;
@@ -96,8 +72,9 @@ function StoryContent() {
       className={STORY_BODY_CLASS}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       variants={containerVariants}
+      style={{ willChange: "transform, opacity" }}
     >
       <motion.p variants={childVariants}>
         I was lucky to have my dad&apos;s laptop when I was a kid. Spent a ton of time playing video
@@ -134,8 +111,9 @@ function TldrContent() {
       className={STORY_BODY_CLASS}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
       variants={containerVariants}
+      style={{ willChange: "transform, opacity" }}
     >
       <motion.p variants={childVariants}>
         <span>I was lucky to have my dad&apos;s laptop when I was a kid. </span>
@@ -193,11 +171,6 @@ function TldrContent() {
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Story");
   const [greetingIndex, setGreetingIndex] = useState(0);
-  const [weather, setWeather] = useState({
-    temp: "--",
-    condition: "mostly clear night skies",
-    emoji: "🌙",
-  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -206,56 +179,19 @@ export default function AboutPage() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchWeather() {
-      try {
-        const res = await fetch(OPEN_METEO_URL);
-        if (!res.ok) throw new Error("Weather fetch failed");
-        const data = await res.json();
-        const current = data.current as {
-          temperature_2m: number;
-          weather_code: number;
-          is_day: number;
-        };
-        const { condition, emoji } = getWeatherFromWmo(current.weather_code, current.is_day);
-        if (!cancelled) {
-          setWeather({
-            temp: String(Math.round(current.temperature_2m)),
-            condition,
-            emoji,
-          });
-        }
-      } catch {
-        if (!cancelled) {
-          setWeather({
-            temp: "--",
-            condition: "mostly clear night skies",
-            emoji: "🌙",
-          });
-        }
-      }
-    }
-
-    fetchWeather();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
-    <main className="h-screen w-full snap-y snap-mandatory overflow-y-auto overflow-x-hidden bg-bg font-gilroyRegular text-text_primary no-scrollbar">
+    <main className="w-full bg-bg font-gilroyRegular text-text_primary">
       
       {/* Section 1 — Hero */}
-      <section className="relative flex h-screen w-full snap-start flex-col items-center justify-center overflow-hidden px-6 md:px-12 pt-8">
+      <section className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden px-6 md:px-12 pt-8">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 items-center gap-12 md:grid-cols-2">
           <motion.div
             className="flex flex-col gap-6 text-lg text-text_primary/70 md:text-xl"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
             variants={containerVariants}
+            style={{ willChange: "transform, opacity" }}
           >
             <div>
               <div className="relative h-12 overflow-hidden md:h-14">
@@ -273,7 +209,7 @@ export default function AboutPage() {
                 </AnimatePresence>
               </div>
               <motion.h1
-                className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl"
+                className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl will-change-[transform,filter,opacity]"
                 initial={{ opacity: 0, y: 15, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -287,14 +223,13 @@ export default function AboutPage() {
               blending full-stack code with product design.
             </motion.p>
             <motion.p variants={childVariants}>
-              I am based in Pune, India, and it&apos;s {weather.emoji} {weather.condition} at{" "}
-              {weather.temp}°C.
+              I am based in Pune, India, and it&apos;s <LiveWeather />
             </motion.p>
           </motion.div>
 
           <div className="relative flex flex-col items-center justify-center">
             <motion.div
-              className="relative z-10 mx-auto aspect-[4/5] w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:w-[400px]"
+              className="relative z-10 mx-auto aspect-[4/5] w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:w-[400px] will-change-transform"
               initial={{ opacity: 0, scale: 0.9, rotate: -3, y: 30 }}
               animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
               transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.3 }}
@@ -317,26 +252,32 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50">
+        <motion.div
+          className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50 will-change-transform"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+        >
           <span className="font-gilroyBold text-xs tracking-[0.2em] uppercase">Scroll Down</span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 0 }}
+            className="will-change-transform"
           >
             <ArrowDown size={18} strokeWidth={1.5} />
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Section 2 — About */}
-      <section className="relative flex min-h-screen w-full snap-start flex-col items-center justify-center px-6 md:px-12 pt-24 pb-20">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 pt-16 pb-8">
         <div className="mx-auto flex w-full h-full max-w-[1000px] flex-col">
           <div className="flex flex-row items-end justify-between border-b border-text_primary/10 pb-4">
             <motion.h2
-              className="font-gilroyBold text-4xl text-text_primary/40"
+              className="font-gilroyBold text-4xl text-text_primary/40 will-change-transform"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "0px 0px -15% 0px" }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               About
@@ -375,25 +316,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Section 3 — Footer */}
-      <section className="relative flex min-h-[30vh] w-full snap-start flex-col justify-end px-6 md:px-12">
-        <div className="mx-auto w-full max-w-[1000px]">
-          <motion.footer
-            initial={{ opacity: 0, y: 48 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="flex w-full justify-between border-t border-dashed border-text_primary/40 pt-8 pb-12 text-sm font-gilroyBold"
-          >
-            <nav className="flex gap-8">
-              <Link href="/work" className="hover:opacity-70 transition-opacity">My work</Link>
-              <Link href="/other-things" className="hover:opacity-70 transition-opacity">Other things</Link>
-              <Link href="/hire-me" className="hover:opacity-70 transition-opacity">Contact</Link>
-            </nav>
-            <p className="font-gilroyRegular text-text_primary/40">© 2026 | Divyansh Baghel.</p>
-          </motion.footer>
-        </div>
-      </section>
+      <PageFooter />
 
     </main>
   );
