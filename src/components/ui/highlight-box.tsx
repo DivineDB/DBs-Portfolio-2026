@@ -11,7 +11,7 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
   return (
     <span
       className={cn(
-        "relative inline-flex h-8 items-center justify-center px-3 align-middle md:h-9 md:px-3.5",
+        "relative inline-flex items-baseline justify-center px-3 align-middle md:px-3.5 pb-2 pt-1",
         className,
       )}
     >
@@ -25,7 +25,7 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
       />
       <span
         className={cn(
-          "relative z-10 whitespace-nowrap text-sm leading-none text-[#2A4756] md:text-base",
+          "relative z-10 whitespace-nowrap leading-none text-[#2A4756]",
           textClassName,
         )}
       >
@@ -34,3 +34,4 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
     </span>
   );
 }
+

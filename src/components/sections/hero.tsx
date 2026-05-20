@@ -25,7 +25,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="flex h-screen w-screen select-none items-center justify-center overflow-hidden bg-[#F8EDD1]">
+    <section className="flex h-screen w-screen select-none items-center justify-center bg-[#F8EDD1]">
       <div className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-1 items-center gap-8 px-12 py-16 md:px-20 lg:grid-cols-12">
         <div className="flex h-full max-h-[600px] flex-col justify-between py-4 lg:col-span-5">
           <div className="flex flex-col items-start gap-2">
@@ -33,7 +33,7 @@ export function Hero() {
             <h1 className="flex flex-row items-baseline gap-3 flex-wrap font-gilroyBold text-5xl tracking-tight text-text_primary md:text-6xl animate-fade-in">
               <span>Divyansh</span>
               <HighlightBox
-                className="h-[48px] md:h-[64px] px-5 md:px-7 translate-y-[2px]"
+                className="px-5 md:px-7"
                 textClassName="text-3xl md:text-5xl font-gilroyRegular text-text_primary"
               >
                 Baghel
@@ -73,8 +73,8 @@ export function Hero() {
           </footer>
         </div>
 
-        <div className="relative flex h-full max-h-[750px] w-full items-center justify-end lg:col-span-7">
-          <div className="relative aspect-[588/970] w-full max-w-[600px]">
+        <div className="relative flex h-full max-h-[750px] w-full items-center justify-end lg:col-span-7 pt-12 lg:pt-16">
+          <div className="relative aspect-[588/970] h-[85%] max-h-[580px] lg:max-h-[660px] w-auto">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"
@@ -94,36 +94,36 @@ export function Hero() {
             {/* Interactive Window Links */}
             <Link
               href="/about"
-              className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
+              className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
-              <span className="font-gilroyBold text-[9px] xs:text-[11px] sm:text-xs md:text-sm font-medium text-text_primary tracking-wide uppercase px-1 transition-transform group-hover:scale-105">
+              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
                 About Me
               </span>
             </Link>
 
             <Link
               href="/work"
-              className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
+              className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
-              <span className="font-gilroyBold text-[9px] xs:text-[11px] sm:text-xs md:text-sm font-medium text-text_primary tracking-wide uppercase px-1 transition-transform group-hover:scale-105">
+              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
                 Selected Work
               </span>
             </Link>
 
             <Link
               href="/other-things"
-              className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
+              className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
-              <span className="font-gilroyBold text-[9px] xs:text-[11px] sm:text-xs md:text-sm font-medium text-text_primary tracking-wide uppercase px-1 transition-transform group-hover:scale-105">
+              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
                 Other Things
               </span>
             </Link>
 
             <Link
               href="/hire-me"
-              className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
+              className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
-              <span className="font-gilroyBold text-[9px] xs:text-[11px] sm:text-xs md:text-sm font-medium text-text_primary tracking-wide uppercase px-1 transition-transform group-hover:scale-105">
+              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
                 Hire Me
               </span>
             </Link>
