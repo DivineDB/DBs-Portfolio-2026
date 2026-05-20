@@ -4,11 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
+import useSound from "use-sound";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Hero() {
   const [time, setTime] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+  const [showLocation, setShowLocation] = useState(false);
+  const [playHover] = useSound("/sounds/tick.mp3", { volume: 0.25 });
 
   useEffect(() => {
+    setIsMounted(true);
     const updateTime = () => {
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Kolkata",
@@ -46,6 +52,7 @@ export function Hero() {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={() => playHover()}
                 className="group relative pb-1 transition-colors hover:text-text_primary"
               >
                 Resume
@@ -53,6 +60,7 @@ export function Hero() {
               </a>
               <Link
                 href="/hire-me"
+                onMouseEnter={() => playHover()}
                 className="group relative pb-1 transition-colors hover:text-text_primary"
               >
                 Contact
@@ -62,23 +70,55 @@ export function Hero() {
           </div>
 
           <footer className="mt-auto flex flex-col gap-3">
-            <div className="inline-flex w-fit items-center justify-center rounded-full bg-[#F0F5E1] px-5 py-2.5">
-              <span className="text-lg font-medium tracking-wide text-slate-800">
-                {time || "15:23"}&nbsp;IST
-              </span>
-            </div>
+            <motion.button 
+              onClick={() => setShowLocation(!showLocation)}
+              onMouseEnter={() => playHover()}
+              whileHover={{ scale: 1.05, backgroundColor: "#E6F0C2" }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-flex w-fit cursor-pointer items-center justify-center rounded-full bg-[#F0F5E1] px-5 py-2.5 border-none outline-none will-change-transform"
+            >
+              <AnimatePresence mode="wait">
+                {showLocation ? (
+                  <motion.span
+                    key="location"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    className="text-lg font-medium tracking-wide text-slate-800 will-change-transform"
+                  >
+                    Gwalior, IN
+                  </motion.span>
+                ) : isMounted ? (
+                  <motion.span
+                    key="time"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    className="text-lg font-medium tracking-wide text-slate-800 will-change-transform"
+                  >
+                    {time}&nbsp;IST
+                  </motion.span>
+                ) : (
+                  <span key="placeholder" className="text-lg font-medium tracking-wide text-slate-800">
+                    &nbsp;
+                  </span>
+                )}
+              </AnimatePresence>
+            </motion.button>
             <p className="text-xs text-black/25">© 2026 | Divyansh Baghel.</p>
           </footer>
         </div>
 
         <div className="relative flex h-full w-full items-end justify-center pt-12 lg:col-span-7 lg:justify-end lg:pt-16">
-          <div className="relative aspect-[588/970] h-[85vh] w-auto">
+          <div className="relative aspect-[588/970] h-[92vh] w-auto mb-6">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"
               fill
               priority
               className="object-contain object-bottom"
+              style={{ filter: "drop-shadow(-15px 15px 20px rgba(0,0,0,0.15))" }}
             />
             <Image
               src="/images/boy.svg"
@@ -92,6 +132,7 @@ export function Hero() {
             {/* Interactive Window Links */}
             <Link
               href="/about"
+              onMouseEnter={() => playHover()}
               className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -101,6 +142,7 @@ export function Hero() {
 
             <Link
               href="/work"
+              onMouseEnter={() => playHover()}
               className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -110,6 +152,7 @@ export function Hero() {
 
             <Link
               href="/other-things"
+              onMouseEnter={() => playHover()}
               className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -119,6 +162,7 @@ export function Hero() {
 
             <Link
               href="/hire-me"
+              onMouseEnter={() => playHover()}
               className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
