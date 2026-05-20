@@ -17,7 +17,7 @@ const GREETINGS = ["Hello,", "Namaste,", "Hola,", "Ciao,", "Bonjour,", "Konnichi
 
 
 const STORY_BODY_CLASS =
-  "flex min-h-[880px] max-w-[800px] flex-col gap-8 font-satoshi text-lg font-normal leading-relaxed text-[#4A5568]";
+  "flex max-w-[800px] flex-col gap-8 font-satoshi text-lg font-normal leading-relaxed text-[#4A5568]";
 
 const fadedMaskClass = "opacity-25 line-through decoration-text_primary/20";
 
@@ -270,8 +270,8 @@ export default function AboutPage() {
       </section>
 
       {/* Section 2 — About */}
-      <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 pt-16 pb-8">
-        <div className="mx-auto flex w-full h-full max-w-[1000px] flex-col">
+      <section className="relative w-full px-6 md:px-12 py-20">
+        <div className="mx-auto max-w-[1000px] flex flex-col gap-10">
           <div className="flex flex-row items-end justify-between border-b border-text_primary/10 pb-4">
             <motion.h2
               className="font-gilroyBold text-4xl text-text_primary/40 will-change-transform"
@@ -309,7 +309,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="mt-12 flex flex-1 flex-col">
+          <div>
             {activeTab === "Story" && <StoryContent />}
             {activeTab === "TL;DR" && <TldrContent />}
           </div>
