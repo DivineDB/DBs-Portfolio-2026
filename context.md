@@ -1,6 +1,6 @@
 # Portfolio State (@context.md)
 
-## Phase: 2 — About page dynamics (in progress alongside global polish)
+## Phase: 3 — Completed Portfolio UI Elevation (Phases 1-4) & Global Polish
 
 ## Stack
 
@@ -11,11 +11,13 @@
 - **Global:** Gilroy Regular / Bold via `next/font/local` in `src/app/layout.tsx` (CSS variables `--font-gilroy-regular`, `--font-gilroy-bold`).
 - **About greeting only:** Playfair Display *italic*, `latin`, from `next/font/google`, variable `--font-playfair-display`; consumed as Tailwind `font-playfairDisplayItalic` on the rotating greeting span.
 
-## About page (`src/app/about/page.tsx`)
+## Accomplishments (UI Elevation & Polish)
 
-- **Hero:** Rotating greetings; intro + location lines are fixed copy templates; `<Highlight>` wraps “Design Engineer” (and repeated highlights in narrative).
-- **Weather:** Client `useEffect` → Open‑Meteo (`Pune` lat/lng); initial state `{ temp: '--', condition: 'mostly clear night skies', emoji: '🌙' }`; WMO bands 0–1 / 2–3 / 45+ with day/night emoji split per spec.
-- **Highlight primitive:** Slightly padded green backdrop (`px-1.5 py-[5px]`) on boxed usage; TL;DR tab hides both sticker highlights (hero “Design Engineer” and in-tab “design engineering” render as normal body text).
+- **Phase 1: Cleaned Building SVG Artifacts:** Removed the drop shadow filter bounding box from `Building.svg` to eliminate the faint horizontal line/artifact hovering above the roof.
+- **Phase 2: Typography & Baseline Alignment:** Refactored hero title to perfectly align `"Divyansh"` and `"Baghel"` (wrapped in `<HighlightBox>`) on a single baseline using `flex flex-row items-baseline gap-3 flex-wrap` inside the `h1` wrapper, resolving staggering.
+- **Phase 3: Action Links (Resume & Contact):** Upgraded "Resume" and "Contact" nav links to use custom left-to-right scaling animated underlines via css transitions (`after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-left after:scale-x-0 after:bg-[#A2F991] after:transition-transform hover:after:scale-x-100`).
+- **Phase 4: Live Clock Widget:** Redesigned bottom-left status indicator into a glassmorphic IST clock with a pulsing green live indicator that updates dynamically in real-time.
+- **Interactive SVG Windows:** Cleared out the static, blurry vector text paths and green hover blocks inside `Building.svg`. Replaced them with responsive absolute HTML Next.js `<Link>` components mapped precisely to the SVG aspect-ratio bounds. Each window features smooth backdrop-blur scaling, premium border glows, and crisp centered typography ("About Me", "Selected Work", "Other Things", "Hire Me").
 
 ## Narrative tabs (morphing pill)
 
@@ -24,7 +26,6 @@
 
 ## Other routes / components
 
-- Home hero and shared UI unchanged in this snapshot; revisit `hero.tsx` / `highlight-box.tsx` if global highlight sticker rules should align with the About inline `<Highlight>`.
 - **Hire Me page (`src/app/hire-me/page.tsx`)**: Full-screen snap-scrolling “Hire Me” pitch page that inherits **all** visual tokens from the About page (`bg-bg`, `text-text_primary`, `bg-accent_highlight`, Gilroy fonts).
   - **Scroll architecture**: `h-screen w-full overflow-y-scroll snap-y snap-mandatory`; each major section is `h-screen snap-start snap-always … justify-center`; scrollbars hidden via `.no-scrollbar` utility.
   - **Scroll indicator**: Uses the same bottom-center “Scroll Down” + bouncing `ArrowDown` pattern as About.
@@ -34,5 +35,6 @@
 
 ## Next
 
-- Extend Phase 2 to remaining sections (navigation, footer links, work grids) and any window/click interactions spec’d for the homepage.
-- Optional: dedupe Story / TL;DR shared copy into data + renderers once copy stabilizes.
+- Continuous verification of custom interactive states and route flow.
+- Ensure that git staging tracks all updated assets and component changes.
+
