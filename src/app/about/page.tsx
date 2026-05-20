@@ -68,54 +68,40 @@ function Highlight({ children, boxed = true }: HighlightProps) {
 
 function StoryContent() {
   return (
-    <motion.div
-      className={STORY_BODY_CLASS}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-      variants={containerVariants}
-      style={{ willChange: "transform, opacity" }}
-    >
-      <motion.p variants={childVariants}>
+    <div className={STORY_BODY_CLASS}>
+      <p>
         I was lucky to have my dad&apos;s laptop when I was a kid. Spent a ton of time playing video
         games, but my real introduction to design was messing around with PowerPoint animations in
         school. I loved figuring out how to make things move and fit together on a screen, and that
         early obsession with layouts completely stuck with me.
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         Later on, got obsessed with photography and cinematics. I loved how a single frame could
         freeze a feeling, or how lighting could change a whole mood. That love for visual aesthetics
         and composition never left, it just shifted from camera lenses to digital interfaces.
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         Naturally, I ended up learning how to code and went for a{" "}
         <Highlight>B.Tech degree</Highlight>. But during my final year, I realized I cared way more
         about UX choices and people than just pure coding. I found myself focusing on why someone
         would use a feature and how it actually felt to use it, rather than just writing hidden
         backend logic.
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         That&apos;s why I love the middle ground of <Highlight>design engineering</Highlight>. I
         make sure the creative vision never gets lost in the engineering cycle. I design digital
         products for people, and use code as the medium to bring them to life. I just want to build
         simple, beautiful digital products that make sense to the people using them.
-      </motion.p>
-    </motion.div>
+      </p>
+    </div>
   );
 }
 
 /** Same copy and metrics as Story; subtractive mask via opacity + strikethrough only. */
 function TldrContent() {
   return (
-    <motion.div
-      className={STORY_BODY_CLASS}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-      variants={containerVariants}
-      style={{ willChange: "transform, opacity" }}
-    >
-      <motion.p variants={childVariants}>
+    <div className={STORY_BODY_CLASS}>
+      <p>
         <span>I was lucky to have my dad&apos;s laptop when I was a kid. </span>
         <span className={fadedMaskClass}>
           Spent a ton of time playing video games, but{" "}
@@ -126,8 +112,8 @@ function TldrContent() {
           in school. I loved figuring out how to make things move and fit together on a screen, and
           that early obsession with layouts completely stuck with me.
         </span>
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         <span className={fadedMaskClass}>
           Later on, got obsessed with photography and cinematics. I loved how a single frame could
           freeze a feeling, or how lighting could change a whole mood.{" "}
@@ -136,8 +122,8 @@ function TldrContent() {
           That love for visual aesthetics and composition never left, it just shifted from camera
           lenses to digital interfaces.
         </span>
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         <span className={fadedMaskClass}>
           Naturally, I ended up learning how to code and went for a B.Tech degree. But during my
           final year,{" "}
@@ -148,8 +134,8 @@ function TldrContent() {
           I found myself focusing on why someone would use a feature and how it actually felt to use
           it, rather than just writing hidden backend logic.
         </span>
-      </motion.p>
-      <motion.p variants={childVariants}>
+      </p>
+      <p>
         <span>That&apos;s why I love the middle ground of </span>
         <Highlight boxed={false}>design engineering</Highlight>
         <span className={fadedMaskClass}>
@@ -163,8 +149,8 @@ function TldrContent() {
           I just want to build simple, beautiful digital products that make sense to the people
           using them.
         </span>
-      </motion.p>
-    </motion.div>
+      </p>
+    </div>
   );
 }
 
