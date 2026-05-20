@@ -62,25 +62,23 @@ export function Hero() {
           </div>
 
           <footer className="mt-auto flex flex-col gap-3">
-            <div className="flex items-center gap-2 border border-text_primary/10 bg-[#F8EDD1]/50 backdrop-blur-sm rounded-full px-4 py-1.5 w-fit text-sm text-text_primary/70 shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            <div className="inline-flex w-fit items-center justify-center rounded-full bg-[#F0F5E1] px-5 py-2.5">
+              <span className="text-lg font-medium tracking-wide text-slate-800">
+                {time || "15:23"}&nbsp;IST
               </span>
-              <span className="font-mono text-sm tracking-wide">{time || "15:23"} IST</span>
             </div>
             <p className="text-xs text-black/25">© 2026 | Divyansh Baghel.</p>
           </footer>
         </div>
 
-        <div className="relative flex h-full w-full items-end justify-center lg:justify-end lg:col-span-7 pt-12 lg:pt-16">
-          <div className="relative aspect-[588/970] w-full max-w-[550px] lg:max-w-none lg:w-auto lg:h-[85vh]">
+        <div className="relative flex h-full w-full items-end justify-center pt-12 lg:col-span-7 lg:justify-end lg:pt-16">
+          <div className="relative aspect-[588/970] h-[85vh] w-auto">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"
               fill
               priority
-              className="h-full w-full object-contain"
+              className="object-contain object-bottom"
             />
             <Image
               src="/images/boy.svg"
