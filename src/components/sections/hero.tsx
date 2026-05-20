@@ -2,19 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
-import useSound from "use-sound";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Hero() {
   const [time, setTime] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
-  const [playHover] = useSound("/sounds/tick.mp3", { volume: 0.25 });
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playHover = useCallback(() => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = 0;
+    audioRef.current.play().catch(() => {});
+  }, []);
 
   useEffect(() => {
     setIsMounted(true);
+    audioRef.current = new Audio("/sounds/tick.mp3");
+    audioRef.current.volume = 0.25;
+
     const updateTime = () => {
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Kolkata",
