@@ -18,6 +18,7 @@
 - **Phase 3: Action Links (Resume & Contact):** Upgraded "Resume" and "Contact" nav links to use custom left-to-right scaling animated underlines via css transitions (`after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-left after:scale-x-0 after:bg-[#A2F991] after:transition-transform hover:after:scale-x-100`).
 - **Phase 4: Live Clock Widget:** Redesigned bottom-left status indicator into a glassmorphic IST clock with a pulsing green live indicator that updates dynamically in real-time.
 - **Interactive SVG Windows:** Cleared out the static, blurry vector text paths and green hover blocks inside `Building.svg`. Replaced them with responsive absolute HTML Next.js `<Link>` components mapped precisely to the SVG aspect-ratio bounds. Each window features smooth backdrop-blur scaling, premium border glows, and crisp centered typography ("About Me", "Selected Work", "Other Things", "Hire Me").
+- **Phase 5 (Regression Fixes):** Removed `overflow-hidden` from main app wrappers to prevent clipping of the building SVG roof. Refactored the `<HighlightBox>` internal styling (`inline-flex items-baseline`) to align strictly with external typographic baselines without hardcoded heights. Adjusted window link text overlays to use top-aligned minimalist typography (`font-gilroyRegular text-xs capitalize tracking-normal text-slate-800`).
 
 ## Narrative tabs (morphing pill)
 
