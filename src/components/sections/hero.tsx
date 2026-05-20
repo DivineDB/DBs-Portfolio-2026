@@ -27,8 +27,8 @@ export function Hero() {
   return (
     <section className="flex h-screen w-screen select-none items-center justify-center bg-[#F8EDD1]">
       <div className="mx-auto grid h-full w-full max-w-[1440px] grid-cols-1 items-center gap-8 px-12 py-16 md:px-20 lg:grid-cols-12">
-        <div className="flex h-full max-h-[600px] flex-col justify-between py-4 lg:col-span-5">
-          <div className="flex flex-col items-start gap-2">
+        <div className="flex h-full flex-col py-4 lg:col-span-5">
+          <div className="flex flex-1 flex-col justify-center items-start gap-2">
             <p className="font-gilroyRegular text-lg text-black/25">Hey, I&apos;m</p>
             <h1 className="flex flex-row items-baseline gap-3 flex-wrap font-gilroyBold text-5xl tracking-tight text-text_primary md:text-6xl animate-fade-in">
               <span>Divyansh</span>
@@ -73,8 +73,8 @@ export function Hero() {
           </footer>
         </div>
 
-        <div className="relative flex h-full max-h-[750px] w-full items-center justify-end lg:col-span-7 pt-12 lg:pt-16">
-          <div className="relative aspect-[588/970] h-[85%] max-h-[580px] lg:max-h-[660px] w-auto">
+        <div className="relative flex h-full w-full items-end justify-center lg:justify-end lg:col-span-7 pt-12 lg:pt-16">
+          <div className="relative aspect-[588/970] w-full max-w-[550px] lg:max-w-none lg:w-auto lg:h-[85vh]">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"

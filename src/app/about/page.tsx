@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +18,27 @@ const STORY_BODY_CLASS =
   "flex min-h-[880px] max-w-[800px] flex-col gap-8 font-satoshi text-lg font-normal leading-relaxed text-[#4A5568]";
 
 const fadedMaskClass = "opacity-25 line-through decoration-text_primary/20";
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const childVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
 
 /** WMO buckets: 0–1 clear, 2–3 partly cloudy, 45+ overcast/rain; emoji follows `is_day`. */
 function getWeatherFromWmo(code: number, isDay: number) {
@@ -71,40 +92,52 @@ function Highlight({ children, boxed = true }: HighlightProps) {
 
 function StoryContent() {
   return (
-    <div className={STORY_BODY_CLASS}>
-      <p>
+    <motion.div
+      className={STORY_BODY_CLASS}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
+      <motion.p variants={childVariants}>
         I was lucky to have my dad&apos;s laptop when I was a kid. Spent a ton of time playing video
         games, but my real introduction to design was messing around with PowerPoint animations in
         school. I loved figuring out how to make things move and fit together on a screen, and that
         early obsession with layouts completely stuck with me.
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         Later on, got obsessed with photography and cinematics. I loved how a single frame could
         freeze a feeling, or how lighting could change a whole mood. That love for visual aesthetics
         and composition never left, it just shifted from camera lenses to digital interfaces.
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         Naturally, I ended up learning how to code and went for a{" "}
         <Highlight>B.Tech degree</Highlight>. But during my final year, I realized I cared way more
         about UX choices and people than just pure coding. I found myself focusing on why someone
         would use a feature and how it actually felt to use it, rather than just writing hidden
         backend logic.
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         That&apos;s why I love the middle ground of <Highlight>design engineering</Highlight>. I
         make sure the creative vision never gets lost in the engineering cycle. I design digital
         products for people, and use code as the medium to bring them to life. I just want to build
         simple, beautiful digital products that make sense to the people using them.
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 }
 
 /** Same copy and metrics as Story; subtractive mask via opacity + strikethrough only. */
 function TldrContent() {
   return (
-    <div className={STORY_BODY_CLASS}>
-      <p>
+    <motion.div
+      className={STORY_BODY_CLASS}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
+      <motion.p variants={childVariants}>
         <span>I was lucky to have my dad&apos;s laptop when I was a kid. </span>
         <span className={fadedMaskClass}>
           Spent a ton of time playing video games, but{" "}
@@ -115,8 +148,8 @@ function TldrContent() {
           in school. I loved figuring out how to make things move and fit together on a screen, and
           that early obsession with layouts completely stuck with me.
         </span>
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         <span className={fadedMaskClass}>
           Later on, got obsessed with photography and cinematics. I loved how a single frame could
           freeze a feeling, or how lighting could change a whole mood.{" "}
@@ -125,8 +158,8 @@ function TldrContent() {
           That love for visual aesthetics and composition never left, it just shifted from camera
           lenses to digital interfaces.
         </span>
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         <span className={fadedMaskClass}>
           Naturally, I ended up learning how to code and went for a B.Tech degree. But during my
           final year,{" "}
@@ -137,8 +170,8 @@ function TldrContent() {
           I found myself focusing on why someone would use a feature and how it actually felt to use
           it, rather than just writing hidden backend logic.
         </span>
-      </p>
-      <p>
+      </motion.p>
+      <motion.p variants={childVariants}>
         <span>That&apos;s why I love the middle ground of </span>
         <Highlight boxed={false}>design engineering</Highlight>
         <span className={fadedMaskClass}>
@@ -152,8 +185,8 @@ function TldrContent() {
           I just want to build simple, beautiful digital products that make sense to the people
           using them.
         </span>
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 }
 
@@ -217,7 +250,13 @@ export default function AboutPage() {
       {/* Section 1 — Hero */}
       <section className="relative flex h-screen w-full snap-start flex-col items-center justify-center overflow-hidden px-6 md:px-12 pt-8">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 items-center gap-12 md:grid-cols-2">
-          <div className="flex flex-col gap-6 text-lg text-text_primary/70 md:text-xl">
+          <motion.div
+            className="flex flex-col gap-6 text-lg text-text_primary/70 md:text-xl"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={containerVariants}
+          >
             <div>
               <div className="relative h-12 overflow-hidden md:h-14">
                 <AnimatePresence mode="wait">
@@ -233,23 +272,34 @@ export default function AboutPage() {
                   </motion.span>
                 </AnimatePresence>
               </div>
-              <h1 className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl">
+              <motion.h1
+                className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl"
+                initial={{ opacity: 0, y: 15, filter: "blur(12px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              >
                 I&apos;m DB.
-              </h1>
+              </motion.h1>
             </div>
-            <p>
+            <motion.p variants={childVariants}>
               I&apos;m a 22 year old{" "}
               <Highlight boxed={activeTab !== "TL;DR"}>Design Engineer</Highlight> currently freelancing —
               blending full-stack code with product design.
-            </p>
-            <p>
+            </motion.p>
+            <motion.p variants={childVariants}>
               I am based in Pune, India, and it&apos;s {weather.emoji} {weather.condition} at{" "}
               {weather.temp}°C.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
           <div className="relative flex flex-col items-center justify-center">
-            <div className="relative z-10 mx-auto aspect-[4/5] w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:w-[400px]">
+            <motion.div
+              className="relative z-10 mx-auto aspect-[4/5] w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:w-[400px]"
+              initial={{ opacity: 0, scale: 0.9, rotate: -3, y: 30 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
+              transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.3 }}
+              whileHover={{ scale: 1.02, rotate: -1, transition: { duration: 0.4, ease: "easeOut" } }}
+            >
               <div className="absolute inset-x-4 top-4 bottom-14 overflow-hidden">
                 <Image
                   src="/images/me.jpeg"
@@ -263,7 +313,7 @@ export default function AboutPage() {
               <p className="absolute right-0 bottom-0 left-0 flex h-14 items-center justify-center text-sm text-text_primary/40">
                 me.jpeg
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
 
