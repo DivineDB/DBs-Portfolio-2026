@@ -47,24 +47,22 @@ export function Hero() {
             </h1>
             <p className="font-gilroyRegular text-xl text-black/25">Design Engineer</p>
 
-            <nav className="mt-6 flex gap-6 font-gilroyRegular text-lg font-medium text-text_primary">
+            <nav className="mt-8 flex gap-4 font-gilroyRegular">
               <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 onMouseEnter={() => playHover()}
-                className="group relative pb-1 transition-colors hover:text-text_primary"
+                className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
               >
                 Resume
-                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-bottom-left scale-x-0 bg-[#A2F991] transition-transform duration-300 group-hover:scale-x-100" />
               </a>
               <Link
                 href="/hire-me"
                 onMouseEnter={() => playHover()}
-                className="group relative pb-1 transition-colors hover:text-text_primary"
+                className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
               >
                 Contact
-                <span className="absolute bottom-0 left-0 h-[2px] w-full origin-bottom-left scale-x-0 bg-[#A2F991] transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             </nav>
           </div>
@@ -100,8 +98,8 @@ export function Hero() {
                     {time}&nbsp;IST
                   </motion.span>
                 ) : (
-                  <span key="placeholder" className="text-lg font-medium tracking-wide text-slate-800">
-                    &nbsp;
+                  <span key="placeholder" className="text-lg font-medium tracking-wide text-transparent select-none" aria-hidden="true">
+                    00:00 IST
                   </span>
                 )}
               </AnimatePresence>
@@ -110,15 +108,15 @@ export function Hero() {
           </footer>
         </div>
 
-        <div className="relative flex h-full w-full items-end justify-center pt-12 lg:col-span-7 lg:justify-end lg:pt-16">
-          <div className="relative aspect-[588/970] h-[92vh] w-auto mb-6">
+        <div className="relative flex h-full w-full items-end justify-center pt-8 lg:col-span-7 lg:justify-end">
+          <div className="relative aspect-[588/970] h-[95vh] w-auto mb-4">
             <Image
               src="/images/Building.svg"
               alt="Building illustration"
               fill
               priority
               className="object-contain object-bottom"
-              style={{ filter: "drop-shadow(-15px 15px 20px rgba(0,0,0,0.15))" }}
+              style={{ filter: "drop-shadow(-20px 20px 0px rgba(0,0,0,0.12))" }}
             />
             <Image
               src="/images/boy.svg"
