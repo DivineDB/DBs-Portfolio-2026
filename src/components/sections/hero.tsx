@@ -28,111 +28,116 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="h-screen w-full overflow-hidden bg-[#F8EDD1] select-none flex flex-col justify-between box-border p-8 md:p-12">
+    <main className="relative w-full h-screen overflow-hidden bg-[#F8EDD1] select-none flex flex-col">
 
-      {/* ── Central grid: text + building ─────────────────────────── */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 items-center gap-8 min-h-0">
+      {/* ── Central content grid ─────────────────────────────────────── */}
+      <div className="flex-grow w-full max-w-[1400px] mx-auto px-8 md:px-16 lg:px-24 grid grid-cols-1 md:grid-cols-2 relative">
 
-        {/* Left: hero text */}
-        <div className="flex flex-col justify-start pt-[4vh] h-full md:col-span-5">
-          <div className="flex flex-col items-start gap-2">
-            <p className="font-gilroyRegular text-lg text-black/25">Hey, I&apos;m</p>
-            <h1 className="flex flex-row items-baseline gap-3 flex-wrap font-gilroyBold text-5xl tracking-tight text-text_primary md:text-6xl animate-fade-in">
-              <span>Divyansh</span>
-              <HighlightBox
-                className="px-5 md:px-7"
-                textClassName="text-3xl md:text-5xl font-gilroyRegular text-text_primary"
-              >
-                Baghel
-              </HighlightBox>
-            </h1>
-            <p className="font-gilroyRegular text-xl text-black/25">Design Engineer</p>
+        {/* Left column: hero text, vertically centered */}
+        <div className="flex flex-col justify-center h-full z-10">
+          <p className="font-gilroyRegular text-xl text-black/30 mb-2">Hey, I&apos;m</p>
 
-            {/* Action links — editorial text-only style */}
-            <nav className="mt-6 flex gap-8 font-gilroyRegular">
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
-              >
-                Resume
-                <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
-              </a>
-              <Link
-                href="/hire-me"
-                className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
-              >
-                Contact
-                <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
-              </Link>
-            </nav>
-          </div>
-        </div>
-
-        {/* Right: building illustration */}
-        <div className="relative w-full h-full flex items-end justify-end md:col-span-7 overflow-visible">
-          <div className="relative aspect-[588/970] h-[110%] w-auto max-w-none translate-y-4">
-            <Image
-              src="/images/Building.svg"
-              alt="Building illustration"
-              fill
-              priority
-              className="object-contain object-bottom select-none"
-              style={{ filter: "drop-shadow(-24px 24px 0px rgba(0,0,0,0.14))" }}
-            />
-            <Image
-              src="/images/boy.svg"
-              alt=""
-              aria-hidden
-              width={184}
-              height={180}
-              className="pointer-events-none absolute top-[43%] left-[21.8%] z-10 h-auto w-[23%] object-contain"
-            />
-
-            {/* Interactive Window Links */}
-            <Link
-              href="/about"
-              className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          <h1 className="flex flex-row items-baseline gap-4 flex-wrap font-gilroyBold text-6xl lg:text-7xl tracking-tight text-text_primary mb-4 animate-fade-in">
+            <span>Divyansh</span>
+            <HighlightBox
+              className="px-5 md:px-7"
+              textClassName="text-4xl lg:text-5xl font-gilroyRegular text-text_primary"
             >
-              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
-                About Me
-              </span>
-            </Link>
+              Baghel
+            </HighlightBox>
+          </h1>
 
-            <Link
-              href="/work"
-              className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          <p className="font-gilroyRegular text-2xl text-black/30 font-light mb-12">Design Engineer</p>
+
+          {/* Action links — editorial text-only */}
+          <nav className="flex gap-8 font-gilroyRegular">
+            <a
+              href="/Divyansh_Baghel_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
             >
-              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
-                Selected Work
-              </span>
-            </Link>
-
-            <Link
-              href="/other-things"
-              className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
-            >
-              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
-                Other Things
-              </span>
-            </Link>
-
+              Resume
+              <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
+            </a>
             <Link
               href="/hire-me"
-              className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+              className="group relative py-1 text-xl font-medium tracking-wide text-text_primary transition-colors hover:text-slate-500"
             >
-              <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
-                Hire Me
-              </span>
+              Contact
+              <span className="absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 bg-text_primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
-          </div>
+          </nav>
+        </div>
+
+        {/* Right column: spacer (building is absolutely positioned) */}
+        <div className="hidden md:block" />
+      </div>
+
+      {/* ── Building: absolutely anchored to bottom-right ───────────── */}
+      <div className="absolute bottom-0 right-0 md:right-[4%] w-auto h-[88vh] z-0 pointer-events-none">
+        {/* Aspect-ratio wrapper preserving 588:970 */}
+        <div className="relative h-full" style={{ width: "calc(88vh * 588 / 970)" }}>
+          <Image
+            src="/images/Building.svg"
+            alt="Building illustration"
+            fill
+            priority
+            className="object-contain object-bottom pointer-events-none select-none"
+            style={{ filter: "drop-shadow(-20px 20px 0px rgba(0,0,0,0.15))" }}
+          />
+          <Image
+            src="/images/boy.svg"
+            alt=""
+            aria-hidden
+            width={184}
+            height={180}
+            className="pointer-events-none absolute top-[43%] left-[21.8%] z-10 h-auto w-[23%] object-contain"
+          />
+
+          {/* Interactive Window Links — pointer-events re-enabled */}
+          <Link
+            href="/about"
+            className="pointer-events-auto absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          >
+            <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
+              About Me
+            </span>
+          </Link>
+
+          <Link
+            href="/work"
+            className="pointer-events-auto absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          >
+            <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
+              Selected Work
+            </span>
+          </Link>
+
+          <Link
+            href="/other-things"
+            className="pointer-events-auto absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          >
+            <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
+              Other Things
+            </span>
+          </Link>
+
+          <Link
+            href="/hire-me"
+            className="pointer-events-auto absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
+          >
+            <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
+              Hire Me
+            </span>
+          </Link>
         </div>
       </div>
 
-      {/* ── Bottom row: clock pinned in screen bounds ──────────────── */}
-      <div className="w-full flex justify-between items-end h-[8vh] shrink-0">
-        <div className="flex flex-col gap-1">
+      {/* ── Footer row: absolutely anchored to bottom-left ──────────── */}
+      <div className="absolute bottom-8 left-8 md:left-16 lg:left-24 flex flex-col gap-2 z-20">
+        <div className="flex items-center gap-6">
+          {/* Live clock / location toggle */}
           <motion.button
             onClick={() => setShowLocation(!showLocation)}
             whileHover={{ scale: 1.05, backgroundColor: "#E6F0C2" }}
@@ -168,10 +173,30 @@ export function Hero() {
               )}
             </AnimatePresence>
           </motion.button>
-          <p className="text-xs text-black/25">© 2026 | Divyansh Baghel.</p>
+
+          {/* ⌘K hint badge */}
+          <button
+            type="button"
+            onClick={() => {
+              document.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true })
+              );
+            }}
+            title="Open command palette"
+            className="group flex items-center gap-1.5 rounded-full border border-text_primary/12 bg-text_primary/5 px-3.5 py-1.5 transition-all duration-200 hover:border-text_primary/20 hover:bg-text_primary/10 hover:scale-105 active:scale-95"
+          >
+            <span className="font-gilroyRegular text-xs text-text_primary/45 group-hover:text-text_primary/70 transition-colors">
+              Press
+            </span>
+            <kbd className="font-gilroyBold text-xs text-text_primary/55 group-hover:text-text_primary/80 tracking-wide transition-colors">
+              ⌘K
+            </kbd>
+          </button>
         </div>
+
+        <span className="text-sm text-black/25">© 2026 | Divyansh Baghel.</span>
       </div>
 
-    </section>
+    </main>
   );
 }
