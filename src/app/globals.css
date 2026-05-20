@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@config "./tailwind.config.ts";
+
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("/fonts/Satoshi-Medium.woff2") format("woff2"),
+    url("/fonts/Satoshi-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-bg: #f8edd1;
+  --color-text_primary: #2a4756;
+  --color-text_muted: rgba(1, 1, 1, 0.25);
+  --color-accent_highlight: #a2f991;
+  --color-about_body: #4a5568;
+  --font-gilroyRegular: var(--font-gilroy-regular), sans-serif;
+  --font-gilroyBold: var(--font-gilroy-bold), sans-serif;
+  --font-satoshi: "Satoshi", sans-serif;
+  --font-playfairDisplayItalic: var(--font-playfair-display), serif;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-bg text-text_primary antialiased font-gilroyRegular;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(42, 71, 86, 0.2);
+  border-radius: 10px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(42, 71, 86, 0.2) transparent;
+}
+
+/* Hide scrollbar but keep scroll (opt-in). */
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE/Edge legacy */
+    scrollbar-width: none; /* Firefox */
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
+
+@layer components {
+  /* Level text; depth/hover scale live only on ::after */
+  .highlight-sticker {
+    @apply relative isolate inline whitespace-nowrap align-baseline px-0 py-0 leading-none box-border;
+  }
+
+  .highlight-sticker::after {
+    content: "";
+    @apply absolute inset-0 z-0 h-full w-full rounded-[3px] border border-[#2A4756]/20 bg-[#A2F991] transition-transform;
+    box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.25);
+  }
+
+  .highlight-sticker:hover::after {
+    @apply scale-[1.02];
+  }
+
+  .highlight-sticker-text {
+    @apply relative z-10 font-gilroyBold text-[#2A4756];
+  }
+
+  .faded-text {
+    @apply text-[#2A4756]/20 line-through decoration-[#2A4756]/10;
+  }
+
+  .prominent-text {
+    @apply text-[#4A5568];
+  }
+}
