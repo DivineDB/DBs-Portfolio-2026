@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,18 +10,9 @@ export function Hero() {
   const [time, setTime] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const playHover = useCallback(() => {
-    if (!audioRef.current) return;
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(() => {});
-  }, []);
 
   useEffect(() => {
     setIsMounted(true);
-    audioRef.current = new Audio("/sounds/tick.mp3");
-    audioRef.current.volume = 0.25;
 
     const updateTime = () => {
       const options: Intl.DateTimeFormatOptions = {
@@ -60,14 +51,12 @@ export function Hero() {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                onMouseEnter={() => playHover()}
                 className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
               >
                 Resume
               </a>
               <Link
                 href="/hire-me"
-                onMouseEnter={() => playHover()}
                 className="group relative overflow-hidden rounded-full border border-slate-300 px-6 py-2.5 text-sm font-medium tracking-wide text-slate-700 transition-all duration-300 hover:border-[#A2F991] hover:bg-[#A2F991] hover:text-slate-900"
               >
                 Contact
@@ -76,9 +65,8 @@ export function Hero() {
           </div>
 
           <footer className="mt-auto flex flex-col gap-3">
-            <motion.button 
+            <motion.button
               onClick={() => setShowLocation(!showLocation)}
-              onMouseEnter={() => playHover()}
               whileHover={{ scale: 1.05, backgroundColor: "#E6F0C2" }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -138,7 +126,6 @@ export function Hero() {
             {/* Interactive Window Links */}
             <Link
               href="/about"
-              onMouseEnter={() => playHover()}
               className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -148,7 +135,6 @@ export function Hero() {
 
             <Link
               href="/work"
-              onMouseEnter={() => playHover()}
               className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -158,7 +144,6 @@ export function Hero() {
 
             <Link
               href="/other-things"
-              onMouseEnter={() => playHover()}
               className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -168,7 +153,6 @@ export function Hero() {
 
             <Link
               href="/hire-me"
-              onMouseEnter={() => playHover()}
               className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-start justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group pt-2.5 sm:pt-3.5"
             >
               <span className="font-gilroyRegular text-[10px] sm:text-xs font-medium text-slate-800 capitalize tracking-normal px-1 transition-transform group-hover:scale-105">
@@ -181,4 +165,3 @@ export function Hero() {
     </section>
   );
 }
-
