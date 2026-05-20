@@ -66,6 +66,71 @@ function Highlight({ children, boxed = true }: HighlightProps) {
   );
 }
 
+/** Inline keyword: turns into a syntax-highlighted code snippet on hover */
+function CodeKeyword({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.span
+      className="relative inline-block cursor-crosshair font-medium text-[#2a4756] group"
+      whileHover="hovered"
+      initial="idle"
+    >
+      {/* Hover pill */}
+      <motion.span
+        className="absolute -inset-x-2 -inset-y-1 rounded-md bg-[#1e293b] z-0 pointer-events-none"
+        variants={{ idle: { opacity: 0, scale: 0.92 }, hovered: { opacity: 1, scale: 1 } }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+      />
+      {/* Normal text (fades out) */}
+      <motion.span
+        className="relative z-10"
+        variants={{ idle: { opacity: 1 }, hovered: { opacity: 0 } }}
+        transition={{ duration: 0.12 }}
+      >
+        {children}
+      </motion.span>
+      {/* Mono code text (fades in) */}
+      <motion.span
+        className="absolute inset-0 flex items-center justify-center z-10 font-mono text-[#4ade80] text-[0.85em] whitespace-nowrap"
+        variants={{ idle: { opacity: 0 }, hovered: { opacity: 1 } }}
+        transition={{ duration: 0.18, delay: 0.06 }}
+        aria-hidden
+      >
+        {'<'}{children}{' />'}
+      </motion.span>
+    </motion.span>
+  );
+}
+
+/** Inline keyword: reveals a faint architectural grid on hover */
+function DesignEngineeringKeyword({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.span
+      className="relative inline-block cursor-default font-medium text-[#2a4756] px-1 z-10"
+      whileHover="hovered"
+      initial="idle"
+    >
+      {/* Grid bg */}
+      <motion.span
+        className="absolute -inset-x-3 -inset-y-2 rounded pointer-events-none z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right,#2a475614 1px,transparent 1px),linear-gradient(to bottom,#2a475614 1px,transparent 1px)",
+          backgroundSize: "6px 6px",
+        }}
+        variants={{ idle: { opacity: 0, scale: 0.88 }, hovered: { opacity: 1, scale: 1.08 } }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+      />
+      {/* Highlight underline */}
+      <motion.span
+        className="absolute bottom-0 left-0 h-[2px] bg-[#a2f991] rounded-full pointer-events-none z-0"
+        variants={{ idle: { width: "0%", opacity: 0 }, hovered: { width: "100%", opacity: 1 } }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+      />
+      <span className="relative z-10">{children}</span>
+    </motion.span>
+  );
+}
+
 function StoryContent() {
   return (
     <div className={STORY_BODY_CLASS}>
@@ -81,14 +146,18 @@ function StoryContent() {
         and composition never left, it just shifted from camera lenses to digital interfaces.
       </p>
       <p>
-        Naturally, I ended up learning how to code and went for a{" "}
+        Naturally, I ended up learning how to{" "}
+        <CodeKeyword>code</CodeKeyword>{" "}and went for a{" "}
         <Highlight>B.Tech degree</Highlight>. But during my final year, I realized I cared way more
         about UX choices and people than just pure coding. I found myself focusing on why someone
         would use a feature and how it actually felt to use it, rather than just writing hidden
         backend logic.
       </p>
       <p>
-        That&apos;s why I love the middle ground of <Highlight>design engineering</Highlight>. I
+        That&apos;s why I love the middle ground of{" "}
+        <DesignEngineeringKeyword>
+          <Highlight>design engineering</Highlight>
+        </DesignEngineeringKeyword>. I
         make sure the creative vision never gets lost in the engineering cycle. I design digital
         products for people, and use code as the medium to bring them to life. I just want to build
         simple, beautiful digital products that make sense to the people using them.
