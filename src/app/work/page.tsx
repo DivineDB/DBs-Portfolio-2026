@@ -33,7 +33,12 @@ export default function WorkPage() {
           </motion.p>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0, duration: 0.5, ease: "easeOut" }}
+          className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50"
+        >
           <span className="font-gilroyBold text-xs tracking-[0.2em] uppercase">Scroll Down</span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
@@ -42,7 +47,7 @@ export default function WorkPage() {
           >
             <ArrowDown size={18} strokeWidth={1.5} />
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Featured Project 1: Scout */}

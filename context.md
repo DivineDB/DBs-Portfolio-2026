@@ -1,6 +1,6 @@
 # Portfolio State (@context.md)
 
-## Phase: 5 — Rebuilt "Minimalist Editorial" Landing Page (Awwwards-level)
+## Phase: 6 — Hire Me page overhauled to premium bento-box layout
 
 ## Stack
 
@@ -28,12 +28,15 @@
 
 ## Other routes / components
 
-- **Hire Me page (`src/app/hire-me/page.tsx`)**: Full-screen snap-scrolling “Hire Me” pitch page that inherits **all** visual tokens from the About page (`bg-bg`, `text-text_primary`, `bg-accent_highlight`, Gilroy fonts).
-  - **Scroll architecture**: `h-screen w-full overflow-y-scroll snap-y snap-mandatory`; each major section is `h-screen snap-start snap-always … justify-center`; scrollbars hidden via `.no-scrollbar` utility.
-  - **Scroll indicator**: Uses the same bottom-center “Scroll Down” + bouncing `ArrowDown` pattern as About.
-  - **Highlight**: Introduced `HighlightBox` (`src/components/hire-me/highlight-box.tsx`) for thick marker-style highlights (applied to “Hire me!”, “Tech Stack”, “hire me?”, “Preferences”).
-  - **Hero interactions**: Resume download + hover “View PDF” preview card (Framer Motion `AnimatePresence`); Calendly scheduling via `react-calendly` `PopupModal` (no iframe instructions).
-  - **Content**: Sections include Tech Stack grid (hover glow/scale), “Why hire me” bullets, Preferences grid, and a footer snap section with About-style dashed border.
+- **Hire Me page (`src/app/hire-me/page.tsx`)**: Fully overhauled recruiter-facing page. Plain block layout with `h-screen` sections (no snap-scroll). Inherits all design tokens (`bg-bg`, `text-text_primary`, `bg-accent_highlight`, Gilroy).
+  - **Hero CTA row** (`flex flex-wrap gap-4 items-center mt-8`): Three buttons — **Download Resume** (`<a download>`, solid `bg-accent_highlight`), **Copy Link** (`motion.button`, `whileTap` spring only, fixed `w-[140px]` prevents layout shift on “Copied!” swap via `AnimatePresence`), **Contact** (`<a mailto:>`, outline style). No `whileHover` scale anywhere — CSS `transition-colors duration-300` only.
+  - **Bento Tech Stack** (`grid grid-cols-1 md:grid-cols-2 gap-6`): 4 category cards with inline dot-grid SVG background + `bg-[#F8EDD1]/80` overlay. Tools as list rows (icon + label). Each `motion.li`: `whileHover={{ y: -2, opacity: 1, filter: 'grayscale(0)' }} initial={{ opacity: 0.7, filter: 'grayscale(1)' }}`.
+    - Frontend Development: Next.js, React.js, Tailwind CSS, HTML5/CSS3
+    - Design & Strategy: Figma, Rive, Framer, Information Architecture
+    - Core Languages: TypeScript, JavaScript ES6+
+    - Data & AI Systems: PostgreSQL, Groq, Serper.dev, Next.js API
+  - **Closing hook** (above `<PageFooter />`): `flex justify-center py-32`. Words split into `motion.span` inside `whileHover="hover"` parent. `rest: { y:0, color: slate-500 }` → `hover: { y:-6, color: var(--color-highlight), spring bounce:0.6, stagger:0.05s }`. Typography: `font-gilroyRegular text-lg md:text-xl tracking-wide text-slate-500` — non-bold, visually subordinate.
+  - **Preserved sections**: “Why hire me?” staggered bullet list, Preferences 2-col grid, `<PageFooter />`.
 
 ## Phase 4 — Global Command Palette & Interactive Keywords
 
@@ -49,8 +52,9 @@
 
 ## Next
 
-- Verify `other-things` page animations and hover states in dev server.
-- Ensure git staging tracks new/changed files: `other-things/page.tsx`, `PageFooter.tsx`, `CommandPalette.tsx`, `context.md`.
+- Review `other-things` page animations in dev server.
+- Audit `hire-me` on mobile — bento grid collapses to 1-col, verify dot-grid texture at small sizes.
+- Git stage: `hire-me/page.tsx`, `context.md`.
 
 # AI Skill: Emil Kowalski UI & Animation Guidelines
 
