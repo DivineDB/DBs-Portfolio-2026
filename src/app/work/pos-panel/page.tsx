@@ -4,11 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
+import PageFooter from "@/components/PageFooter";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-type ViewMode = "designer" | "developer";
-
-// Custom GitHub icon component (Lucide path SVG)
+// Custom GitHub icon component
 function GithubIcon({ size = 15, className }: { size?: number; className?: string }) {
   return (
     <svg
@@ -29,7 +27,7 @@ function GithubIcon({ size = 15, className }: { size?: number; className?: strin
   );
 }
 
-// ─── Static data extracted from GitHub repo ───────────────────────────────────
+// ─── Static metadata ──────────────────────────────────────────────────────────
 const META = {
   role: "Design Engineer",
   timeline: "Apr 2026 → May 2026",
@@ -40,137 +38,7 @@ const META = {
   stars: 1,
 };
 
-// ─── Content blocks ───────────────────────────────────────────────────────────
-const DESIGNER_CONTENT = [
-  {
-    id: "tldr",
-    label: "TL;DR",
-    text: "SSG Store is a high-density, touch-first cashier console custom-built to maximize order throughput and minimize visual strain during long checkout shifts.",
-  },
-  {
-    id: "challenge",
-    label: "UX Challenge: Cash Register Friction",
-    text: "In fast-paced retail checkout environments, operators cannot afford layout shifts, deep hierarchical menus, or laggy feedback. The challenge was building an integrated workspace aggregating catalog browsing, cart operations, pricing math, and receipt printing without visual clutter.",
-  },
-  {
-    id: "grid",
-    label: "Locked-Grid Architecture & Color-Coded Tiles",
-    text: "Designed an asymmetric dashboard layout utilizing color-coded tiles (Brand Mint, Rose, Blue, and Lavender) that act as distinct visual landmarks. Active items feature dark, high-contrast text over soft pastel backgrounds to guide cashier focus. Active touch boundaries are constrained to a safe 48x48px target zone for error-free input.",
-  },
-  {
-    id: "contrast",
-    label: "Optic Relief System & Micro-Animations",
-    text: "To combat fatigue over 8+ hour shifts, we built a dark theme utilizing deep carbon backgrounds, raised panel surfaces, and subtle charcoal borders. Custom thin scrollbars limit clutter, and snappy micro-animations (page transitions over 300ms, hover translation over 200ms) keep the console feeling hyper-responsive.",
-  },
-];
-
-const DEVELOPER_CONTENT = [
-  {
-    id: "tldr",
-    label: "TL;DR",
-    text: "An offline-tolerant, reactive terminal featuring client-side computation engines and an optimized caching layer to safeguard database throughput.",
-  },
-  {
-    id: "difficulty",
-    label: "Tech Challenge: Database Saturation & Network Dropouts",
-    text: "In traditional architectures, performing server roundtrips to compute shopping totals or register inventory changes on every cart update creates huge lag. Dips in internet connectivity freeze the entire cashier station, causing queues and customer frustration.",
-  },
-  {
-    id: "workaround",
-    label: "Offline-First State & Local Sync",
-    text: "Decoupled transaction mechanics by standardizing operations inside Zustand store slices. All transaction mathematics (wholesale/retail pricing, GST tier rules, flat discounts) are computed locally client-side in under 1.5ms. Order records sync to Supabase database transaction pipelines asynchronously in the background.",
-  },
-  {
-    id: "pdf",
-    label: "Offline PDF Generator & Cache",
-    text: "Built a client-side in-memory cache that locks product catalog metadata for 5 minutes, yielding an 80% reduction in database read traffic. Implemented a direct browser-based jsPDF pipeline that constructs and streams thermal receipts locally, ensuring cashiers can print invoices even during complete internet blackouts.",
-  },
-];
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function PerspectiveToggle({
-  viewMode,
-  onChange,
-}: {
-  viewMode: ViewMode;
-  onChange: (m: ViewMode) => void;
-}) {
-  return (
-    <div
-      className="relative flex items-center gap-1 rounded-full p-1"
-      style={{
-        background: "rgba(42,71,86,0.06)",
-        border: "1px solid rgba(42,71,86,0.1)",
-      }}
-      role="tablist"
-      aria-label="Perspective toggle"
-    >
-      {(["designer", "developer"] as ViewMode[]).map((mode) => (
-        <button
-          key={mode}
-          id={`toggle-${mode}`}
-          role="tab"
-          aria-selected={viewMode === mode}
-          onClick={() => onChange(mode)}
-          className="relative z-10 px-5 py-2 text-sm font-gilroyBold capitalize tracking-wide transition-colors duration-200 rounded-full cursor-pointer focus:outline-none"
-          style={{
-            color: viewMode === mode ? "#2a4756" : "rgba(42,71,86,0.4)",
-          }}
-        >
-          {/* Animated pill background */}
-          {viewMode === mode && (
-            <motion.span
-              layoutId="perspective-pill"
-              className="absolute inset-0 rounded-full"
-              style={{ background: "#A2F991" }}
-              transition={{
-                type: "spring",
-                bounce: 0.2,
-                duration: 0.6,
-              }}
-            />
-          )}
-          <span className="relative z-10">{mode}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ContentBlock({
-  label,
-  text,
-  index,
-}: {
-  label: string;
-  text: string;
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col gap-2 border-l-2 pl-4"
-      style={{ borderColor: "rgba(162,249,145,0.5)" }}
-    >
-      <span
-        className="text-xs font-gilroyBold uppercase tracking-widest"
-        style={{ color: "rgba(42,71,86,0.45)" }}
-      >
-        {label}
-      </span>
-      <p
-        className="text-base leading-relaxed font-satoshi"
-        style={{ color: "rgba(42,71,86,0.82)" }}
-      >
-        {text}
-      </p>
-    </motion.div>
-  );
-}
-
+// ─── Interactive UI Placeholders ──────────────────────────────────────────────
 function ScreenPlaceholder({ label }: { label: string }) {
   if (label === "High-Density Grid") {
     return (
@@ -180,7 +48,7 @@ function ScreenPlaceholder({ label }: { label: string }) {
           aspectRatio: "16/10",
           background: "#08090a",
           border: "1px solid rgba(166,231,199,0.08)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         {/* Fake POS grid interface */}
@@ -246,7 +114,7 @@ function ScreenPlaceholder({ label }: { label: string }) {
           aspectRatio: "16/10",
           background: "#08090a",
           border: "1px solid rgba(166,231,199,0.08)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         {/* Fake Cart summary layout */}
@@ -289,7 +157,7 @@ function ScreenPlaceholder({ label }: { label: string }) {
     );
   }
 
-  // Fallback / default placeholder (Checkout Analytics or Bill Print)
+  // Fallback / Bill Print
   return (
     <div
       className="relative w-full overflow-hidden rounded-xl"
@@ -297,7 +165,7 @@ function ScreenPlaceholder({ label }: { label: string }) {
         aspectRatio: "16/10",
         background: "#08090a",
         border: "1px solid rgba(166,231,199,0.08)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+        boxShadow: "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
       }}
     >
       <div
@@ -333,129 +201,113 @@ function ScreenPlaceholder({ label }: { label: string }) {
           <span>ONLINE MODE</span>
         </div>
       </div>
-      {/* Label overlay */}
-      <div className="absolute bottom-3 right-3">
-        <span
-          className="text-[9px] font-gilroyBold uppercase tracking-widest px-2 py-1 rounded"
-          style={{ background: "rgba(166,231,199,0.08)", color: "rgba(166,231,199,0.4)" }}
-        >
-          {label}
-        </span>
-      </div>
     </div>
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function POSCaseStudy() {
-  const [viewMode, setViewMode] = useState<ViewMode>("designer");
-
-  const content = viewMode === "designer" ? DESIGNER_CONTENT : DEVELOPER_CONTENT;
+  const [activeShowcaseTab, setActiveShowcaseTab] = useState<"grid" | "pastels" | "relief" | "animations">("grid");
 
   return (
     <main
       className="min-h-screen w-full font-gilroyRegular selection:bg-accent_highlight selection:text-text_primary"
       style={{ background: "#f8edd1" }}
     >
-      {/* ── Back nav ── */}
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12 pt-10">
-        <Link
-          href="/work"
-          className="group inline-flex items-center gap-2 text-sm font-gilroyBold transition-colors"
-          style={{ color: "rgba(42,71,86,0.5)" }}
-        >
-          <ArrowLeft
-            size={15}
-            className="transition-transform group-hover:-translate-x-1"
-          />
-          Selected Work
-        </Link>
+      {/* ── Sticky back nav ── */}
+      <div
+        className="sticky top-0 z-50 w-full px-6 py-4"
+        style={{
+          background: "rgba(248,237,209,0.85)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(42,71,86,0.08)",
+        }}
+      >
+        <div className="mx-auto max-w-[800px]">
+          <Link
+            href="/work"
+            className="group inline-flex items-center gap-2 text-sm font-gilroyBold transition-colors"
+            style={{ color: "rgba(42,71,86,0.5)" }}
+          >
+            <ArrowLeft
+              size={15}
+              className="transition-transform group-hover:-translate-x-1"
+            />
+            Selected Work
+          </Link>
+        </div>
       </div>
 
-      {/* ── Split-screen layout ── */}
-      <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-
-        {/* ════════════ LEFT COLUMN ════════════ */}
-        <div className="lg:col-span-5 lg:sticky lg:top-12 flex flex-col gap-8">
-
-          {/* Project identity */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-3"
+      {/* ── Article content ── */}
+      <div className="mx-auto max-w-[800px] px-6 py-12 flex flex-col gap-10">
+        
+        {/* Project Header Identity */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-3"
+        >
+          <p
+            className="text-xs font-gilroyBold uppercase tracking-[0.2em]"
+            style={{ color: "rgba(42,71,86,0.4)" }}
           >
-            <p
-              className="text-xs font-gilroyBold uppercase tracking-[0.2em]"
-              style={{ color: "rgba(42,71,86,0.4)" }}
-            >
-              Retail Dashboard · 2026
-            </p>
-            <h1
-              className="font-gilroyBold text-6xl md:text-7xl tracking-tight leading-none"
-              style={{ color: "#2a4756" }}
-            >
-              POS Panel
-            </h1>
-            <p
-              className="text-lg font-satoshi leading-relaxed"
-              style={{ color: "rgba(42,71,86,0.65)" }}
-            >
-              A high-density retail point-of-sale console. Tactile grids. Offline resiliency. Engineered to eliminate input lag and visual noise.
-            </p>
-          </motion.div>
-
-          {/* Screenshots / Visual Placeholder */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-3"
+            Retail Dashboard · 2026
+          </p>
+          <h1
+            className="font-gilroyBold text-6xl md:text-7xl tracking-tight leading-none"
+            style={{ color: "#2a4756" }}
           >
-            <ScreenPlaceholder label="High-Density Grid" />
-            <div className="grid grid-cols-2 gap-3">
-              <ScreenPlaceholder label="Active Checkout Cart" />
-              <ScreenPlaceholder label="Bill Printer" />
+            POS Panel
+          </h1>
+          <p
+            className="text-lg font-satoshi leading-relaxed mt-2"
+            style={{ color: "rgba(42,71,86,0.65)" }}
+          >
+            A touch-first retail checkout console designed for optimal throughput, offline resilience, and muscle memory.
+          </p>
+        </motion.div>
+
+        {/* Project Meta Metrics Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y"
+          style={{ borderColor: "rgba(42,71,86,0.12)" }}
+        >
+          {[
+            { label: "Role", value: META.role },
+            { label: "Timeline", value: META.timeline },
+            { label: "Language", value: META.language },
+            { label: "Stars", value: `★ ${META.stars}` },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col gap-0.5">
+              <span
+                className="text-[10px] font-gilroyBold uppercase tracking-widest"
+                style={{ color: "rgba(42,71,86,0.35)" }}
+              >
+                {label}
+              </span>
+              <span
+                className="text-sm font-gilroyBold"
+                style={{ color: "rgba(42,71,86,0.75)" }}
+              >
+                {value}
+              </span>
             </div>
-          </motion.div>
+          ))}
+        </motion.div>
 
-          {/* Meta grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-2 gap-4"
-          >
-            {[
-              { label: "Role", value: META.role },
-              { label: "Timeline", value: META.timeline },
-              { label: "Language", value: META.language },
-              { label: "Stars", value: `★ ${META.stars}` },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex flex-col gap-0.5">
-                <span
-                  className="text-[10px] font-gilroyBold uppercase tracking-widest"
-                  style={{ color: "rgba(42,71,86,0.35)" }}
-                >
-                  {label}
-                </span>
-                <span
-                  className="text-sm font-gilroyBold"
-                  style={{ color: "rgba(42,71,86,0.75)" }}
-                >
-                  {value}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Stack tags */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-2"
-          >
+        {/* Tags Stack and Action Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-6"
+        >
+          <div className="flex flex-wrap gap-2 max-w-[500px]">
             {META.stack.map((tag) => (
               <span
                 key={tag}
@@ -469,318 +321,465 @@ export default function POSCaseStudy() {
                 {tag}
               </span>
             ))}
-          </motion.div>
+          </div>
 
-          {/* CTA buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row gap-3"
-          >
-            {/* Primary glassmorphic GitHub button */}
+          <div className="flex gap-3">
             <a
               href={META.github}
               target="_blank"
               rel="noopener noreferrer"
-              id="pos-github-cta"
-              className="group flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl text-sm font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex-1 sm:flex-initial"
+              className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: "rgba(5,5,5,0.88)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
                 border: "1px solid rgba(166,231,199,0.2)",
                 color: "#e8f5e9",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(166,231,199,0.08)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
               }}
             >
-              <GithubIcon size={15} className="transition-transform group-hover:rotate-6" />
-              View on GitHub
-              <span
-                className="ml-auto opacity-40 group-hover:opacity-70 group-hover:translate-x-0.5 transition-all text-xs"
-              >
-                ↗
-              </span>
+              <GithubIcon size={14} className="transition-transform group-hover:rotate-6" />
+              GitHub ↗
             </a>
-
-            {/* Secondary: Live demo */}
             <a
               href={META.live}
               target="_blank"
               rel="noopener noreferrer"
-              id="pos-live-cta"
-              className="group flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl text-sm font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex-1 sm:flex-initial"
+              className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: "rgba(166,231,199,0.12)",
                 border: "1px solid rgba(166,231,199,0.3)",
                 color: "#2a4756",
-                boxShadow: "0 2px 12px rgba(166,231,199,0.1)",
               }}
             >
-              <ExternalLink size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ExternalLink size={13} />
               Live Demo
             </a>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
 
-        {/* ════════════ RIGHT COLUMN — The Breakdown ════════════ */}
-        <div className="lg:col-span-7 flex flex-col gap-8">
+        {/* Narrative Flow */}
+        <div className="flex flex-col gap-12 mt-8 font-satoshi text-base leading-relaxed text-slate-800">
+          
+          {/* TLDR / Brief */}
+          <section className="flex flex-col gap-2 border-l-2 pl-4" style={{ borderColor: "rgba(162,249,145,0.5)" }}>
+            <span className="text-[10px] font-gilroyBold uppercase tracking-widest text-[#2a4756]/50">Summary</span>
+            <p className="text-lg text-[#2a4756] font-gilroyBold leading-snug">
+              SSG Store is a high-density, touch-first cashier console custom-built to maximize order throughput and minimize visual strain during long checkout shifts.
+            </p>
+          </section>
 
-          {/* Header + Toggle */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-6 pt-1"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h2
-                className="font-gilroyBold text-2xl"
-                style={{ color: "#2a4756" }}
-              >
-                The Breakdown
-              </h2>
-              <PerspectiveToggle viewMode={viewMode} onChange={setViewMode} />
+          {/* Section 1: The Challenge */}
+          <section className="flex flex-col gap-4">
+            <h2 className="text-xl font-gilroyBold text-[#2a4756]">UX Challenge: Cash Register Friction</h2>
+            <p>
+              In fast-paced retail checkout environments, operators cannot afford layout shifts, deep hierarchical menus, or laggy feedback. The challenge was building an integrated workspace aggregating catalog browsing, cart operations, pricing math, and receipt printing without visual clutter.
+            </p>
+          </section>
+
+          {/* Section 2: Locked Grid Spatial System */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-gilroyBold text-[#2a4756]">01. Locked-Grid Spatial System</h2>
+              <p>
+                Unlike fluid web layouts, a Point of Sale (POS) terminal requires constant grid alignment. The checkout panel uses a locked, asymmetric grid that never shifts during operation.
+              </p>
+              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
+                <li>
+                  <strong className="text-slate-900">Fixed Coordinates:</strong> Anchors the Product Catalog, Active Cart, and Checkout Summary in absolute visual positions to build cashier muscle memory.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Touch-Safe Targets:</strong> Buttons, item tiles, and cart controls are constrained to a minimum bounding box of <strong>48x48 pixels</strong> to prevent misaligned taps.
+                </li>
+              </ul>
             </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
+                Workflow Visual: Grid Layout Mockup
+              </span>
+              <ScreenPlaceholder label="High-Density Grid" />
+            </div>
+          </section>
 
-            {/* Divider */}
-            <div style={{ height: 1, background: "rgba(42,71,86,0.08)" }} />
-          </motion.div>
+          {/* Section 3: Color-Coded Pastels & Landmark Grids */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+            <div className="md:order-2 flex flex-col gap-4">
+              <h2 className="text-xl font-gilroyBold text-[#2a4756]">02. Pastel Landmarking</h2>
+              <p>
+                Instead of raw, saturated colors that cause optic fatigue during long shifts, the POS Panel employs a system of soft, high-contrast pastels:
+              </p>
+              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
+                <li>
+                  <strong className="text-slate-900">Brand Mint:</strong> Highlights active state items and primary checkouts.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Rose Pastel:</strong> Signals low stock, errors, or supervisor approvals.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Blue & Lavender Slate:</strong> Segregates categories (e.g. food, drinks) to speed up navigation.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Active Ink:</strong> Dark, high-contrast typography layered over pastel tiles to remain readable under varied lighting.
+                </li>
+              </ul>
+            </div>
+            <div className="md:order-1 flex flex-col gap-2">
+              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
+                Workflow Visual: Checkout Cart Grid
+              </span>
+              <ScreenPlaceholder label="Active Checkout Cart" />
+            </div>
+          </section>
 
-          {/* Dynamic content — AnimatePresence crossfade */}
-          <AnimatePresence mode="wait">
+          {/* Section 4: Zustand Offline State & Sync */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-gilroyBold text-[#2a4756]">03. State Lifecycle & Offline Resilience</h2>
+              <p>
+                Traditional architectures make database requests to compute totals, causing register lag. SSG Store decouples transactions via client-side Zustand store slices.
+              </p>
+              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
+                <li>
+                  <strong className="text-slate-900">Zustand Slices:</strong> Computes tax, wholesale pricing, and discounts locally in under <strong>1.5ms</strong>.
+                </li>
+                <li>
+                  <strong className="text-slate-900">Async Queue Sync:</strong> Transactions write to Supabase asynchronously in the background, allowing terminal operations during connection dropouts.
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
+                Workflow Diagram: Transaction Lifecycle
+              </span>
+              <div
+                className="rounded-2xl p-5 flex flex-col gap-4"
+                style={{
+                  background: "rgba(5,5,5,0.92)",
+                  border: "1px solid rgba(166,231,199,0.1)",
+                  boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
+                }}
+              >
+                <p className="text-[9px] font-gilroyBold uppercase tracking-[0.18em] text-[#a6e7c7]/60">
+                  Checkout Lifecycle
+                </p>
+                {[
+                  {
+                    stage: "01",
+                    name: "Zustand Local Stage",
+                    desc: "Instant cart mutation & computational math (<1.5ms)",
+                    color: "rgba(166,231,199,0.9)",
+                  },
+                  {
+                    stage: "02",
+                    name: "Direct jsPDF Construct",
+                    desc: "Render vector print stream directly in browser (0 dependencies)",
+                    color: "rgba(166,231,199,0.6)",
+                  },
+                  {
+                    stage: "03",
+                    name: "Supabase Queue Push",
+                    desc: "Parallel write for order logs & sales history aggregation",
+                    color: "rgba(166,231,199,0.4)",
+                  },
+                  {
+                    stage: "04",
+                    name: "Database Edge Trigger",
+                    desc: "Stock adjustments & proactive low-stock system alerts",
+                    color: "rgba(166,231,199,0.25)",
+                  },
+                ].map((step, i) => (
+                  <div key={step.stage} className="flex items-start gap-3">
+                    <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-gilroyBold"
+                        style={{
+                          background: `${step.color}15`,
+                          border: `1px solid ${step.color}35`,
+                          color: step.color,
+                        }}
+                      >
+                        {step.stage}
+                      </div>
+                      {i < 3 && (
+                        <div
+                          className="w-px h-6"
+                          style={{
+                            background: `linear-gradient(to bottom, ${step.color}25, transparent)`,
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-xs font-gilroyBold" style={{ color: step.color }}>{step.name}</span>
+                      <span className="text-[10px] text-white/40">{step.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Section 5: jsPDF Local Print */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+            <div className="md:order-2 flex flex-col gap-4">
+              <h2 className="text-xl font-gilroyBold text-[#2a4756]">04. In-Memory Cache & Thermal Receipts</h2>
+              <p>
+                To safeguard the register from complete network outages, a local thermal receipt printer workflow runs entirely client-side.
+              </p>
+              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
+                <li>
+                  <strong className="text-slate-900">Local jsPDF Pipeline:</strong> Constructs and streams invoice vector graphics locally, enabling checkout receipts during full internet dropouts.
+                </li>
+                <li>
+                  <strong className="text-slate-900">5-Min Catalog Cache:</strong> Locks metadata catalog records in memory, reducing database read load by 80% to protect supabase infrastructure during peak traffic hours.
+                </li>
+              </ul>
+            </div>
+            <div className="md:order-1 flex flex-col gap-2">
+              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
+                Workflow Visual: Thermal Receipt Streamer
+              </span>
+              <ScreenPlaceholder label="Bill Printer" />
+            </div>
+          </section>
+
+          {/* Section 6: Specifications Panel Reference */}
+          <section className="border-t pt-10 flex flex-col gap-6" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl font-gilroyBold text-[#2a4756]">System Specifications Reference</h2>
+              <p className="text-sm text-slate-600">
+                Direct reference specifications detailing terminal interactive configurations, touch target parameters, and optic refresh systems.
+              </p>
+            </div>
+            
+            {/* Interactive design showcase component */}
             <motion.div
-              key={viewMode}
+              key="design-tokens"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col gap-7"
+              className="rounded-2xl p-6 flex flex-col gap-6"
+              style={{
+                background: "rgba(10,18,22,0.95)",
+                border: "1px solid rgba(166,231,199,0.15)",
+                boxShadow: "0 20px 50px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
+              }}
             >
-              {content.map((block, i) => (
-                <ContentBlock
-                  key={block.id}
-                  label={block.label}
-                  text={block.text}
-                  index={i}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+              <div className="flex items-center justify-between">
+                <p
+                  className="text-[10px] font-gilroyBold uppercase tracking-[0.2em]"
+                  style={{ color: "#a6e7c7" }}
+                >
+                  Design Element System Showcase
+                </p>
+                <span className="text-[9px] font-gilroyBold uppercase tracking-widest px-2 py-0.5 rounded" style={{ background: "rgba(166,231,199,0.1)", color: "#a6e7c7" }}>
+                  Tactile POS
+                </span>
+              </div>
 
-          {/* ── Contextual technical visual ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <AnimatePresence mode="wait">
-              {viewMode === "developer" ? (
-                <motion.div
-                  key="arch-diagram"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.32 }}
-                  className="rounded-2xl p-6 flex flex-col gap-5"
-                  style={{
-                    background: "rgba(5,5,5,0.92)",
-                    border: "1px solid rgba(166,231,199,0.1)",
-                    boxShadow: "0 16px 48px rgba(0,0,0,0.2)",
-                  }}
-                >
-                  <p
-                    className="text-[10px] font-gilroyBold uppercase tracking-[0.18em]"
-                    style={{ color: "rgba(166,231,199,0.5)" }}
+              {/* Grid visualizers */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Visual 1 */}
+                <div className="flex flex-col gap-3">
+                  <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    Landmark Tile Matrix (48px Touch Zones)
+                  </span>
+                  <motion.div 
+                    className="grid grid-cols-2 gap-2.5 p-3 bg-black/40 rounded-xl border h-44 justify-center items-center transition-all duration-300"
+                    animate={{
+                      borderColor: (activeShowcaseTab === "grid" || activeShowcaseTab === "pastels") ? "rgba(166,231,199,0.3)" : "rgba(255,255,255,0.05)"
+                    }}
                   >
-                    Checkout Lifecycle
-                  </p>
-                  {/* Architecture flow */}
-                  {[
-                    {
-                      stage: "01",
-                      name: "Zustand Local Stage",
-                      desc: "Instant cart mutation & computational math (<1.5ms)",
-                      color: "rgba(166,231,199,0.9)",
-                    },
-                    {
-                      stage: "02",
-                      name: "Direct jsPDF Construct",
-                      desc: "Render vector print stream directly in browser (0 dependencies)",
-                      color: "rgba(166,231,199,0.6)",
-                    },
-                    {
-                      stage: "03",
-                      name: "Supabase Queue Push",
-                      desc: "Parallel write for order logs & sales history aggregation",
-                      color: "rgba(166,231,199,0.4)",
-                    },
-                    {
-                      stage: "04",
-                      name: "Database Edge Trigger",
-                      desc: "Stock adjustments & proactive low-stock system alerts",
-                      color: "rgba(166,231,199,0.25)",
-                    },
-                  ].map((step, i) => (
-                    <div key={step.stage} className="flex items-start gap-4">
-                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                        <div
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-gilroyBold"
-                          style={{
-                            background: `${step.color}18`,
-                            border: `1px solid ${step.color}40`,
-                            color: step.color,
-                          }}
-                        >
-                          {step.stage}
-                        </div>
-                        {i < 3 && (
-                          <div
-                            className="w-px h-8"
-                            style={{
-                              background: `linear-gradient(to bottom, ${step.color}30, transparent)`,
-                            }}
-                          />
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-0.5 pt-0.5">
-                        <span
-                          className="text-sm font-gilroyBold"
-                          style={{ color: step.color }}
-                        >
-                          {step.name}
-                        </span>
-                        <span
-                          className="text-xs font-satoshi"
-                          style={{ color: "rgba(255,255,255,0.3)" }}
-                        >
-                          {step.desc}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="design-tokens"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.32 }}
-                  className="rounded-2xl p-6 flex flex-col gap-6"
-                  style={{
-                    background: "rgba(10,18,22,0.95)",
-                    border: "1px solid rgba(166,231,199,0.15)",
-                    boxShadow: "0 20px 50px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <p
-                      className="text-[10px] font-gilroyBold uppercase tracking-[0.2em]"
-                      style={{ color: "#a6e7c7" }}
+                    <motion.div 
+                      className="rounded-lg flex flex-col justify-between p-2 h-16 cursor-pointer" 
+                      style={{ background: "#a6e7c7", color: "#1a2f25" }}
+                      animate={{
+                        scale: activeShowcaseTab === "grid" ? 1.04 : 1,
+                        boxShadow: activeShowcaseTab === "pastels" ? "0 0 12px rgba(166,231,199,0.5)" : "none",
+                        y: activeShowcaseTab === "animations" ? [0, -3, 0] : 0
+                      }}
+                      transition={{ y: { repeat: Infinity, duration: 1.5, delay: 0 } }}
                     >
-                      Design Element System Showcase
-                    </p>
-                    <span className="text-[9px] font-gilroyBold uppercase tracking-widest px-2 py-0.5 rounded" style={{ background: "rgba(166,231,199,0.1)", color: "#a6e7c7" }}>
-                      Tactile POS
-                    </span>
-                  </div>
+                      <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Active</span>
+                      <span className="text-[10px] font-gilroyBold leading-none">Brand Mint</span>
+                    </motion.div>
 
-                  {/* Dual Grid: Landmark Keypad & Contrast Hierarchy */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Visual 1: Landmark Color Grid */}
-                    <div className="flex flex-col gap-3">
-                      <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
-                        Landmark Tile Matrix (48px Touch Zones)
-                      </span>
-                      <div className="grid grid-cols-2 gap-2.5 p-3 bg-black/40 rounded-xl border border-white/5 h-44 justify-center">
-                        <div className="rounded-lg flex flex-col justify-between p-2 h-16 transition-transform hover:scale-105 cursor-pointer" style={{ background: "#a6e7c7", color: "#1a2f25" }}>
-                          <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Active</span>
-                          <span className="text-[10px] font-gilroyBold leading-none">Brand Mint</span>
-                        </div>
-                        <div className="rounded-lg flex flex-col justify-between p-2 h-16 transition-transform hover:scale-105 cursor-pointer" style={{ background: "#fbc4c5", color: "#3d1f20" }}>
-                          <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Alert</span>
-                          <span className="text-[10px] font-gilroyBold leading-none">Rose Pastel</span>
-                        </div>
-                        <div className="rounded-lg flex flex-col justify-between p-2 h-16 transition-transform hover:scale-105 cursor-pointer" style={{ background: "#abcbf4", color: "#1a2535" }}>
-                          <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Regular</span>
-                          <span className="text-[10px] font-gilroyBold leading-none">Blue Slate</span>
-                        </div>
-                        <div className="rounded-lg flex flex-col justify-between p-2 h-16 transition-transform hover:scale-105 cursor-pointer" style={{ background: "#d1c4e9", color: "#251a3a" }}>
-                          <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Special</span>
-                          <span className="text-[10px] font-gilroyBold leading-none">Lavender</span>
-                        </div>
-                      </div>
-                    </div>
+                    <motion.div 
+                      className="rounded-lg flex flex-col justify-between p-2 h-16 cursor-pointer" 
+                      style={{ background: "#fbc4c5", color: "#3d1f20" }}
+                      animate={{
+                        scale: activeShowcaseTab === "grid" ? 1.04 : 1,
+                        boxShadow: activeShowcaseTab === "pastels" ? "0 0 12px rgba(251,196,197,0.5)" : "none",
+                        y: activeShowcaseTab === "animations" ? [0, -3, 0] : 0
+                      }}
+                      transition={{ y: { repeat: Infinity, duration: 1.5, delay: 0.3 } }}
+                    >
+                      <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Alert</span>
+                      <span className="text-[10px] font-gilroyBold leading-none">Rose Pastel</span>
+                    </motion.div>
 
-                    {/* Visual 2: Optic Relief Layering */}
-                    <div className="flex flex-col gap-3">
-                      <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
-                        Contrast & Structure
-                      </span>
-                      <div className="flex flex-col gap-2.5 p-3.5 bg-black/40 rounded-xl border border-white/5 h-44 justify-center">
-                        {/* Contrast demo row */}
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[8px] font-gilroyBold text-white/30 uppercase tracking-widest">Base Canvas</span>
-                          <div className="h-6 rounded bg-[#262626] border border-white/5 flex items-center px-2">
-                            <span className="text-[9px] text-white/50">Carbon Canvas</span>
-                          </div>
-                        </div>
+                    <motion.div 
+                      className="rounded-lg flex flex-col justify-between p-2 h-16 cursor-pointer" 
+                      style={{ background: "#abcbf4", color: "#1a2535" }}
+                      animate={{
+                        scale: activeShowcaseTab === "grid" ? 1.04 : 1,
+                        boxShadow: activeShowcaseTab === "pastels" ? "0 0 12px rgba(171,203,244,0.5)" : "none",
+                        y: activeShowcaseTab === "animations" ? [0, -3, 0] : 0
+                      }}
+                      transition={{ y: { repeat: Infinity, duration: 1.5, delay: 0.6 } }}
+                    >
+                      <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Regular</span>
+                      <span className="text-[10px] font-gilroyBold leading-none">Blue Slate</span>
+                    </motion.div>
 
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[8px] font-gilroyBold text-white/30 uppercase tracking-widest">Raised Surfaces</span>
-                          <div className="h-8 rounded bg-[#303030] border border-[#424242] flex items-center justify-between px-2.5">
-                            <span className="text-[9px] text-white/80">Panel Content</span>
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#a6e7c7] shadow-sm shadow-[#a6e7c7]/50" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    <motion.div 
+                      className="rounded-lg flex flex-col justify-between p-2 h-16 cursor-pointer" 
+                      style={{ background: "#d1c4e9", color: "#251a3a" }}
+                      animate={{
+                        scale: activeShowcaseTab === "grid" ? 1.04 : 1,
+                        boxShadow: activeShowcaseTab === "pastels" ? "0 0 12px rgba(209,196,233,0.5)" : "none",
+                        y: activeShowcaseTab === "animations" ? [0, -3, 0] : 0
+                      }}
+                      transition={{ y: { repeat: Infinity, duration: 1.5, delay: 0.9 } }}
+                    >
+                      <span className="text-[8px] font-gilroyBold uppercase tracking-wider">Special</span>
+                      <span className="text-[10px] font-gilroyBold leading-none">Lavender</span>
+                    </motion.div>
+                  </motion.div>
+                </div>
 
-                  <p
-                    className="text-xs font-satoshi leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.4)" }}
+                {/* Visual 2 */}
+                <div className="flex flex-col gap-3">
+                  <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    Contrast & Structure
+                  </span>
+                  <motion.div 
+                    className="flex flex-col gap-2.5 p-3.5 bg-black/40 rounded-xl border h-44 justify-center transition-all duration-300"
+                    animate={{
+                      borderColor: activeShowcaseTab === "relief" ? "rgba(166,231,199,0.3)" : "rgba(255,255,255,0.05)"
+                    }}
                   >
-                    SSG Store cash terminal designs prioritize muscle memory. Core grids are geometrically locked to prevent runtime shifting, while pastel visual landmarks map category regions. Minimum active targets of 48px square safeguard against false cashier taps during checkout rushes.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[8px] font-gilroyBold text-white/30 uppercase tracking-widest">Base Canvas</span>
+                      <motion.div 
+                        className="h-6 rounded bg-[#262626] border flex items-center px-2"
+                        animate={{ borderColor: activeShowcaseTab === "relief" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.05)" }}
+                      >
+                        <span className="text-[9px] text-white/50">Carbon Canvas</span>
+                      </motion.div>
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[8px] font-gilroyBold text-white/30 uppercase tracking-widest">Raised Surfaces</span>
+                      <motion.div 
+                        className="h-8 rounded bg-[#303030] border flex items-center justify-between px-2.5"
+                        animate={{
+                          borderColor: activeShowcaseTab === "relief" ? "#a6e7c7" : "#424242",
+                          boxShadow: activeShowcaseTab === "relief" ? "0 0 10px rgba(166,231,199,0.15)" : "none"
+                        }}
+                      >
+                        <span className="text-[9px] text-white/80">Panel Content</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#a6e7c7] shadow-sm shadow-[#a6e7c7]/50" />
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Selector */}
+              <div className="flex flex-col gap-4 border-t border-white/10 pt-5 mt-2">
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { id: "grid", label: "Locked-Grid System" },
+                    { id: "pastels", label: "Pastel Landmarking" },
+                    { id: "relief", label: "Optic Relief" },
+                    { id: "animations", label: "Micro-Animations" }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveShowcaseTab(tab.id as any)}
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-gilroyBold cursor-pointer transition-all duration-200"
+                      style={{
+                        background: activeShowcaseTab === tab.id ? "rgba(166, 231, 199, 0.15)" : "rgba(255, 255, 255, 0.02)",
+                        color: activeShowcaseTab === tab.id ? "#a6e7c7" : "rgba(255, 255, 255, 0.5)",
+                        border: activeShowcaseTab === tab.id ? "1px solid rgba(166, 231, 199, 0.3)" : "1px solid rgba(255, 255, 255, 0.05)"
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="bg-black/25 rounded-xl p-4 border border-white/5">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeShowcaseTab}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex flex-col gap-3"
+                    >
+                      {activeShowcaseTab === "grid" && (
+                        <>
+                          <h4 className="text-sm font-gilroyBold text-white">Locked-Grid Spatial System</h4>
+                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
+                            POS terminals require a highly predictable layout that builds cashier muscle memory over repetitive operations:
+                          </p>
+                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
+                            <li><strong className="text-white/85">Fixed Coordinates:</strong> Anchors the catalog, checkout cart, and checkout math in absolute positions that never shift.</li>
+                            <li><strong className="text-white/85">Touch-Safe Targets:</strong> Imposes a strict minimum bounding size of <strong className="text-[#a6e7c7]">48x48 pixels</strong> for all interactive buttons to eliminate misaligned finger-taps in high-stress retail checkouts.</li>
+                          </ul>
+                        </>
+                      )}
+                      {activeShowcaseTab === "pastels" && (
+                        <>
+                          <h4 className="text-sm font-gilroyBold text-white">Color-Coded Pastels & Landmark Grids</h4>
+                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
+                            Replaces harsh, saturated primary colors with a system of soft pastels to safeguard operators against screen fatigue:
+                          </p>
+                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
+                            <li><strong className="text-white/85">Brand Mint:</strong> Reserved for selected items and high-priority primary checkout actions.</li>
+                            <li><strong className="text-white/85">Rose Pastel:</strong> Triggers supervisor alerts, low-stock warnings, and transaction errors.</li>
+                            <li><strong className="text-white/85">Blue & Lavender Slate:</strong> Segregates categories (e.g. food, drinks, promos) into visually recognizable groups.</li>
+                            <li><strong className="text-white/85">Active Ink:</strong> Solid, high-contrast dark typography layered on pastel tiles to maximize readability under variable retail light.</li>
+                          </ul>
+                        </>
+                      )}
+                      {activeShowcaseTab === "relief" && (
+                        <>
+                          <h4 className="text-sm font-gilroyBold text-white">Optic Relief System</h4>
+                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
+                            Styled specifically to support long 8+ hour cashier shifts:
+                          </p>
+                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
+                            <li><strong className="text-white/85">Deep Carbon Canvas:</strong> Minimizes display light emission and reduces ambient screen glare.</li>
+                            <li><strong className="text-white/85">Raised Panel Tiles:</strong> Lighter gray cards that visually segment layout functions without clutter.</li>
+                            <li><strong className="text-white/85">Charcoal Borders:</strong> Ultra-thin borders guiding structured navigation without screen glare.</li>
+                          </ul>
+                        </>
+                      )}
+                      {activeShowcaseTab === "animations" && (
+                        <>
+                          <h4 className="text-sm font-gilroyBold text-white">Snappy Micro-Animations</h4>
+                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
+                            Visual feedback speed is optimized to keep pace with rapid retail processing rates:
+                          </p>
+                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
+                            <li><strong className="text-white/85">Ultra-Fast Cycles:</strong> Page changes, category filters, and item updates complete within <strong className="text-[#a6e7c7]">200ms to 300ms</strong>.</li>
+                            <li><strong className="text-white/85">Linear Translations:</strong> Hovering and tapping yields instant, simple translation motion to confirm actions immediately.</li>
+                          </ul>
+                        </>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          </section>
         </div>
       </div>
 
-      {/* ── Footer ── */}
-      <div
-        className="mx-auto max-w-[1200px] px-6 md:px-12 pb-16 mt-8"
-        style={{ borderTop: "1px dashed rgba(42,71,86,0.15)" }}
-      >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-8">
-          <nav className="flex gap-6">
-            {[
-              { label: "About", href: "/about" },
-              { label: "Other Things", href: "/other-things" },
-              { label: "Contact", href: "/hire-me" },
-            ].map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className="text-sm font-gilroyBold transition-opacity hover:opacity-60"
-                style={{ color: "#2a4756" }}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-          <p
-            className="text-xs font-gilroyRegular"
-            style={{ color: "rgba(42,71,86,0.35)" }}
-          >
-            © 2026 · Divyansh Baghel
-          </p>
-        </div>
-      </div>
+      {/* ── Footer spacer + Footer ── */}
+      <div className="mt-32" />
+      <PageFooter />
     </main>
   );
 }

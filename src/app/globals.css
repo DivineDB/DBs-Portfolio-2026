@@ -4,9 +4,49 @@
 @font-face {
   font-family: "Satoshi";
   src:
+    url("/fonts/Satoshi-Light.woff2") format("woff2"),
+    url("/fonts/Satoshi-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("/fonts/Satoshi-Regular.woff2") format("woff2"),
+    url("/fonts/Satoshi-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src:
     url("/fonts/Satoshi-Medium.woff2") format("woff2"),
     url("/fonts/Satoshi-Medium.woff") format("woff");
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("/fonts/Satoshi-Bold.woff2") format("woff2"),
+    url("/fonts/Satoshi-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src:
+    url("/fonts/Satoshi-Black.woff2") format("woff2"),
+    url("/fonts/Satoshi-Black.woff") format("woff");
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -54,6 +94,35 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(42, 71, 86, 0.2) transparent;
+  /* Remove iOS tap blue flash — active: states provide feedback instead */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent any rogue element from causing horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* ── Touch-device: neutralise sticky :hover states ────────────────────────── */
+/* On iOS/Android, :hover fires on tap and stays until another element is
+   tapped. This guard resets hover-only CSS to prevent ghost highlights.     */
+@media (hover: none) and (pointer: coarse) {
+  .highlight-sticker:hover::after {
+    transform: none;
+  }
+  /* Building window links: reset all hover CSS on touch devices.
+     The active: state (green flash on tap) still fires correctly. */
+  .building-window:hover {
+    background-color: rgba(162, 249, 145, 0.05); /* same as bg-[#A2F991]/5 default */
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* ── Safe-area utility (for FAB / fixed elements near the home indicator) ── */
+.safe-bottom {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
 }
 
 /* Hide scrollbar but keep scroll (opt-in). */

@@ -200,7 +200,8 @@ function TradingTerminal() {
       </div>
 
       {/* Column headers */}
-      <div className="grid grid-cols-5 gap-2 px-6 py-1.5 border-t border-b border-white/5 text-[10px] font-mono text-white/20 uppercase tracking-wider">
+      <div className="overflow-x-auto">
+      <div className="min-w-[400px] grid grid-cols-5 gap-2 px-6 py-1.5 border-t border-b border-white/5 text-[10px] font-mono text-white/20 uppercase tracking-wider">
         <span>Strike</span>
         <span className="text-right">LTP</span>
         <span className="text-right">Chg</span>
@@ -213,7 +214,7 @@ function TradingTerminal() {
         {TICKER_ROWS.map((row, i) => (
           <div
             key={i}
-            className="grid grid-cols-5 gap-2 py-2 border-b border-white/[0.04] group hover:bg-white/[0.03] transition-colors rounded px-1"
+            className="min-w-[400px] grid grid-cols-5 gap-2 py-2 border-b border-white/[0.04] group hover:bg-white/[0.03] transition-colors rounded px-1"
           >
             <span className="font-mono text-[11px] text-white/50 flex items-center gap-1.5">
               <span
@@ -240,6 +241,7 @@ function TradingTerminal() {
           </div>
         ))}
       </div>
+      </div> {/* end overflow-x-auto */}
 
       {/* Bottom status bar */}
       <div className="flex items-center justify-between px-6 py-3 border-t border-white/5">
@@ -296,7 +298,7 @@ function CityRow({ city }: { city: City }) {
       <motion.span
         className="font-gilroyBold text-6xl md:text-8xl leading-none block will-change-transform"
         animate={{
-          color: hovered ? "#2a4756" : "transparent",
+          color: hovered ? "#2a4756" : "rgba(42, 71, 86, 0)",
           opacity: hovered ? 1 : 0.3,
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
@@ -341,7 +343,7 @@ function CityRow({ city }: { city: City }) {
 export default function OtherThingsPage() {
   return (
     <main className="w-full bg-bg font-gilroyRegular text-text_primary">
-      <div className="pt-32 pb-16 px-8 md:px-16 max-w-7xl mx-auto">
+      <div className="pt-16 md:pt-32 pb-16 px-5 md:px-16 max-w-7xl mx-auto">
 
         {/* ── Hero ── */}
         <motion.div
@@ -448,7 +450,9 @@ export default function OtherThingsPage() {
           </div>
 
           <p className="mt-6 font-satoshi text-sm text-text_muted">
-            Hover a city to see the polaroid.
+            {typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+              ? 'Tap a city to explore.'
+              : 'Hover a city to see the polaroid.'}
           </p>
         </motion.section>
 

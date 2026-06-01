@@ -16,7 +16,7 @@ export default function PageFooter({ showOfferButton = false }: { showOfferButto
   const pathname = usePathname();
 
   return (
-    <section className="relative flex min-h-[30vh] w-full flex-col justify-end px-6 md:px-12">
+    <section className="relative flex w-full flex-col justify-end px-6 md:px-12 pt-16 pb-28 md:pb-0 md:min-h-[30vh]">
       <div className="mx-auto w-full max-w-[1000px] flex flex-col items-center">
         {showOfferButton && (
           <div className="mb-12 flex justify-center">
@@ -62,19 +62,19 @@ export default function PageFooter({ showOfferButton = false }: { showOfferButto
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="flex w-full justify-between border-t border-dashed border-text_primary/40 pt-8 pb-12 text-sm font-gilroyBold will-change-transform"
+          className="flex w-full flex-col gap-6 sm:flex-row sm:justify-between sm:items-center border-t border-dashed border-text_primary/40 pt-8 pb-10 text-sm font-gilroyBold will-change-transform"
         >
-          <nav className="flex gap-8">
+          <nav className="flex flex-wrap gap-x-6 gap-y-3">
             {NAV_LINKS.map(({ href, label }) => {
               const isActive = pathname === href;
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`transition-opacity ${
+                  className={`inline-flex items-center min-h-[44px] transition-opacity touch-manipulation ${
                     isActive
                       ? "opacity-30 pointer-events-none"
-                      : "hover:opacity-70"
+                      : "hover:opacity-70 active:opacity-50"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >

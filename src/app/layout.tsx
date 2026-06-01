@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
 import SmoothScroll from "../components/SmoothScroll";
 import CommandPaletteLoader from "../components/CommandPaletteLoader";
+import MobileCommandTrigger from "../components/MobileCommandTrigger";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -44,6 +45,7 @@ export default function RootLayout({
     >
       <body className="min-h-full">
         <CommandPaletteLoader />
+        <MobileCommandTrigger />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

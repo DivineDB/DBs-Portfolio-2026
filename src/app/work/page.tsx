@@ -11,7 +11,7 @@ export default function WorkPage() {
     <main className="w-full bg-bg font-gilroyRegular text-text_primary">
       
       {/* Hero Section */}
-      <section className="relative flex h-screen w-full flex-col items-center justify-center px-6 md:px-12">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-6">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -51,7 +51,7 @@ export default function WorkPage() {
       </section>
 
       {/* Featured Project 1: Scout */}
-      <section className="relative flex h-screen w-full flex-col justify-center px-6 md:px-12">
+      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -106,7 +106,7 @@ export default function WorkPage() {
       </section>
 
       {/* Featured Project 2: POS Panel */}
-      <section className="relative flex h-screen w-full flex-col justify-center px-6 md:px-12">
+      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -154,7 +154,7 @@ export default function WorkPage() {
       </section>
 
       {/* More Builds */}
-      <section className="relative flex h-screen w-full flex-col items-center justify-center px-6 md:px-12">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}

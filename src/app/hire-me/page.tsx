@@ -175,7 +175,7 @@ export default function HireMePage() {
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-b border-dashed border-[#2A4756]" />
 
       {/* ══ Section 1: Hero ══════════════════════════════════════════════════════ */}
-      <section id="top" className="h-screen px-6 md:px-12">
+      <section id="top" className="relative min-h-screen px-6 md:px-12 py-24 md:py-0 flex items-center">
         <MotionInView className="relative mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
           {/* Status pill */}
           <div className="mb-4 flex items-center gap-2">
@@ -255,23 +255,23 @@ export default function HireMePage() {
               Contact <Mail className="h-4 w-4" />
             </a>
           </div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5, ease: "easeOut" }}
-            className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-[#2A4756]/50"
-          >
-            <span className="font-gilroyBold text-xs uppercase tracking-[0.2em]">Scroll Down</span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowDown size={18} strokeWidth={1.5} />
-            </motion.div>
-          </motion.div>
         </MotionInView>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5, ease: "easeOut" }}
+          className="pointer-events-none absolute bottom-8 left-1/2 hidden md:flex -translate-x-1/2 flex-col items-center gap-2 text-[#2A4756]/50"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.2em]">Scroll Down</span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown size={18} strokeWidth={1.5} />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ══ Section 2: Bento Tech Stack ══════════════════════════════════════════ */}
@@ -357,53 +357,64 @@ export default function HireMePage() {
       </section>
 
       {/* ══ Section 3: Why Hire Me ════════════════════════════════════════════════ */}
-      <section className="h-screen px-6 md:px-12">
+      <section className="min-h-screen px-6 md:px-12 py-24 md:py-0 flex items-center">
         <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
           <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
             Why must you{" "}
             <HighlightBox className="font-gilroyBold tracking-tight">hire me?</HighlightBox>
           </h2>
 
-          <motion.ul
+          <motion.div
             variants={LIST_STAGGER}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.3 }}
-            className="mt-8 max-w-3xl space-y-6 text-base leading-relaxed text-slate-700 md:text-lg"
+            className="mt-16 grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2"
           >
-            <motion.li variants={LIST_ITEM}>
-              •{" "}
-              <span className="font-gilroyBold text-text_primary">A witty package:</span> Bringing
-              humor, craft, and absolute clarity to complex problems.
-            </motion.li>
-            <motion.li variants={LIST_ITEM}>
-              •{" "}
-              <span className="font-gilroyBold text-text_primary">Proven leadership:</span>{" "}
-              Experience leading engineering teams in India and shaping products end-to-end.
-            </motion.li>
-            <motion.li variants={LIST_ITEM}>
-              •{" "}
-              <span className="font-gilroyBold text-text_primary">Highly adaptable:</span> A quick
-              learner comfortable jumping across domains—from food-tech and ed-tech, to fin-tech.
-            </motion.li>
-            <motion.li variants={LIST_ITEM}>
-              •{" "}
-              <span className="font-gilroyBold text-text_primary">Deep expertise:</span> A
-              full-stack engineer specializing in scalable apps with React, TypeScript, Node.js, and
-              GoLang.
-            </motion.li>
-          </motion.ul>
+            <motion.div variants={LIST_ITEM}>
+              <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
+                A witty package.
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-slate-700">
+                Bringing humor, craft, and absolute clarity to complex problems.
+              </p>
+            </motion.div>
+            <motion.div variants={LIST_ITEM}>
+              <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
+                Proven leadership.
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-slate-700">
+                Experience leading engineering teams in India and shaping products end-to-end.
+              </p>
+            </motion.div>
+            <motion.div variants={LIST_ITEM}>
+              <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
+                Highly adaptable.
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-slate-700">
+                A quick learner comfortable jumping across domains—from food-tech and ed-tech, to fin-tech.
+              </p>
+            </motion.div>
+            <motion.div variants={LIST_ITEM}>
+              <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
+                Deep expertise.
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-slate-700">
+                A full-stack engineer specializing in scalable apps with React, TypeScript, Node.js, and GoLang.
+              </p>
+            </motion.div>
+          </motion.div>
         </MotionInView>
       </section>
 
       {/* ══ Section 4: Preferences ════════════════════════════════════════════════ */}
-      <section className="h-screen px-6 md:px-12">
+      <section className="min-h-screen px-6 md:px-12 py-24 md:py-0 flex items-center">
         <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
           <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
             My <HighlightBox className="font-gilroyBold tracking-tight">Preferences</HighlightBox>
           </h2>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
+          <div className="mt-16 grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
                 Amazing work culture.

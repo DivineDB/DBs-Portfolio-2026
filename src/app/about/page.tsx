@@ -238,7 +238,7 @@ export default function AboutPage() {
     <main className="w-full bg-bg font-gilroyRegular text-text_primary">
       
       {/* Section 1 — Hero */}
-      <section className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden px-6 md:px-12 pt-8">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 md:px-12 py-24 md:py-8">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 items-center gap-12 md:grid-cols-2">
           <motion.div
             className="flex flex-col gap-6 text-lg text-text_primary/70 md:text-xl"
@@ -284,7 +284,7 @@ export default function AboutPage() {
 
           <div className="relative flex flex-col items-center justify-center">
             <motion.div
-              className="relative z-10 mx-auto aspect-[4/5] w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:w-[400px] will-change-transform"
+              className="relative z-10 mx-auto aspect-[4/5] w-full max-w-[340px] rotate-[6deg] border border-text_primary/10 bg-white p-4 pb-14 shadow-2xl md:max-w-[400px] will-change-transform"
               initial={{ opacity: 0, scale: 0.9, rotate: -3, y: 30 }}
               animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
               transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.3 }}

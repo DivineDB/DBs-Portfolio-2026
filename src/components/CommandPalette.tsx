@@ -82,8 +82,11 @@ export default function CommandPalette() {
       label="Global Command Palette"
       container={typeof window !== "undefined" ? document.body : undefined}
     >
-      {/* Visually-hidden title satisfies Radix Dialog a11y requirement */}
+      {/* Visually-hidden title and description satisfy Radix Dialog a11y requirements */}
       <Dialog.Title className="sr-only">Command Palette</Dialog.Title>
+      <Dialog.Description className="sr-only">
+        Search for pages and perform actions across the site.
+      </Dialog.Description>
       {/* --- Overlay --- */}
       {open && (
         <div
@@ -109,7 +112,7 @@ export default function CommandPalette() {
           />
 
           {/* Command List */}
-          <Command.List className="max-h-[320px] overflow-y-auto p-2" data-lenis-prevent>
+          <Command.List className="max-h-[320px] overflow-y-auto p-2 scroll-smooth" data-lenis-prevent>
             <Command.Empty className="py-8 text-center text-sm text-[#2a4756]/40 font-gilroyRegular">
               No results found.
             </Command.Empty>

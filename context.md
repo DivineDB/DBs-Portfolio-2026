@@ -1,17 +1,36 @@
 # Portfolio State (@context.md)
 
-## Phase: 6 — Hire Me page overhauled to premium bento-box layout
+## Phase: 7 — Site-wide Mobile Strategy, Scroll Optimization, and Bug Fixes
 
 ## Stack
 
-- Next.js 16 (App Router, `src/`), TypeScript, Tailwind
+- Next.js 16 (App Router, `src/`), TypeScript, Tailwind CSS, Framer Motion
 
 ## Typography
 
 - **Global:** Gilroy Regular / Bold via `next/font/local` in `src/app/layout.tsx` (CSS variables `--font-gilroy-regular`, `--font-gilroy-bold`).
 - **About greeting only:** Playfair Display *italic*, `latin`, from `next/font/google`, variable `--font-playfair-display`; consumed as Tailwind `font-playfairDisplayItalic` on the rotating greeting span.
 
-## Accomplishments (UI Elevation & Polish)
+## Accomplishments (UI Elevation, Mobile Strategy, & Polish)
+
+- **Mobile Responsiveness & Layout Simplification Strategy:**
+  - Removed the building illustration completely on both mobile and desktop screens, clearing the right column of the landing page to create a focused, minimalist, editorial-first experience.
+  - Resolved mobile viewport clipping on `/work`, `/about`, and `/hire-me` by switching sections from fixed `h-screen` to `min-h-screen` and adding responsive vertical padding (`py-24 md:py-0`).
+  - Optimized the `/other-things` layout on mobile by reducing hero top padding (`pt-16` instead of `pt-32`), wrapping the 5-col options trading terminal in an `overflow-x-auto` container with a minimum width, and updating interaction hints dynamically based on touch capabilities.
+  - Overhauled `PageFooter.tsx`: links wrap and stack vertically on mobile, touch target bounds were increased, and added `pb-28` to clear the mobile Floating Action Button (FAB).
+  - Disabled Lenis smooth scrolling inside `SmoothScroll.tsx` on touch-only coarse devices (`(hover: none) and (pointer: coarse)`) to ensure native OS momentum scrolling runs smoothly without JS lag, keeping it enabled for desktop mouse-wheel users.
+
+- **UI Polish & Theme Integration:**
+  - **Typographic Alignment:** Replaced simulated browser-level `font-extrabold` with mapped local `font-gilroyBold` on the landing page's main heading, adding a left padding offset (`pl-1`) to align the text edge with other left-aligned items.
+  - **Theme Blended Shortcut Prompt:** Redesigned the desktop `⌘K` command shortcut button with the warm, cozy greenish-cream background (`bg-[#F0F5E1]`), matching text colors (`text-[#2a4756]/70`), a `rounded-full` pill structure, and an inner kbd element (`bg-bg`) to fully integrate with the Swiss design system.
+  - **Smooth Command Palette Scroll:** Added `scroll-smooth` to the list container inside the Command Palette to animate programmatic scroll transitions during arrow-key navigation.
+  - **Layout Refactoring:** Cleared the right-hand column content (including `buildingg.svg`, `boy.svg`, and interactive window overlays) from the homepage, leaving only the left editorial text and control deck.
+
+- **Developer Experience & Console Warning Fixes:**
+  - **Cross-Origin Dev Support:** Added `allowedDevOrigins: ["eight-pets-greet.loca.lt", "*.loca.lt"]` inside `next.config.ts` to allow localtunnel/ngrok development proxies.
+  - **Module Declaration:** Added `"type": "module"` in `package.json` to eliminate Node warning messages about typeless CommonJS package parsing.
+  - **Framer Motion Warning:** Replaced `"transparent"` target in `/other-things` page's city name hover transition with `"rgba(42, 71, 86, 0)"` to resolve `value-not-animatable` console errors.
+  - **A11y Dialog Warnings:** Added a visually hidden `<Dialog.Description>` alongside `<Dialog.Title>` inside the Command Palette dialog.
 
 - **Phase 1: Cleaned Building SVG Artifacts:** Removed the drop shadow filter bounding box from `Building.svg` to eliminate the faint horizontal line/artifact hovering above the roof.
 - **Phase 2: Typography & Baseline Alignment:** Refactored hero title to perfectly align `"Divyansh"` and `"Baghel"` (wrapped in `<HighlightBox>`) on a single baseline using `flex flex-row items-baseline gap-3 flex-wrap` inside the `h1` wrapper, resolving staggering.
@@ -36,7 +55,9 @@
     - Core Languages: TypeScript, JavaScript ES6+
     - Data & AI Systems: PostgreSQL, Groq, Serper.dev, Next.js API
   - **Closing hook** (above `<PageFooter />`): `flex justify-center py-32`. Words split into `motion.span` inside `whileHover="hover"` parent. `rest: { y:0, color: slate-500 }` → `hover: { y:-6, color: var(--color-highlight), spring bounce:0.6, stagger:0.05s }`. Typography: `font-gilroyRegular text-lg md:text-xl tracking-wide text-slate-500` — non-bold, visually subordinate.
-  - **Preserved sections**: “Why hire me?” staggered bullet list, Preferences 2-col grid, `<PageFooter />`.
+  - **Why hire me?** Reformatted the bulleted list into a 2x2 responsive grid matching the structural aesthetics and layout classes of the Preferences section, while preserving staggered fade-in scroll animations.
+  - **Scroll Down indicator**: Hidden on mobile (`hidden md:flex`) to prevent any visual overlaps in short viewports.
+  - **Other sections**: Preferences 2-col grid, `<PageFooter />`.
 
 ## Phase 4 — Global Command Palette & Interactive Keywords
 
@@ -52,9 +73,8 @@
 
 ## Next
 
-- Review `other-things` page animations in dev server.
-- Audit `hire-me` on mobile — bento grid collapses to 1-col, verify dot-grid texture at small sizes.
-- Git stage: `hire-me/page.tsx`, `context.md`.
+- Final validation of production builds and mobile layout checks on dev server.
+- Commit all code and confirm responsiveness. stage: `hire-me/page.tsx`, `context.md`.
 
 # AI Skill: Emil Kowalski UI & Animation Guidelines
 

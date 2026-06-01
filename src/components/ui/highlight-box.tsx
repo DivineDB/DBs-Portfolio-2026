@@ -11,7 +11,7 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
   return (
     <span
       className={cn(
-        "relative inline-flex items-baseline justify-center px-3 align-middle md:px-3.5 pb-2 pt-1",
+        "relative inline-flex items-baseline justify-center px-3 align-middle md:px-3.5 pb-2 pt-1 -ml-3 md:-ml-3.5",
         className,
       )}
     >
