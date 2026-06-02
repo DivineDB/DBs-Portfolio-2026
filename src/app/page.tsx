@@ -279,7 +279,7 @@ export default function Home() {
               aria-hidden
               width={184}
               height={180}
-              className="pointer-events-none absolute top-[43%] left-[24.5%] z-30 h-auto w-[28%] object-contain"
+              className="pointer-events-none absolute top-[42.5%] left-[24.5%] z-30 h-auto w-[28%] object-contain"
             />
 
             {/* Interactive Window Links — staggered fade-in after building lands */}
@@ -291,7 +291,7 @@ export default function Home() {
             >
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[34.5%] left-[30.5%] w-[16%] h-[23.5%] z-20"
+                className="absolute top-[34.5%] left-[30.5%] w-[17.5%] h-[23.5%] z-20"
               >
                 <Link
                   href="/about"
