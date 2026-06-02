@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
+import { useEffect } from "react";
 
 interface SmoothScrollProps {
   children: React.ReactNode;
@@ -14,6 +15,17 @@ const isTouchOnly =
   window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Force manual scroll restoration so the browser doesn't scroll to previous position on reload
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      // Instantly scroll to top on reload/load
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   if (isTouchOnly) return <>{children}</>;
 
   return (

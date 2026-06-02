@@ -5,14 +5,59 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
+import { Coffee, Sun, Sunset, Moon, X } from "lucide-react";
 
 export default function Home() {
   const [time, setTime] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
+  const [skipAnimation, setSkipAnimation] = useState(true);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastIcon, setToastIcon] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
 
   useEffect(() => {
     setIsMounted(true);
+    
+    // Check if user has visited in this session
+    const visited = sessionStorage.getItem("hasVisitedHome");
+    if (!visited) {
+      setSkipAnimation(false);
+      sessionStorage.setItem("hasVisitedHome", "true");
+    }
+
+    // Set custom toast greeting based on local time
+    const hours = new Date().getHours();
+    let greeting = "";
+    let iconType: "morning" | "afternoon" | "evening" | "night" = "morning";
+
+    if (hours >= 5 && hours < 12) {
+      greeting = "Good Morning Visitor! ☕️ Welcome to my portfolio.";
+      iconType = "morning";
+    } else if (hours >= 12 && hours < 17) {
+      greeting = "Good Afternoon Visitor! ☀️ Thanks for dropping by.";
+      iconType = "afternoon";
+    } else if (hours >= 17 && hours < 22) {
+      greeting = "Good Evening Visitor! 🌇 Enjoy your stay.";
+      iconType = "evening";
+    } else {
+      greeting = "Good Night Visitor! 🌙 Hello, fellow night owl.";
+      iconType = "night";
+    }
+
+    setToastMessage(greeting);
+    setToastIcon(iconType);
+
+    // Show toast after a short delay (1.5 seconds)
+    const toastTimeout = setTimeout(() => {
+      setShowToast(true);
+    }, 1500);
+
+    // Auto-dismiss toast after 6 seconds
+    const dismissTimeout = setTimeout(() => {
+      setShowToast(false);
+    }, 7500);
+
     const updateTime = () => {
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Kolkata",
@@ -24,13 +69,50 @@ export default function Home() {
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(toastTimeout);
+      clearTimeout(dismissTimeout);
+    };
   }, []);
 
   return (
     <main className="relative w-full h-screen overflow-hidden bg-background">
       {/* A subtle, animated noise overlay for texture */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
+
+      {/* Custom Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="absolute top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none max-w-[90vw]"
+          >
+            <div className="flex items-center gap-2">
+              {toastIcon === "morning" && <Coffee className="w-4 h-4 text-[#26393A]" />}
+              {toastIcon === "afternoon" && <Sun className="w-4 h-4 text-[#26393A]" />}
+              {toastIcon === "evening" && <Sunset className="w-4 h-4 text-[#26393A]" />}
+              {toastIcon === "night" && <Moon className="w-4 h-4 text-[#26393A]" />}
+              
+              <span className="font-gilroyBold text-[13px] md:text-[14px] leading-none whitespace-nowrap">
+                {toastMessage}
+              </span>
+            </div>
+            
+            <button
+              onClick={() => setShowToast(false)}
+              className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#EADFC3]/40 active:scale-90 transition-all cursor-pointer focus:outline-none"
+              aria-label="Dismiss greeting"
+            >
+              <X className="w-3.5 h-3.5 text-[#26393A]/60" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* The main grid container */}
       <div className="w-full max-w-[1600px] h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative">
@@ -158,9 +240,13 @@ export default function Home() {
 
         </div>
 
-        {/* Phase 2: Right Column (The Building - Standard Unscaled Natural Height) */}
+        {/* Phase 2: Right Column (The Building - Animated Entrance) */}
         <div className="col-span-12 md:col-span-5 relative h-full z-10 flex justify-center items-end pointer-events-none">
-          <div
+          {/* Building rises from below */}
+          <motion.div
+            initial={skipAnimation ? { y: "0%", opacity: 1 } : { y: "18%", opacity: 0 }}
+            animate={{ y: "0%", opacity: 1 }}
+            transition={skipAnimation ? { duration: 0 } : { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="relative h-[96vh] pointer-events-none select-none flex items-end"
             style={{ aspectRatio: "611 / 996" }}
           >
@@ -179,46 +265,74 @@ export default function Home() {
               className="pointer-events-none absolute top-[45.8%] left-[21.4%] z-10 h-auto w-[28%] object-contain"
             />
 
-            {/* Interactive Window Links */}
-            <Link
-              href="/about"
-              className="pointer-events-auto absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
+            {/* Interactive Window Links — staggered fade-in after building lands */}
+            <motion.div
+              initial={skipAnimation ? "visible" : "hidden"}
+              animate="visible"
+              variants={{ visible: { transition: { staggerChildren: skipAnimation ? 0 : 0.1, delayChildren: skipAnimation ? 0 : 0.9 } } }}
+              className="contents"
             >
-              <div className="h-[15%] w-full flex-shrink-0" />
-              <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
-                About Me
-              </span>
-            </Link>
+              <motion.div
+                variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
+                className="absolute top-[37.7%] left-[25.1%] w-[20.7%] h-[18.4%] z-20"
+              >
+                <Link
+                  href="/about"
+                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                >
+                  <div className="h-[15%] w-full flex-shrink-0" />
+                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                    About Me
+                  </span>
+                </Link>
+              </motion.div>
 
-            <Link
-              href="/work"
-              className="pointer-events-auto absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
-            >
-              <div className="h-[15%] w-full flex-shrink-0" />
-              <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
-                Selected Work
-              </span>
-            </Link>
+              <motion.div
+                variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
+                className="absolute top-[38.1%] left-[61.5%] w-[20.7%] h-[17.5%] z-20"
+              >
+                <Link
+                  href="/work"
+                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                >
+                  <div className="h-[15%] w-full flex-shrink-0" />
+                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                    Selected Work
+                  </span>
+                </Link>
+              </motion.div>
 
-            <Link
-              href="/other-things"
-              className="pointer-events-auto absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
-            >
-              <div className="h-[25%] w-full flex-shrink-0" />
-              <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
-                Other things I do
-              </span>
-            </Link>
+              <motion.div
+                variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
+                className="absolute top-[73.2%] left-[24.6%] w-[21.3%] h-[19.0%] z-20"
+              >
+                <Link
+                  href="/other-things"
+                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                >
+                  <div className="h-[25%] w-full flex-shrink-0" />
+                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                    Other things I do
+                  </span>
+                </Link>
+              </motion.div>
 
-            <Link
-              href="/hire-me"
-              className="pointer-events-auto absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 z-20 group"
-            >
-              <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
-                Hire Me
-              </span>
-            </Link>
-          </div>
+              <motion.div
+                variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
+                className="absolute top-[73.2%] left-[61.5%] w-[21.3%] h-[19.0%] z-20"
+              >
+                <Link
+                  href="/hire-me"
+                  className="pointer-events-auto w-full h-full flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                >
+                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                    Hire Me
+                  </span>
+                </Link>
+              </motion.div>
+            </motion.div>
+
+          </motion.div>
         </div>
 
       </div>

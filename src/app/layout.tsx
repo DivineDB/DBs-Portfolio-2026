@@ -31,6 +31,9 @@ const gilroyBold = localFont({
 export const metadata: Metadata = {
   title: "Divyansh Baghel — Design Engineer",
   description: "Portfolio of Divyansh Baghel, Design Engineer.",
+  icons: {
+    icon: "/icon",
+  },
 };
 
 export default function RootLayout({
