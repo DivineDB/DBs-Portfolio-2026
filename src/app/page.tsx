@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coffee, Sun, Sunset, Moon, X } from "lucide-react";
+import { Coffee, Sun, Sunset, Moon, X, ArrowDown } from "lucide-react";
 
 export default function Home() {
   const [time, setTime] = useState("");
@@ -219,14 +219,14 @@ export default function Home() {
                 </AnimatePresence>
               </button>
 
-              {/* ⌘K Command Palette Trigger — matches clock pill aesthetic */}
+              {/* ⌘K Command Palette Trigger — matches clock pill aesthetic (hidden on mobile due to FAB) */}
               <button
                 onClick={() =>
                   document.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true })
                   )
                 }
-                className="h-[36px] px-4 flex items-center gap-2 rounded-full bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] text-[13px] font-satoshi font-medium transition-transform hover:scale-105 active:scale-95 focus:outline-none select-none cursor-pointer"
+                className="h-[36px] px-4 hidden md:flex items-center gap-2 rounded-full bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] text-[13px] font-satoshi font-medium transition-transform hover:scale-105 active:scale-95 focus:outline-none select-none cursor-pointer"
                 aria-label="Open command palette"
               >
                 <span className="opacity-50 text-[11px]">Press</span>
@@ -236,12 +236,29 @@ export default function Home() {
             <span className="text-[10px] font-satoshi font-medium text-[#26393A] select-none">
               © 2026 | Divyansh Baghel.
             </span>
+
+            {/* Animated mobile scroll indicator */}
+            <div className="md:hidden flex justify-center w-full mt-6 animate-bounce">
+              <button
+                onClick={() => {
+                  const buildingEl = document.getElementById("interactive-building-sec");
+                  if (buildingEl) {
+                    buildingEl.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="pointer-events-auto flex flex-col items-center gap-1 text-[#2A4756]/45 hover:text-[#2A4756]/65 transition-colors focus:outline-none"
+                aria-label="Scroll to explore interactive building"
+              >
+                <span className="text-[10px] font-satoshi font-semibold uppercase tracking-wider">Scroll to Explore</span>
+                <ArrowDown size={14} strokeWidth={2.5} />
+              </button>
+            </div>
           </motion.div>
 
         </div>
 
         {/* Phase 2: Right Column (The Building - Animated Entrance) */}
-        <div className="col-span-12 md:col-span-5 relative h-auto md:h-full z-10 flex justify-center items-end pointer-events-none mt-10 md:mt-0">
+        <div id="interactive-building-sec" className="col-span-12 md:col-span-5 relative h-auto md:h-full z-10 flex justify-center items-end pointer-events-none mt-10 md:mt-0">
           {/* Building rises from below */}
           <motion.div
             initial={skipAnimation ? { y: "0%", opacity: 1 } : { y: "18%", opacity: 0 }}
@@ -278,7 +295,7 @@ export default function Home() {
               >
                 <Link
                   href="/about"
-                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                  className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[15%] w-full flex-shrink-0" />
                   <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
@@ -293,7 +310,7 @@ export default function Home() {
               >
                 <Link
                   href="/work"
-                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                  className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[15%] w-full flex-shrink-0" />
                   <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
@@ -308,7 +325,7 @@ export default function Home() {
               >
                 <Link
                   href="/other-things"
-                  className="pointer-events-auto w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                  className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[25%] w-full flex-shrink-0" />
                   <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
@@ -323,7 +340,7 @@ export default function Home() {
               >
                 <Link
                   href="/hire-me"
-                  className="pointer-events-auto w-full h-full flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] transition-all duration-300 group"
+                  className="pointer-events-auto building-window w-full h-full flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
                     Hire Me
