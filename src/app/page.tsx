@@ -291,7 +291,7 @@ export default function Home() {
             >
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[34.5%] left-[30.5%] w-[17.5%] h-[23.5%] z-20"
+                className="absolute top-[34.5%] left-[29.5%] w-[17.5%] h-[23.5%] z-20"
               >
                 <Link
                   href="/about"
