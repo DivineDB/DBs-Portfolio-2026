@@ -15,14 +15,6 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
         className,
       )}
     >
-      <Image
-        src="/images/HighlightBox.svg"
-        alt=""
-        aria-hidden
-        width={183}
-        height={59}
-        className="pointer-events-none absolute inset-0 h-full w-full"
-      />
       <span
         className={cn(
           "relative z-10 whitespace-nowrap leading-none text-[#2A4756]",
@@ -31,6 +23,14 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
       >
         {children}
       </span>
+      <Image
+        src="/images/HighlightBox.svg"
+        alt=""
+        aria-hidden
+        width={183}
+        height={59}
+        className="pointer-events-none absolute inset-0 h-full w-full"
+      />
     </span>
   );
 }

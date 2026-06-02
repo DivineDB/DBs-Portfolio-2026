@@ -13,18 +13,19 @@
 
 ## Accomplishments (UI Elevation, Mobile Strategy, & Polish)
 
-- **Mobile Responsiveness & Layout Simplification Strategy:**
-  - Removed the building illustration completely on both mobile and desktop screens, clearing the right column of the landing page to create a focused, minimalist, editorial-first experience.
-  - Resolved mobile viewport clipping on `/work`, `/about`, and `/hire-me` by switching sections from fixed `h-screen` to `min-h-screen` and adding responsive vertical padding (`py-24 md:py-0`).
-  - Optimized the `/other-things` layout on mobile by reducing hero top padding (`pt-16` instead of `pt-32`), wrapping the 5-col options trading terminal in an `overflow-x-auto` container with a minimum width, and updating interaction hints dynamically based on touch capabilities.
-  - Overhauled `PageFooter.tsx`: links wrap and stack vertically on mobile, touch target bounds were increased, and added `pb-28` to clear the mobile Floating Action Button (FAB).
-  - Disabled Lenis smooth scrolling inside `SmoothScroll.tsx` on touch-only coarse devices (`(hover: none) and (pointer: coarse)`) to ensure native OS momentum scrolling runs smoothly without JS lag, keeping it enabled for desktop mouse-wheel users.
+- **Interactive Building & Mobile Layout Strategy:** Kept and optimized the interactive building illustration on both desktop and mobile viewports. On mobile, the building collapses cleanly below the editorial content to preserve readability and access to interactive pages via window hotspots. Switch building container to `h-auto w-full max-w-[450px] mx-auto` to preserve the building aspect ratio on mobile screens without viewport clipping.
+- **Mobile Viewport Optimization:** Resolved mobile viewport clipping on `/work`, `/about`, and `/hire-me` by switching sections from fixed `h-screen` to `min-h-screen` and adding responsive vertical padding (`py-24 md:py-0`).
+- **Other Things page Mobile Refinements:** Optimized the `/other-things` layout on mobile by reducing hero top padding (`pt-16` instead of `pt-32`), wrapping the 5-col options trading terminal in an `overflow-x-auto` container with a minimum width, and updating interaction hints dynamically based on touch capabilities.
+- **Footer Responsiveness:** Overhauled `PageFooter.tsx`: links wrap and stack vertically on mobile, touch target bounds were increased, and added `pb-28` to clear the mobile Floating Action Button (FAB).
+- **Lenis Smooth Scroll Adjustment:** Disabled Lenis smooth scrolling inside `SmoothScroll.tsx` on touch-only coarse devices (`(hover: none) and (pointer: coarse)`) to ensure native OS momentum scrolling runs smoothly without JS lag, keeping it enabled for desktop mouse-wheel users.
 
-- **UI Polish & Theme Integration:**
-  - **Typographic Alignment:** Replaced simulated browser-level `font-extrabold` with mapped local `font-gilroyBold` on the landing page's main heading, adding a left padding offset (`pl-1`) to align the text edge with other left-aligned items.
-  - **Theme Blended Shortcut Prompt:** Redesigned the desktop `⌘K` command shortcut button with the warm, cozy greenish-cream background (`bg-[#F0F5E1]`), matching text colors (`text-[#2a4756]/70`), a `rounded-full` pill structure, and an inner kbd element (`bg-bg`) to fully integrate with the Swiss design system.
-  - **Smooth Command Palette Scroll:** Added `scroll-smooth` to the list container inside the Command Palette to animate programmatic scroll transitions during arrow-key navigation.
-  - **Layout Refactoring:** Cleared the right-hand column content (including `buildingg.svg`, `boy.svg`, and interactive window overlays) from the homepage, leaving only the left editorial text and control deck.
+## UI Polish & Theme Integration
+
+- **HighlightBox Padding Refinement:** Tightened `<HighlightBox>` padding (`py-[2px] md:py-[3px] px-[8px] md:px-[12px]` instead of `py-1 md:py-1.5 px-4 md:px-6`) to make the highlighted container tightly hug the "Baghel" text and match modern Swiss-style aesthetics.
+- **Typographic Alignment:** Replaced simulated browser-level `font-extrabold` with mapped local `font-gilroyBold` on the landing page's main heading, adding a left padding offset (`pl-1`) to align the text edge with other left-aligned items.
+- **Theme Blended Shortcut Prompt:** Redesigned the desktop `⌘K` command shortcut button with the warm, cozy greenish-cream background (`bg-[#F0F5E1]`), matching text colors (`text-[#2a4756]/70`), a `rounded-full` pill structure, and an inner kbd element (`bg-bg`) to fully integrate with the Swiss design system.
+- **Smooth Command Palette Scroll:** Added `scroll-smooth` to the list container inside the Command Palette to animate programmatic scroll transitions during arrow-key navigation.
+- **Character & Hotspot Optimization:** Layered `boy.svg` above window overlays with `z-30` so the character graphic remains fully visible and doesn't get obscured by hover backdrops. Refined all window coordinates and hotspot bounds ("About Me", "Selected Work", "Other Things", "Hire Me") to match the updated visual layout. Nudged the character position to `top-[43%] left-[24.5%]` (a bit down and left) to align perfectly inside the window frame.
 
 - **Developer Experience & Console Warning Fixes:**
   - **Cross-Origin Dev Support:** Added `allowedDevOrigins: ["eight-pets-greet.loca.lt", "*.loca.lt"]` inside `next.config.ts` to allow localtunnel/ngrok development proxies.
