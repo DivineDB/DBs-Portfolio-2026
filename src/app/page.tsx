@@ -78,7 +78,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full h-screen overflow-hidden bg-background">
+    <main className="relative w-full min-h-screen md:h-screen overflow-y-auto md:overflow-hidden bg-background">
       {/* A subtle, animated noise overlay for texture */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
@@ -90,7 +90,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
             exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="absolute top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none max-w-[90vw]"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none max-w-[90vw]"
           >
             <div className="flex items-center gap-2">
               {toastIcon === "morning" && <Coffee className="w-4 h-4 text-[#26393A]" />}
@@ -115,10 +115,10 @@ export default function Home() {
       </AnimatePresence>
 
       {/* The main grid container */}
-      <div className="w-full max-w-[1600px] h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative">
+      <div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
         
         {/* Phase 1: Unified Left Column (Alignment Fix, Hero Text, Clock & Footer) */}
-        <div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between h-full py-10 z-20 pointer-events-none">
+        <div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between min-h-[85vh] md:h-full py-10 z-20 pointer-events-none">
           
           {/* TOP / CENTER: Hero Text */}
           <motion.div 
@@ -241,13 +241,13 @@ export default function Home() {
         </div>
 
         {/* Phase 2: Right Column (The Building - Animated Entrance) */}
-        <div className="col-span-12 md:col-span-5 relative h-full z-10 flex justify-center items-end pointer-events-none">
+        <div className="col-span-12 md:col-span-5 relative h-auto md:h-full z-10 flex justify-center items-end pointer-events-none mt-10 md:mt-0">
           {/* Building rises from below */}
           <motion.div
             initial={skipAnimation ? { y: "0%", opacity: 1 } : { y: "18%", opacity: 0 }}
             animate={{ y: "0%", opacity: 1 }}
             transition={skipAnimation ? { duration: 0 } : { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="relative h-[96vh] pointer-events-none select-none flex items-end"
+            className="relative h-[72vh] md:h-[96vh] pointer-events-none select-none flex items-end w-full max-w-[450px] md:max-w-none"
             style={{ aspectRatio: "611 / 996" }}
           >
             <img
