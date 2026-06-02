@@ -357,6 +357,7 @@ export default function HireMePage() {
       </section>
 
       {/* ══ Section 3: Why Hire Me ════════════════════════════════════════════════ */}
+      {/* ══ Section 3: Why Hire Me ════════════════════════════════════════════════ */}
       <section className="min-h-screen px-6 md:px-12 py-24 md:py-0 flex items-center">
         <MotionInView className="mx-auto flex h-full w-full max-w-[1000px] flex-col justify-center">
           <h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
@@ -373,34 +374,34 @@ export default function HireMePage() {
           >
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                A witty package.
+                A complimentary package.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Hiring me comes with unparalleled wit, a knack for solving tough challenges (often with a bit of humor), and a genuine passion for delighting users with everything I build.
+                Hiring me comes with sharp attention to detail, a knack for turning complex user problems into straightforward interfaces, and just enough humor to keep sprint planning interesting.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Proven experience.
+                The sweet spot.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I have designed and built products among the leading product and engineering teams in India, spanning sectors from food-tech and ed-tech to fin-tech.
+                Jokes aside, I live right in the middle of design and code. I&apos;ve worked alongside some incredibly sharp product and engineering teams in India, shipping things across food-tech, ed-tech, and fin-tech.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Highly adaptable.
+                Structured & independent.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I am a quick learner who can work independently, loves complex design challenges, and bridges the gap between vision and code effortlessly.
+                I’m structured, comfortable working independently, and I actually enjoy the friction of figuring out a messy, ambiguous problem.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Hybrid sweet spot.
+                Designer who builds.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I am a designer first, but with a developer’s mind. Armed with React, TypeScript, and Next.js, I build pixel-perfect, highly-interactive web experiences.
+                Just to remind you: I spend my mornings mapping user flows and micro-interactions in Figma, and my afternoons writing clean, production-ready code in React, Next.js, and Node.js to bring them to life.
               </p>
             </motion.div>
           </motion.div>
@@ -417,37 +418,34 @@ export default function HireMePage() {
           <div className="mt-16 grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Amazing work culture.
+                Culture over corporate jargon. 🌊
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Clear ownership, kind feedback loops, and a strict bias toward shipping quality work.
+                I’ve been incredibly lucky to work with teams that value trust, open communication, and individual well-being over micromanagement. I look for spaces that treat people like adults and value great work over hours logged.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Familiar tech stack.
+                Remote first (or hill-first). 🏠
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                React/Next.js, TypeScript, and strong fundamentals so I can start contributing on
-                day one.
+                I thrive when given the flexibility and comfort to structure my own deep-work hours. A company with a strong async communication culture is a massive plus for me.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Remote first.
+                The right tools. 🛠️
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Async-friendly teams with deliberate collaboration, strong documentation, and
-                thoughtful rituals.
+                While my core comfort zone is Figma, React, TypeScript, and Node.js, I don&apos;t believe in being precious about a stack. If a project requires picking up a new tool, framework, or workflow automation, I adapt quickly.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Fair compensation.
+                Fair compensation. 💰
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Transparent leveling and compensation that aligns directly with impact, ownership,
-                and execution.
+                I love being fairly compensated for the craft and ownership I bring to a team. That said, money isn&apos;t my only driver—otherwise, I wouldn&apos;t spend my free time building custom side projects and internal tools just to see if I can.
               </p>
             </div>
           </div>
