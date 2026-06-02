@@ -376,15 +376,15 @@ export default function HireMePage() {
                 A witty package.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Bringing humor, craft, and absolute clarity to complex problems.
+                Hiring me comes with unparalleled wit, a knack for solving tough challenges (often with a bit of humor), and a genuine passion for delighting users with everything I build.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Proven leadership.
+                Proven experience.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Experience leading engineering teams in India and shaping products end-to-end.
+                I have designed and built products among the leading product and engineering teams in India, spanning sectors from food-tech and ed-tech to fin-tech.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
@@ -392,15 +392,15 @@ export default function HireMePage() {
                 Highly adaptable.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                A quick learner comfortable jumping across domains—from food-tech and ed-tech, to fin-tech.
+                I am a quick learner who can work independently, loves complex design challenges, and bridges the gap between vision and code effortlessly.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Deep expertise.
+                Hybrid sweet spot.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                A full-stack engineer specializing in scalable apps with React, TypeScript, Node.js, and GoLang.
+                I am a designer first, but with a developer’s mind. Armed with React, TypeScript, and Next.js, I build pixel-perfect, highly-interactive web experiences.
               </p>
             </motion.div>
           </motion.div>
