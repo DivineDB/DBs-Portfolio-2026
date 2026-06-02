@@ -90,7 +90,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
             exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none max-w-[90vw]"
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 px-3 py-2.5 md:px-4 md:py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none w-[92vw] md:w-auto md:max-w-[90vw] justify-between"
           >
             <div className="flex items-center gap-2">
               {toastIcon === "morning" && <Coffee className="w-4 h-4 text-[#26393A]" />}
@@ -98,7 +98,7 @@ export default function Home() {
               {toastIcon === "evening" && <Sunset className="w-4 h-4 text-[#26393A]" />}
               {toastIcon === "night" && <Moon className="w-4 h-4 text-[#26393A]" />}
               
-              <span className="font-gilroyBold text-[13px] md:text-[14px] leading-none whitespace-nowrap">
+              <span className="font-gilroyBold text-[11px] md:text-[14px] leading-snug">
                 {toastMessage}
               </span>
             </div>
@@ -115,10 +115,10 @@ export default function Home() {
       </AnimatePresence>
 
       {/* The main grid container */}
-      <div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
+      <div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative pb-36 md:pb-0">
         
-        {/* Phase 1: Unified Left Column (Alignment Fix, Hero Text, Clock & Footer) */}
-        <div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between min-h-[85vh] md:h-full py-10 z-20 pointer-events-none">
+        {/* Phase 1: Unified Left Column */}
+        <div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between min-h-[75vh] md:h-full pt-12 pb-4 md:py-10 z-20 pointer-events-none">
           
           {/* TOP / CENTER: Hero Text */}
           <motion.div 
@@ -129,20 +129,20 @@ export default function Home() {
           >
             <motion.span 
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }} 
-              className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/40 mb-2.5 select-none"
+              className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/40 mb-1.5 md:mb-2.5 select-none"
             >
               Hey, I'm
             </motion.span>
             
             <motion.div 
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }} 
-              className="flex flex-row items-center gap-[10px] mb-2.5 flex-wrap"
+              className="flex flex-row items-baseline gap-[10px] mb-1.5 md:mb-2.5 flex-wrap"
             >
               <h1 className="text-[36px] md:text-[54px] font-satoshi font-bold tracking-tight text-[#2A4756] leading-none select-none">
                 Divyansh
               </h1>
               <HighlightBox 
-                className="py-2.5 px-[30px] leading-none ml-0 md:ml-0"
+                className="pt-1.5 pb-2 px-5 md:pt-2.5 md:pb-3 md:px-[30px] ml-0 md:ml-0"
                 textClassName="text-[36px] md:text-[54px] font-satoshi font-normal text-[#2A4756] tracking-tight leading-none"
               >
                 Baghel
@@ -151,7 +151,7 @@ export default function Home() {
             
             <motion.h2 
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }} 
-              className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/40 tracking-tight mb-[42px] select-none"
+              className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/40 tracking-tight mb-6 md:mb-[42px] select-none"
             >
               Design Engineer
             </motion.h2>
@@ -182,7 +182,7 @@ export default function Home() {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             transition={{ delay: 0.8, duration: 1 }}
-            className="flex flex-col gap-[21px] pointer-events-auto"
+            className="flex flex-col gap-3.5 md:gap-[21px] pointer-events-auto"
           >
             <div className="flex items-center gap-3">
               {/* Fixed-size Clock Button */}
@@ -238,7 +238,7 @@ export default function Home() {
             </span>
 
             {/* Animated mobile scroll indicator */}
-            <div className="md:hidden flex justify-center w-full mt-6 animate-bounce">
+            <div className="md:hidden flex justify-center w-full mt-4 animate-bounce">
               <button
                 onClick={() => {
                   const buildingEl = document.getElementById("interactive-building-sec");
@@ -258,13 +258,13 @@ export default function Home() {
         </div>
 
         {/* Phase 2: Right Column (The Building - Animated Entrance) */}
-        <div id="interactive-building-sec" className="col-span-12 md:col-span-5 relative h-auto md:h-full z-10 flex justify-center items-end pointer-events-none mt-10 md:mt-0">
+        <div id="interactive-building-sec" className="col-span-12 md:col-span-5 relative z-10 flex justify-center items-end pointer-events-none mt-0 md:mt-0 h-[68vh] md:h-full">
           {/* Building rises from below */}
           <motion.div
             initial={skipAnimation ? { y: "0%", opacity: 1 } : { y: "18%", opacity: 0 }}
             animate={{ y: "0%", opacity: 1 }}
             transition={skipAnimation ? { duration: 0 } : { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="relative h-[72vh] md:h-[96vh] pointer-events-none select-none flex items-end w-full max-w-[450px] md:max-w-none"
+            className="relative h-full md:h-[96vh] pointer-events-none select-none flex items-end w-full md:max-w-none"
             style={{ aspectRatio: "611 / 996" }}
           >
             <img
@@ -298,7 +298,10 @@ export default function Home() {
                   className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[15%] w-full flex-shrink-0" />
-                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                  <span 
+                    className="font-satoshi text-xs sm:text-sm md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105"
+                    style={{ textShadow: "0 1px 2px rgba(255, 255, 255, 0.85)" }}
+                  >
                     About Me
                   </span>
                 </Link>
@@ -313,7 +316,10 @@ export default function Home() {
                   className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[15%] w-full flex-shrink-0" />
-                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                  <span 
+                    className="font-satoshi text-xs sm:text-sm md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105"
+                    style={{ textShadow: "0 1px 2px rgba(255, 255, 255, 0.85)" }}
+                  >
                     Selected Work
                   </span>
                 </Link>
@@ -328,7 +334,10 @@ export default function Home() {
                   className="pointer-events-auto building-window w-full h-full flex flex-col items-center justify-start rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
                   <div className="h-[25%] w-full flex-shrink-0" />
-                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                  <span 
+                    className="font-satoshi text-xs sm:text-sm md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105"
+                    style={{ textShadow: "0 1px 2px rgba(255, 255, 255, 0.85)" }}
+                  >
                     Other things I do
                   </span>
                 </Link>
@@ -342,7 +351,10 @@ export default function Home() {
                   href="/hire-me"
                   className="pointer-events-auto building-window w-full h-full flex items-center justify-center text-center rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300 group"
                 >
-                  <span className="font-satoshi text-[10px] md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105">
+                  <span 
+                    className="font-satoshi text-xs sm:text-sm md:text-[11.5px] font-bold text-[#2A4756] tracking-wide px-1 whitespace-nowrap leading-none transition-transform group-hover:scale-105"
+                    style={{ textShadow: "0 1px 2px rgba(255, 255, 255, 0.85)" }}
+                  >
                     Hire Me
                   </span>
                 </Link>
