@@ -261,10 +261,10 @@ export default function Home() {
         <div id="interactive-building-sec" className="col-span-12 md:col-span-5 relative z-10 flex justify-center items-end pointer-events-none mt-4 md:mt-0 h-auto md:h-full w-full max-w-[450px] md:max-w-none mx-auto md:mx-0">
           {/* Building rises from below */}
           <motion.div
-            initial={skipAnimation ? { y: "0%", opacity: 1 } : { y: "18%", opacity: 0 }}
-            animate={{ y: "0%", opacity: 1 }}
-            transition={skipAnimation ? { duration: 0 } : { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full"
+            initial={skipAnimation ? { clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 } : { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }}
+            animate={{ clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 }}
+            transition={skipAnimation ? { duration: 0 } : { type: "spring", stiffness: 60, damping: 15, delay: 0.2 }}
+            className="relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full will-change-[transform,opacity,clip-path]"
             style={{ aspectRatio: "611 / 996" }}
           >
             <img
@@ -273,14 +273,21 @@ export default function Home() {
               alt="Interactive Building"
             />
 
-            <Image
-              src="/images/boy.svg"
-              alt=""
-              aria-hidden
-              width={184}
-              height={180}
+            <motion.div
+              initial={skipAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={skipAnimation ? { duration: 0 } : { type: "spring", stiffness: 180, damping: 15, delay: 0.8 }}
               className="pointer-events-none absolute top-[42.5%] left-[24.5%] z-30 h-auto w-[28%] object-contain"
-            />
+            >
+              <Image
+                src="/images/boy.svg"
+                alt=""
+                aria-hidden
+                width={184}
+                height={180}
+                className="w-full h-auto"
+              />
+            </motion.div>
 
             {/* Interactive Window Links — staggered fade-in after building lands */}
             <motion.div
