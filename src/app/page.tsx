@@ -15,6 +15,7 @@ export default function Home() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastIcon, setToastIcon] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -83,36 +84,38 @@ export default function Home() {
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
       {/* Custom Toast Notification */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
-            exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 px-3 py-2.5 md:px-4 md:py-3 rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 pointer-events-auto select-none w-[92vw] md:w-auto md:max-w-[90vw] justify-between"
-          >
-            <div className="flex items-center gap-2">
-              {toastIcon === "morning" && <Coffee className="w-4 h-4 text-[#26393A]" />}
-              {toastIcon === "afternoon" && <Sun className="w-4 h-4 text-[#26393A]" />}
-              {toastIcon === "evening" && <Sunset className="w-4 h-4 text-[#26393A]" />}
-              {toastIcon === "night" && <Moon className="w-4 h-4 text-[#26393A]" />}
-              
-              <span className="font-gilroyBold text-[11px] md:text-[14px] leading-snug">
-                {toastMessage}
-              </span>
-            </div>
-            
-            <button
-              onClick={() => setShowToast(false)}
-              className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#EADFC3]/40 active:scale-90 transition-all cursor-pointer focus:outline-none"
-              aria-label="Dismiss greeting"
+      <div className="fixed top-4 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
+        <AnimatePresence>
+          {showToast && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="pointer-events-auto select-none flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl md:rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 w-full max-w-[360px] md:w-auto"
             >
-              <X className="w-3.5 h-3.5 text-[#26393A]/60" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="flex items-center gap-2.5">
+                {toastIcon === "morning" && <Coffee className="w-4 h-4 text-[#26393A] shrink-0" />}
+                {toastIcon === "afternoon" && <Sun className="w-4 h-4 text-[#26393A] shrink-0" />}
+                {toastIcon === "evening" && <Sunset className="w-4 h-4 text-[#26393A] shrink-0" />}
+                {toastIcon === "night" && <Moon className="w-4 h-4 text-[#26393A] shrink-0" />}
+                
+                <span className="font-gilroyBold text-[11px] md:text-[14px] leading-snug">
+                  {toastMessage}
+                </span>
+              </div>
+              
+              <button
+                onClick={() => setShowToast(false)}
+                className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#EADFC3]/40 active:scale-90 transition-all cursor-pointer focus:outline-none shrink-0"
+                aria-label="Dismiss greeting"
+              >
+                <X className="w-3.5 h-3.5 text-[#26393A]/60" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* The main grid container */}
       <div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
@@ -261,11 +264,11 @@ export default function Home() {
         <div id="interactive-building-sec" className="col-span-12 md:col-span-5 relative z-10 flex justify-center items-end pointer-events-none mt-4 md:mt-0 h-auto md:h-full w-full max-w-[450px] md:max-w-none mx-auto md:mx-0">
           {/* Building rises from below */}
           <motion.div
-            initial={skipAnimation ? { clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 } : { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }}
-            animate={{ clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 }}
+            initial={skipAnimation ? { clipPath: "none", y: 0, scale: 1, opacity: 1 } : { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }}
+            animate={skipAnimation || animationComplete ? { clipPath: "none", y: 0, scale: 1, opacity: 1 } : { clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 }}
             transition={skipAnimation ? { duration: 0 } : { type: "spring", stiffness: 60, damping: 15, delay: 0.2 }}
-            className="relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full will-change-[transform,opacity,clip-path]"
-            style={{ aspectRatio: "611 / 996" }}
+            onAnimationComplete={() => setAnimationComplete(true)}
+            className="relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto will-change-[transform,opacity]"
           >
             <img
               src="/images/Building.svg"
@@ -277,7 +280,7 @@ export default function Home() {
               initial={skipAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={skipAnimation ? { duration: 0 } : { type: "spring", stiffness: 180, damping: 15, delay: 0.8 }}
-              className="pointer-events-none absolute top-[42.5%] left-[24.5%] z-30 h-auto w-[28%] object-contain"
+              className="pointer-events-none absolute top-[45.2%] md:top-[42.5%] left-[23%] md:left-[24.5%] z-30 h-auto w-[28%] object-contain"
             >
               <Image
                 src="/images/boy.svg"
