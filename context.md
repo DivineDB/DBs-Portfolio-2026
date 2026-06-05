@@ -1,6 +1,6 @@
 # Portfolio State (@context.md)
 
-## Phase: 7 — Site-wide Mobile Strategy, Scroll Optimization, and Bug Fixes
+## Phase: 8 — Interactive Chimney Bird & Custom Pupil Tracking
 
 ## Stack
 
@@ -72,10 +72,31 @@
 - `TldrContent` uses `motion.div` / `motion.p` wrappers (restored after accidental strip).
 - **Build verified:** `next build` exits 0 with all 6 routes static (`/`, `/about`, `/hire-me`, `/other-things`, `/work`, `/_not-found`) + 1 dynamic (`/work/[slug]`).
 
+## Phase: 8 — Interactive Chimney Bird & Custom Pupil Tracking
+
+- **SVG Bird Conversion & Cursor Tracking (`src/components/InteractiveBird.tsx`)**:
+  - Replaced the static building chimney ornament with an interactive React component rendering the bird illustration inline.
+  - Implemented responsive, high-sensitivity eye tracking where the pupils follow the user's cursor within the boundaries of the sclera.
+  - Scleras were enlarged, outline strokes removed, and pupils customized as solid black `#000000` circles to match the visual aesthetic.
+  - **Performance Optimization**: Created an optimized tracking loop using `requestAnimationFrame` that runs **only** during active mouse movement, putting the loop to sleep when the cursor stops or leaves the window. When sleeping, CPU/GPU overhead is 0%.
+  - Pupil coordinate logic handles mirrored SVG transforms to accurately track coordinates.
+- **Intro Animation & Rendering Fix**:
+  - Ensured the pupils and bird render together during load, avoiding visual lag where pupils appeared on screen before the rest of the bird body.
+- **Hover Speech Bubble Popup (`src/app/page.tsx`)**:
+  - Hovering over the bird displays a clean white speech bubble saying a random preloaded greeting (starting with `"hi..."`, plus `"sup?"`, `"peek-a-boo!"`, `"looking at me?"`, `"tweet tweet!"`, `"need help?"`, `"coo coo!"`).
+  - Positioned the speech bubble closer and slightly to the left of the bird, scaled appropriately with a smaller font for a premium feel.
+  - Implemented custom entrance (`350ms`) and exit (`300ms`) delay timers using `setTimeout` refs to prevent accidental triggering during rapid mouse sweeps.
+  - Bubble animation uses a premium custom ease-out cubic-bezier curve (`[0.16, 1, 0.3, 1]`) to transition scale and opacity.
+- **Mobile Strategy**:
+  - The interactive bird is strictly hidden on mobile devices (`hidden md:block`) to avoid visual clutter and viewport issues on smaller screens.
+- **Layout Integrity**:
+  - Preserved exact building layout coordinates (`top-[11.5%] left-[-1%] w-[17%]`) and kept the window hotspots and boy graphic in their original desktop positions.
+
 ## Next
 
 - Final validation of production builds and mobile layout checks on dev server.
-- Commit all code and confirm responsiveness. stage: `hire-me/page.tsx`, `context.md`.
+- Commit all code and confirm responsiveness.
+
 
 # AI Skill: Emil Kowalski UI & Animation Guidelines
 

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
 import { Coffee, Sun, Sunset, Moon, X, ArrowDown } from "lucide-react";
+import InteractiveBird from "@/components/InteractiveBird";
 
 export default function Home() {
   const [time, setTime] = useState("");
@@ -16,6 +17,9 @@ export default function Home() {
   const [toastMessage, setToastMessage] = useState("");
   const [toastIcon, setToastIcon] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [isBirdHovered, setIsBirdHovered] = useState(false);
+  const [birdMessage, setBirdMessage] = useState("hi...");
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -39,10 +43,10 @@ export default function Home() {
       greeting = "Good Afternoon Visitor! ☀️ Thanks for dropping by.";
       iconType = "afternoon";
     } else if (hours >= 17 && hours < 22) {
-      greeting = "Good Evening Visitor! 🌇 Enjoy your stay.";
+      greeting = "Good Evening Visitor! 🌇 Keep Browsing.";
       iconType = "evening";
     } else {
-      greeting = "Good Night Visitor! 🌙 Hello, fellow night owl.";
+      greeting = "🌙 Hello, fellow night owl.";
       iconType = "night";
     }
 
@@ -75,6 +79,9 @@ export default function Home() {
       clearInterval(interval);
       clearTimeout(toastTimeout);
       clearTimeout(dismissTimeout);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -292,6 +299,53 @@ export default function Home() {
               />
             </motion.div>
 
+            {/* Interactive Bird - Sitting perfectly on the left roof corner chimney block */}
+            <motion.div
+              initial={skipAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={skipAnimation ? { duration: 0 } : { type: "spring", stiffness: 180, damping: 15, delay: 0.85 }}
+              onMouseEnter={() => {
+                if (hoverTimeoutRef.current) {
+                  clearTimeout(hoverTimeoutRef.current);
+                }
+                hoverTimeoutRef.current = setTimeout(() => {
+                  const greetings = ["hi...", "sup?", "peek-a-boo!", "looking at me?", "tweet tweet!", "need help?", "coo coo!"];
+                  const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+                  setBirdMessage(randomGreeting);
+                  setIsBirdHovered(true);
+                }, 350); // 350ms delay before appearing
+              }}
+              onMouseLeave={() => {
+                if (hoverTimeoutRef.current) {
+                  clearTimeout(hoverTimeoutRef.current);
+                }
+                hoverTimeoutRef.current = setTimeout(() => {
+                  setIsBirdHovered(false);
+                }, 300); // 300ms delay before disappearing
+              }}
+              className="pointer-events-auto absolute top-[8.8%] left-[7.7%] z-30 w-[17%] h-auto cursor-pointer hidden md:block"
+            >
+              <InteractiveBird className="w-full h-auto" />
+
+              {/* Animated chat popup saying a fun greeting */}
+              <AnimatePresence>
+                {isBirdHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 3, x: "-50%" }}
+                    animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
+                    exit={{ opacity: 0, scale: 0.95, y: 3, x: "-50%" }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute bottom-[90%] left-[43%] z-50 bg-white/95 backdrop-blur-sm border border-[#EADFC3] text-[#26393A] font-satoshi font-bold text-[10px] px-2 py-1 rounded-lg shadow-md pointer-events-none select-none flex items-center justify-center whitespace-nowrap"
+                  >
+                    {birdMessage}
+                    {/* Triangle tail for speech bubble */}
+                    <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-[#EADFC3]"></div>
+                    <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white"></div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
             {/* Interactive Window Links — staggered fade-in after building lands */}
             <motion.div
               initial={skipAnimation ? "visible" : "hidden"}
@@ -301,7 +355,7 @@ export default function Home() {
             >
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[34.5%] left-[29.5%] w-[17.5%] h-[23.5%] z-20"
+                className="absolute top-[34.5%] left-[29.5%] w-[17.5%] h-[23.5%] md:top-[34.1%] md:left-[29.8%] md:w-[16.5%] md:h-[23.5%] z-20"
               >
                 <Link
                   href="/about"
@@ -312,7 +366,7 @@ export default function Home() {
 
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[34.5%] left-[59%] w-[16%] h-[23.5%] z-20"
+                className="absolute top-[34.5%] left-[59%] w-[16%] h-[23.5%] md:top-[34.1%] md:left-[59%] md:w-[16.5%] md:h-[22.5%] z-20"
               >
                 <Link
                   href="/work"
@@ -323,7 +377,7 @@ export default function Home() {
 
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[69.5%] left-[30%] w-[16.5%] h-[24%] z-20"
+                className="absolute top-[69.5%] left-[30%] w-[16.5%] h-[24%] md:top-[69.1%] md:left-[30%] md:w-[16.5%] md:h-[24%] z-20"
               >
                 <Link
                   href="/other-things"
@@ -334,7 +388,7 @@ export default function Home() {
 
               <motion.div
                 variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } } }}
-                className="absolute top-[69.5%] left-[59%] w-[16.5%] h-[24%] z-20"
+                className="absolute top-[69.5%] left-[59%] w-[16.5%] h-[24%] md:top-[69.3%] md:left-[59%] md:w-[16.7%] md:h-[23.5%] z-20"
               >
                 <Link
                   href="/hire-me"
