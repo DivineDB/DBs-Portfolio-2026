@@ -374,34 +374,34 @@ export default function HireMePage() {
           >
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                A complimentary package.
+                I bridge the product gap
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Hiring me comes with sharp attention to detail, a knack for turning complex user problems into straightforward interfaces, and just enough humor to keep sprint planning interesting.
+                I live at the intersection of design and code. My mornings are spent mapping user flows in Figma, and my afternoons are spent writing clean code in React, Next.js, and Node.js. You won&apos;t have to teach me how to talk to developers or designers—I already speak both languages.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                The sweet spot.
+                Proven self-starter
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Jokes aside, I live right in the middle of design and code. I&apos;ve worked alongside some incredibly sharp product and engineering teams in India, shipping things across food-tech, ed-tech, and fin-tech.
+                Without a team or manager pushing me, I’ve independently built and shipped personal projects from scratch. I know how to scope a problem, design the solution, and code the final product.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Structured & independent.
+                Comfortable with ambiguity
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I’m structured, comfortable working independently, and I actually enjoy the friction of figuring out a messy, ambiguous problem.
+                I actually enjoy the friction of figuring out messy, complex problems. When I hit a bug or a design flaw in my projects, I don&apos;t stop—I research and fix it.
               </p>
             </motion.div>
             <motion.div variants={LIST_ITEM}>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Designer who builds.
+                Ready to adapt
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                Just to remind you: I spend my mornings mapping user flows and micro-interactions in Figma, and my afternoons writing clean, production-ready code in React, Next.js, and Node.js to bring them to life.
+                Beyond my technical toolkit, I bring a sharp attention to detail, an eagerness to learn from seasoned pros, and just enough humor to keep sprint planning engaging.
               </p>
             </motion.div>
           </motion.div>
@@ -418,34 +418,34 @@ export default function HireMePage() {
           <div className="mt-16 grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Culture over corporate jargon. 🌊
+                Amazing work culture.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I’ve been incredibly lucky to work with teams that value trust, open communication, and individual well-being over micromanagement. I look for spaces that treat people like adults and value great work over hours logged.
+                I want to work with people who genuinely care about what they are building. I am looking for a team that gets excited about solving tough problems, shares ideas openly, and pushes each other to do great work.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Remote first (or hill-first). 🏠
+                Remote first.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I thrive when given the flexibility and comfort to structure my own deep-work hours. A company with a strong async communication culture is a massive plus for me.
+                I value the flexibility and comfort of working from anywhere. A company that supports remote work is a big plus for me.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                The right tools. 🛠️
+                Familiar Tech stack.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                While my core comfort zone is Figma, React, TypeScript, and Node.js, I don&apos;t believe in being precious about a stack. If a project requires picking up a new tool, framework, or workflow automation, I adapt quickly.
+                I believe in using the right tool for the right job, and so far I&apos;ve been able to pick up new technologies fairly quickly.
               </p>
             </div>
             <div>
               <p className="font-gilroyBold text-lg tracking-tight text-text_primary">
-                Fair compensation. 💰
+                Fair compensation.
               </p>
               <p className="mt-2 text-base leading-relaxed text-slate-700">
-                I love being fairly compensated for the craft and ownership I bring to a team. That said, money isn&apos;t my only driver—otherwise, I wouldn&apos;t spend my free time building custom side projects and internal tools just to see if I can.
+                I won&apos;t lie, I love getting fairly paid, for the work I do. But that&apos;s not my only incentive, anything but my side-projects are a testament to that.
               </p>
             </div>
           </div>

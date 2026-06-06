@@ -37,13 +37,64 @@ type LensItem = {
   aspect: string;
   label: string;
   bg: string;
+  gradient: string;
 };
 
 const LENS_ITEMS: LensItem[] = [
-  { aspect: "aspect-[4/3]", label: "Street", bg: "bg-[#2a4756]/8" },
-  { aspect: "aspect-[4/3]", label: "Cinematography", bg: "bg-[#2a4756]/12" },
-  { aspect: "aspect-[4/3]", label: "Digital Canvas", bg: "bg-[#2a4756]/6" },
-  { aspect: "aspect-[4/3]", label: "Documentary", bg: "bg-[#2a4756]/10" },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Street", 
+    bg: "bg-[#2a4756]/8", 
+    gradient: "radial-gradient(ellipse at 60% 40%, rgba(249,115,22,0.1) 0%, transparent 65%), linear-gradient(135deg, rgba(42,71,86,0.15) 0%, rgba(42,71,86,0.06) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Cinematography", 
+    bg: "bg-[#2a4756]/12", 
+    gradient: "radial-gradient(ellipse at 30% 30%, rgba(14,165,233,0.15) 0%, transparent 70%), linear-gradient(135deg, rgba(42,71,86,0.2) 0%, rgba(42,71,86,0.08) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Digital Canvas", 
+    bg: "bg-[#2a4756]/6", 
+    gradient: "radial-gradient(ellipse at 70% 50%, rgba(168,85,247,0.12) 0%, transparent 60%), linear-gradient(135deg, rgba(42,71,86,0.12) 0%, rgba(42,71,86,0.04) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Documentary", 
+    bg: "bg-[#2a4756]/10", 
+    gradient: "radial-gradient(ellipse at 40% 60%, rgba(120,113,108,0.15) 0%, transparent 65%), linear-gradient(135deg, rgba(42,71,86,0.18) 0%, rgba(42,71,86,0.07) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Minimalism", 
+    bg: "bg-[#2a4756]/5", 
+    gradient: "radial-gradient(ellipse at 50% 50%, rgba(42,71,86,0.08) 0%, transparent 50%), linear-gradient(135deg, rgba(42,71,86,0.1) 0%, rgba(42,71,86,0.03) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Architecture", 
+    bg: "bg-[#2a4756]/9", 
+    gradient: "radial-gradient(ellipse at 20% 80%, rgba(100,116,139,0.12) 0%, transparent 65%), linear-gradient(135deg, rgba(42,71,86,0.16) 0%, rgba(42,71,86,0.06) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Portraits", 
+    bg: "bg-[#2a4756]/11", 
+    gradient: "radial-gradient(ellipse at 50% 30%, rgba(251,191,36,0.12) 0%, transparent 70%), linear-gradient(135deg, rgba(42,71,86,0.2) 0%, rgba(42,71,86,0.08) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Landscapes", 
+    bg: "bg-[#2a4756]/7", 
+    gradient: "radial-gradient(ellipse at 60% 70%, rgba(34,197,94,0.08) 0%, transparent 60%), linear-gradient(135deg, rgba(42,71,86,0.14) 0%, rgba(42,71,86,0.05) 100%)" 
+  },
+  { 
+    aspect: "aspect-[3/4]", 
+    label: "Abstract", 
+    bg: "bg-[#2a4756]/10", 
+    gradient: "radial-gradient(ellipse at 80% 20%, rgba(236,72,153,0.12) 0%, transparent 65%), linear-gradient(135deg, rgba(42,71,86,0.18) 0%, rgba(42,71,86,0.07) 100%)" 
+  },
 ];
 
 function LensCard({ item }: { item: LensItem }) {
@@ -74,9 +125,7 @@ function LensCard({ item }: { item: LensItem }) {
           group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105
         "
         style={{
-          background:
-            "radial-gradient(ellipse at 60% 40%, rgba(162,249,145,0.07) 0%, transparent 65%), " +
-            "linear-gradient(135deg, rgba(42,71,86,0.15) 0%, rgba(42,71,86,0.06) 100%)",
+          background: item.gradient,
         }}
       />
 
@@ -240,7 +289,7 @@ export default function OtherThingsPage() {
         >
           <SectionHeader label="01 // The Lens" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
             {LENS_ITEMS.map((item, i) => (
               <div key={i}>
                 <LensCard item={item} />
