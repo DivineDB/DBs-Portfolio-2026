@@ -40,12 +40,10 @@ type LensItem = {
 };
 
 const LENS_ITEMS: LensItem[] = [
-  { aspect: "aspect-[3/4]", label: "Street", bg: "bg-[#2a4756]/8" },
-  { aspect: "aspect-square", label: "Cinematography", bg: "bg-[#2a4756]/12" },
-  { aspect: "aspect-video", label: "Digital Canvas", bg: "bg-[#2a4756]/6" },
-  { aspect: "aspect-square", label: "Documentary", bg: "bg-[#2a4756]/10" },
-  { aspect: "aspect-[3/4]", label: "Architecture", bg: "bg-[#2a4756]/7" },
-  { aspect: "aspect-video", label: "Abstract", bg: "bg-[#2a4756]/9" },
+  { aspect: "aspect-[4/3]", label: "Street", bg: "bg-[#2a4756]/8" },
+  { aspect: "aspect-[4/3]", label: "Cinematography", bg: "bg-[#2a4756]/12" },
+  { aspect: "aspect-[4/3]", label: "Digital Canvas", bg: "bg-[#2a4756]/6" },
+  { aspect: "aspect-[4/3]", label: "Documentary", bg: "bg-[#2a4756]/10" },
 ];
 
 function LensCard({ item }: { item: LensItem }) {
@@ -120,142 +118,7 @@ function LensCard({ item }: { item: LensItem }) {
 }
 
 /* ─────────────────────────────────────────────
-   Phase 3 – Market Dynamics (Trading terminal)
-───────────────────────────────────────────── */
-type TickerRow = {
-  symbol: string;
-  ltp: string;
-  change: string;
-  oi: string;
-  iv: string;
-  type: "CE" | "PE";
-};
-
-const TICKER_ROWS: TickerRow[] = [
-  { symbol: "NIFTY 24500", ltp: "312.45", change: "+18.20", oi: "1.2M", iv: "14.8%", type: "CE" },
-  { symbol: "NIFTY 24000", ltp: "89.10",  change: "-5.60",  oi: "3.4M", iv: "16.2%", type: "PE" },
-  { symbol: "SENSEX 81K",  ltp: "540.80", change: "+31.50", oi: "0.8M", iv: "13.4%", type: "CE" },
-  { symbol: "NIFTY 23800", ltp: "175.25", change: "-12.40", oi: "2.1M", iv: "17.9%", type: "PE" },
-  { symbol: "BANKNIFTY",   ltp: "229.60", change: "+9.85",  oi: "1.7M", iv: "18.3%", type: "CE" },
-];
-
-const SPARKLINE_POINTS = "0,48 12,42 24,38 36,44 48,32 60,28 72,35 84,22 96,18 108,24 120,14 132,20 144,12 156,8 168,16 180,10";
-
-function TradingTerminal() {
-  return (
-    <div
-      className="w-full rounded-xl overflow-hidden border border-[#1a3040]/50"
-      style={{ background: "linear-gradient(160deg,#0d1f2d 0%,#111a22 60%,#0a1520 100%)" }}
-    >
-      {/* Terminal chrome bar */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
-        <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-        <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-        <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-        <span className="ml-3 font-mono text-[10px] text-white/20 tracking-wider uppercase">
-          options_chain.live — NSE/BSE
-        </span>
-        <div className="ml-auto flex items-center gap-1.5">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a2f991] animate-pulse" />
-          <span className="font-mono text-[10px] text-[#a2f991]/70">LIVE</span>
-        </div>
-      </div>
-
-      {/* Sparkline chart */}
-      <div className="px-6 pt-5 pb-2">
-        <div className="flex items-end justify-between mb-1">
-          <span className="font-mono text-[10px] text-white/20 uppercase tracking-wider">
-            NIFTY 50 — 1D
-          </span>
-          <span className="font-mono text-xs font-bold text-[#a2f991]">+1.42%</span>
-        </div>
-        <svg
-          viewBox="0 0 180 56"
-          className="w-full h-14"
-          preserveAspectRatio="none"
-        >
-          {/* Gradient fill */}
-          <defs>
-            <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#a2f991" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#a2f991" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <polyline
-            points={SPARKLINE_POINTS + " 180,56 0,56"}
-            fill="url(#sparkGrad)"
-          />
-          <polyline
-            points={SPARKLINE_POINTS}
-            fill="none"
-            stroke="#a2f991"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Current price dot */}
-          <circle cx="180" cy="10" r="3" fill="#a2f991" />
-          <circle cx="180" cy="10" r="6" fill="#a2f991" fillOpacity="0.2" />
-        </svg>
-      </div>
-
-      {/* Column headers */}
-      <div className="overflow-x-auto">
-      <div className="min-w-[400px] grid grid-cols-5 gap-2 px-6 py-1.5 border-t border-b border-white/5 text-[10px] font-mono text-white/20 uppercase tracking-wider">
-        <span>Strike</span>
-        <span className="text-right">LTP</span>
-        <span className="text-right">Chg</span>
-        <span className="text-right">OI</span>
-        <span className="text-right">IV</span>
-      </div>
-
-      {/* Ticker rows */}
-      <div className="px-6 py-2 space-y-0.5">
-        {TICKER_ROWS.map((row, i) => (
-          <div
-            key={i}
-            className="min-w-[400px] grid grid-cols-5 gap-2 py-2 border-b border-white/[0.04] group hover:bg-white/[0.03] transition-colors rounded px-1"
-          >
-            <span className="font-mono text-[11px] text-white/50 flex items-center gap-1.5">
-              <span
-                className={`text-[8px] px-1 py-0.5 rounded font-bold ${
-                  row.type === "CE"
-                    ? "bg-[#a2f991]/15 text-[#a2f991]"
-                    : "bg-red-500/15 text-red-400"
-                }`}
-              >
-                {row.type}
-              </span>
-              {row.symbol}
-            </span>
-            <span className="font-mono text-[11px] text-white/70 text-right">{row.ltp}</span>
-            <span
-              className={`font-mono text-[11px] text-right font-semibold ${
-                row.change.startsWith("+") ? "text-[#a2f991]" : "text-red-400"
-              }`}
-            >
-              {row.change}
-            </span>
-            <span className="font-mono text-[11px] text-white/40 text-right">{row.oi}</span>
-            <span className="font-mono text-[11px] text-white/40 text-right">{row.iv}</span>
-          </div>
-        ))}
-      </div>
-      </div> {/* end overflow-x-auto */}
-
-      {/* Bottom status bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-t border-white/5">
-        <span className="font-mono text-[9px] text-white/20 uppercase tracking-wider">
-          PCR: 0.82 · VIX: 12.4 · Open → 24,230
-        </span>
-        <span className="font-mono text-[9px] text-white/20">15:29 IST</span>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Phase 4 – Movement / Travel
+   Phase 3 – Movement / Travel
 ───────────────────────────────────────────── */
 type City = {
   name: string;
@@ -364,7 +227,7 @@ export default function OtherThingsPage() {
           className="max-w-2xl font-satoshi text-lg text-about_body leading-relaxed mb-32"
         >
           Design and engineering pay the bills. This is what keeps the creative engine running.
-          A collection of visual storytelling, market dynamics, and movement.
+          A collection of visual storytelling and movement.
         </motion.p>
 
         {/* ── Phase 2 – The Lens ── */}
@@ -377,59 +240,12 @@ export default function OtherThingsPage() {
         >
           <SectionHeader label="01 // The Lens" />
 
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             {LENS_ITEMS.map((item, i) => (
-              <div key={i} className="break-inside-avoid">
+              <div key={i}>
                 <LensCard item={item} />
               </div>
             ))}
-          </div>
-        </motion.section>
-
-        {/* ── Phase 3 – Market Dynamics ── */}
-        <motion.section
-          variants={sectionVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.05 }}
-          className="mt-32 will-change-transform"
-        >
-          <SectionHeader label="02 // Market Dynamics" />
-
-          <div
-            className="
-              mt-8 rounded-2xl border border-text_primary/10 p-8 md:p-16
-              flex flex-col md:flex-row gap-12 items-center
-              bg-text_primary/[0.025] backdrop-blur-sm
-            "
-          >
-            {/* Left – copy */}
-            <div className="flex-1 flex flex-col gap-6 min-w-0">
-              <h2 className="font-gilroyBold text-4xl md:text-5xl text-text_primary leading-tight">
-                Volatility &amp; Momentum.
-              </h2>
-              <p className="font-satoshi text-base text-about_body leading-relaxed max-w-sm">
-                Trading options and navigating the psychology of the stock market.
-                Finding patterns in chaos across <strong>Nifty</strong> and <strong>Sensex</strong>.
-              </p>
-
-              {/* Stat chips */}
-              <div className="flex flex-wrap gap-3 mt-2">
-                {["Options", "Derivatives", "Intraday", "Swing"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-gilroyBold text-xs uppercase tracking-widest px-3 py-1.5 border border-text_primary/15 rounded-full text-text_primary/50"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right – terminal */}
-            <div className="flex-1 w-full min-w-0">
-              <TradingTerminal />
-            </div>
           </div>
         </motion.section>
 
@@ -441,7 +257,7 @@ export default function OtherThingsPage() {
           viewport={{ once: true, amount: 0.05 }}
           className="mt-32 will-change-transform"
         >
-          <SectionHeader label="03 // Movement" />
+          <SectionHeader label="02 // Movement" />
 
           <div className="mt-8 flex flex-col">
             {CITIES.map((city) => (
