@@ -1,6 +1,6 @@
 # Portfolio State (@context.md)
 
-## Phase: 8 — Interactive Chimney Bird & Custom Pupil Tracking
+## Phase: 9 — Premium Off-Hours Photography Gallery & Lightbox Slideshow
 
 ## Stack
 
@@ -40,6 +40,16 @@
 - **Interactive SVG Windows:** Cleared out the static, blurry vector text paths and green hover blocks inside `Building.svg`. Replaced them with responsive absolute HTML Next.js `<Link>` components mapped precisely to the SVG aspect-ratio bounds. Each window features smooth backdrop-blur scaling, premium border glows, and crisp centered typography ("About Me", "Selected Work", "Other Things", "Hire Me").
 - **Phase 5 (Regression Fixes):** Removed `overflow-hidden` from main app wrappers to prevent clipping of the building SVG roof. Refactored the `<HighlightBox>` internal styling (`inline-flex items-baseline`) to align strictly with external typographic baselines without hardcoded heights. Adjusted window link text overlays to use top-aligned minimalist typography (`font-gilroyRegular text-xs capitalize tracking-normal text-slate-800`).
 - **Phase 6: Rebuilt Minimalist Editorial Landing Page:** Rebuilt the landing page (`/src/app/page.tsx`) completely from scratch using a strict professional 12-column CSS Grid layout (`col-span-7` for typography and `col-span-5` for the building). Cleaned up all imports and deleted `use-sound` and any audio triggers. Structured an animated background noise overlay. Anchored the building at the bottom-right scaling at exactly `90vh` to bleed off the bottom naturally while preserving Next.js `<Link>` window overlays for tactile location redirects. Set up a dynamic fixed-width Control Deck in the absolute bottom-left (integrating live dynamic IST clock withlocation toggles and ⌘K search shortcut) and copyright row placed directly below.
+- **Phase 9: Premium Off-Hours Photography Gallery & Lightbox Slideshow:**
+  - Renamed and configured raw JPEG assets in `public/images/` to clean, web-safe filenames (`photography-1.jpg` to `photography-4.jpg`).
+  - Rebuilt the gallery on the `/other-things` (Off-Hours) page into a premium, minimalist 3-column CSS-columns masonry grid with sharp photo borders (no rounded corners), tighter spacing (`gap-4` and `mb-4` margins), and pushed the section down with a `mb-[50vh]` spacer.
+  - Implemented a scroll-driven theme transition using Framer Motion (`useScroll` and `useTransform`) to map scroll position to page background color (fading smoothly from `#f8edd1` cream to `#121212` dark gray when the gallery enters view, and reverting back to `#f8edd1` cream once it leaves the top of the viewport) and text colors (navy `#2a4756` $\leftrightarrow$ cream `#f8edd1`). Bound these variables inline to theme custom variables so that all typography and components (including page footer) morph dynamically.
+  - Implemented a subtle, premium hover zoom (`scale-103` with a custom camera ease-out cubic-bezier transition).
+  - Built a high-performance fullscreen slideshow/lightbox modal displaying centered photography covering `85vw` width and `90vh` height with sharp borders (no rounded corners), no drop shadows, and zero distractions (no captions, titles, or index numbers) using Framer Motion and `lucide-react` icons.
+  - Applied the **Blur Bridging** animation tenet (a fast 4px to 0px blur filter animated in tandem with opacity fade and scale transitions) to make image switching feel exceptionally premium and smooth.
+  - Added full keyboard accessibility (arrows to slide, ESC to close), touch/drag swiping gestures, static button positioning (`top-1/2 -translate-y-1/2` to prevent layout shift), and automated Lenis scroll freezing while the modal is open.
+  - Resolved browser console warnings by adding the `relative` positioning class to the scroll-target section container, and refactoring color animations to use native CSS transitions instead of Framer Motion string color interpolators.
+
 
 ## Narrative tabs (morphing pill)
 
@@ -94,8 +104,8 @@
 
 ## Next
 
-- Final validation of production builds and mobile layout checks on dev server.
-- Commit all code and confirm responsiveness.
+- Perform final responsive checks across desktop and mobile devices.
+- Ready for deploy.
 
 
 # AI Skill: Emil Kowalski UI & Animation Guidelines

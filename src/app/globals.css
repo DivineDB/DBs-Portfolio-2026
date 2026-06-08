@@ -79,6 +79,17 @@ body {
   @apply bg-bg text-text_primary antialiased font-gilroyRegular;
 }
 
+html.lenis-stopped,
+html.lenis-stopped body {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+}
+
+html.lenis-stopped::-webkit-scrollbar,
+html.lenis-stopped body::-webkit-scrollbar {
+  display: none !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -88,13 +99,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(42, 71, 86, 0.2);
+  background: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2));
   border-radius: 10px;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(42, 71, 86, 0.2) transparent;
+  scrollbar-color: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2)) transparent;
   /* Remove iOS tap blue flash — active: states provide feedback instead */
   -webkit-tap-highlight-color: transparent;
 }
