@@ -7,9 +7,7 @@ interface SmoothScrollProps {
   children: React.ReactNode;
 }
 
-// On touch-only devices (iOS / Android) the browser's native momentum scroll
-// is always smoother than JS-driven lerp. Lenis is kept only for pointer
-// (mouse-wheel) devices where the polished easing is noticeable.
+// Detect touch-only devices to apply a lighter lerp that feels native
 const isTouchOnly =
   typeof window !== "undefined" &&
   window.matchMedia("(hover: none) and (pointer: coarse)").matches;
@@ -26,10 +24,18 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     }
   }, []);
 
-  if (isTouchOnly) return <>{children}</>;
-
   return (
-    <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
+    <ReactLenis
+      root
+      options={{
+        // Lighter, faster lerp on touch so it tracks the finger closely
+        lerp: isTouchOnly ? 0.12 : 0.08,
+        duration: isTouchOnly ? 0.9 : 1.2,
+        smoothWheel: true,
+        // Disable the wheel override on touch – let native momentum handle it
+        ...(isTouchOnly ? { wheelMultiplier: 1 } : {}),
+      }}
+    >
       {children}
     </ReactLenis>
   );

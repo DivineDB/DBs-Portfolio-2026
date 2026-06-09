@@ -56,12 +56,12 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
 
   const bgColor = useTransform(
     scrollYProgress,
-    [0, 0.01, 0.08, 1],
+    [0, 0.02, 0.12, 1],
     ["#f8edd1", "#f8edd1", "#121212", "#121212"]
   );
   const textColor = useTransform(
     scrollYProgress,
-    [0, 0.01, 0.08, 1],
+    [0, 0.02, 0.12, 1],
     ["#2a4756", "#2a4756", "#f8edd1", "#f8edd1"]
   );
 
@@ -106,7 +106,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (typeof window !== "undefined") {
       if (activeIndex !== null) return;
-      const isDark = latest >= 0.05;
+      const isDark = latest >= 0.08;
       document.documentElement.style.setProperty(
         "--scrollbar-thumb",
         isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
@@ -154,7 +154,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
       document.body.style.overflow = "";
       // Restore scrollbar thumb based on active theme color
       const progress = scrollYProgress.get();
-      const isDark = progress >= 0.15;
+      const isDark = progress >= 0.08;
       document.documentElement.style.setProperty(
         "--scrollbar-thumb",
         isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
@@ -233,29 +233,36 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
           <SectionHeader label="01 The Lens" />
 
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 mt-8">
-            {photos.map((item, i) => (
-              <motion.div
-                key={i}
-                onClick={() => {
-                  setDirection(0);
-                  setActiveIndex(i);
-                }}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut", delay: (i % 3) * 0.05 }}
-                className="relative overflow-hidden rounded-3xl border border-current/10 cursor-pointer group aspect-[9/16] will-change-[transform,opacity]"
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-                  priority={i < 6}
-                />
-              </motion.div>
-            ))}
+            {photos.map((item, i) => {
+              // On mobile (2-col grid), hide the last item when total count is odd
+              // so the grid always ends with a complete row.
+              const isOrphanOnMobile =
+                photos.length % 2 !== 0 && i === photos.length - 1;
+
+              return (
+                <motion.div
+                  key={i}
+                  onClick={() => {
+                    setDirection(0);
+                    setActiveIndex(i);
+                  }}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: (i % 3) * 0.05 }}
+                  className={`relative overflow-hidden rounded-3xl border border-current/10 cursor-pointer group aspect-[9/16] will-change-[transform,opacity]${isOrphanOnMobile ? " hidden sm:block" : ""}`}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                    priority={i < 6}
+                  />
+                </motion.div>
+              );
+            })}
           </div>
         </motion.section>
 
