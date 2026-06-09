@@ -23,17 +23,19 @@ export default function MobileCommandTrigger() {
         flex items-center gap-2.5
         min-w-[180px] h-[44px] px-5
         rounded-full
-        bg-[#f8edd1]/85 backdrop-blur-xl
-        border border-[#2a4756]/12
-        shadow-[0_8px_32px_rgba(42,71,86,0.18),0_0_0_1px_rgba(42,71,86,0.06)]
-        text-sm font-gilroyRegular text-[#2a4756]/60
+        bg-[var(--button-bg,#f8edd1)]
+        border border-[var(--button-border,rgba(42,71,86,0.12))]
+        text-sm font-gilroyRegular
         select-none cursor-pointer
         will-change-transform
       "
+      style={{
+        color: "var(--button-text, #2a4756)",
+      }}
     >
-      <Search size={14} strokeWidth={1.75} className="shrink-0 opacity-60" />
-      <span className="flex-1 text-left tracking-wide">Explore...</span>
-      <kbd className="text-[10px] font-gilroyBold text-[#2a4756]/30 tracking-widest">
+      <Search size={14} strokeWidth={1.75} className="shrink-0 opacity-60" style={{ color: "var(--button-text, #2a4756)" }} />
+      <span className="flex-1 text-left tracking-wide opacity-80" style={{ color: "var(--button-text, #2a4756)" }}>Explore...</span>
+      <kbd className="text-[10px] font-gilroyBold tracking-widest opacity-40" style={{ color: "var(--button-text, #2a4756)" }}>
         ⌘K
       </kbd>
     </motion.button>

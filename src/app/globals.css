@@ -70,9 +70,16 @@
 }
 
 
+:root {
+  --button-bg: #f8edd1;
+  --button-text: #2a4756;
+  --button-border: rgba(42, 71, 86, 0.12);
+}
+
 html,
 body {
   min-height: 100%;
+  position: relative;
 }
 
 body {
@@ -95,17 +102,19 @@ html.lenis-stopped body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--scrollbar-track, transparent);
+  transition: background-color 0.4s ease;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2));
   border-radius: 10px;
+  transition: background-color 0.4s ease;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2)) transparent;
+  scrollbar-color: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2)) var(--scrollbar-track, transparent);
   /* Remove iOS tap blue flash — active: states provide feedback instead */
   -webkit-tap-highlight-color: transparent;
 }

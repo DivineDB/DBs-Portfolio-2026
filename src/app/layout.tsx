@@ -4,6 +4,7 @@ import { Playfair_Display } from "next/font/google";
 import SmoothScroll from "../components/SmoothScroll";
 import CommandPaletteLoader from "../components/CommandPaletteLoader";
 import MobileCommandTrigger from "../components/MobileCommandTrigger";
+import BackToHome from "../components/BackToHome";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -47,6 +48,7 @@ export default function RootLayout({
       className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} h-full`}
     >
       <body className="min-h-full">
+        <BackToHome />
         <CommandPaletteLoader />
         <MobileCommandTrigger />
         <SmoothScroll>{children}</SmoothScroll>
