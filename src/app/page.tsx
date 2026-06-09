@@ -86,7 +86,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full min-h-screen md:h-screen overflow-y-auto md:overflow-hidden bg-background">
+    <main className="relative w-full min-h-screen md:h-screen md:overflow-hidden bg-background">
       {/* A subtle, animated noise overlay for texture */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 

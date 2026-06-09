@@ -65,6 +65,14 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
     ["#2a4756", "#2a4756", "#f8edd1", "#f8edd1"]
   );
 
+  const [isTouch, setIsTouch] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    setIsTouch(isTouchOnly);
+  }, []);
+
   const nextSlide = useCallback(() => {
     setDirection(1);
     setActiveIndex((prev) => (prev === null ? null : (prev + 1) % photos.length));
@@ -106,17 +114,56 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (typeof window !== "undefined") {
       if (activeIndex !== null) return;
-      const isDark = latest >= 0.05;
-      document.documentElement.style.setProperty(
-        "--scrollbar-thumb",
-        isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
-      );
-      document.documentElement.style.setProperty(
-        "--scrollbar-track",
-        isDark ? "#121212" : "transparent"
-      );
+      const darkActive = latest >= 0.05;
+      setIsDark(darkActive);
+
+      if (!isTouch) {
+        document.documentElement.style.setProperty(
+          "--scrollbar-thumb",
+          darkActive ? "#333333" : "rgba(42, 71, 86, 0.2)"
+        );
+        document.documentElement.style.setProperty(
+          "--scrollbar-track",
+          darkActive ? "#121212" : "transparent"
+        );
+        
+        // Sync buttons to dark mode
+        document.documentElement.style.setProperty(
+          "--button-bg",
+          darkActive ? "#1e1e1e" : "#f8edd1"
+        );
+        document.documentElement.style.setProperty(
+          "--button-text",
+          darkActive ? "#f8edd1" : "#2a4756"
+        );
+        document.documentElement.style.setProperty(
+          "--button-border",
+          darkActive ? "#2d2d2d" : "#e1d4b7"
+        );
+      }
+    }
+  });
+
+  // Smoothly sync body/document background colors during page scrolling
+  useMotionValueEvent(bgColor, "change", (latestBg) => {
+    if (typeof window !== "undefined") {
+      if (activeIndex !== null) return;
+      if (!isTouch) {
+        document.body.style.backgroundColor = latestBg;
+        document.documentElement.style.backgroundColor = latestBg;
+      }
+    }
+  });
+
+  // Touch device transition optimizations
+  useEffect(() => {
+    if (isTouch && typeof window !== "undefined") {
+      document.body.style.transition = "background-color 0.7s cubic-bezier(0.16, 1, 0.3, 1)";
+      document.documentElement.style.transition = "background-color 0.7s cubic-bezier(0.16, 1, 0.3, 1)";
       
-      // Sync buttons to dark mode
+      document.body.style.backgroundColor = isDark ? "#121212" : "#f8edd1";
+      document.documentElement.style.backgroundColor = isDark ? "#121212" : "#f8edd1";
+
       document.documentElement.style.setProperty(
         "--button-bg",
         isDark ? "#1e1e1e" : "#f8edd1"
@@ -130,16 +177,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
         isDark ? "#2d2d2d" : "#e1d4b7"
       );
     }
-  });
-
-  // Smoothly sync body/document background colors during page scrolling
-  useMotionValueEvent(bgColor, "change", (latestBg) => {
-    if (typeof window !== "undefined") {
-      if (activeIndex !== null) return;
-      document.body.style.backgroundColor = latestBg;
-      document.documentElement.style.backgroundColor = latestBg;
-    }
-  });
+  }, [isDark, isTouch]);
 
   // Prevent scroll when slideshow is open
   useEffect(() => {
@@ -152,20 +190,22 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
     } else {
       document.documentElement.classList.remove("lenis-stopped");
       document.body.style.overflow = "";
-      // Restore scrollbar thumb based on active theme color
-      const progress = scrollYProgress.get();
-      const isDark = progress >= 0.15;
-      document.documentElement.style.setProperty(
-        "--scrollbar-thumb",
-        isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
-      );
-      document.documentElement.style.setProperty(
-        "--scrollbar-track",
-        isDark ? "#121212" : "transparent"
-      );
-      const bg = bgColor.get();
-      document.body.style.backgroundColor = bg;
-      document.documentElement.style.backgroundColor = bg;
+      if (!isTouch) {
+        // Restore scrollbar thumb based on active theme color
+        const progress = scrollYProgress.get();
+        const isDark = progress >= 0.15;
+        document.documentElement.style.setProperty(
+          "--scrollbar-thumb",
+          isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
+        );
+        document.documentElement.style.setProperty(
+          "--scrollbar-track",
+          isDark ? "#121212" : "transparent"
+        );
+        const bg = bgColor.get();
+        document.body.style.backgroundColor = bg;
+        document.documentElement.style.backgroundColor = bg;
+      }
       if (lenis) lenis.start();
     }
     return () => {
@@ -173,28 +213,42 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
       document.body.style.overflow = "";
       if (lenis) lenis.start();
     };
-  }, [activeIndex, lenis, textColor, bgColor, scrollYProgress]);
+  }, [activeIndex, lenis, textColor, bgColor, scrollYProgress, isTouch]);
 
-  // Clean up scrollbar styles on unmount
+  // Clean up scrollbar and body styles on unmount
   useEffect(() => {
     return () => {
-      document.documentElement.style.removeProperty("--scrollbar-thumb");
-      document.documentElement.style.removeProperty("--scrollbar-track");
-      document.documentElement.style.removeProperty("--button-bg");
-      document.documentElement.style.removeProperty("--button-text");
-      document.documentElement.style.removeProperty("--button-border");
-      document.body.style.backgroundColor = "";
-      document.documentElement.style.backgroundColor = "";
+      if (typeof window !== "undefined") {
+        document.body.style.transition = "";
+        document.documentElement.style.transition = "";
+        document.documentElement.style.removeProperty("--scrollbar-thumb");
+        document.documentElement.style.removeProperty("--scrollbar-track");
+        document.documentElement.style.removeProperty("--button-bg");
+        document.documentElement.style.removeProperty("--button-text");
+        document.documentElement.style.removeProperty("--button-border");
+        document.body.style.backgroundColor = "";
+        document.documentElement.style.backgroundColor = "";
+      }
     };
   }, []);
 
-  return (
-    <motion.main
-      className="w-full min-h-screen font-gilroyRegular"
-      style={{
+  const mainStyle = isTouch
+    ? {}
+    : {
         backgroundColor: bgColor,
         color: textColor,
-      }}
+      };
+
+  return (
+    <motion.main
+      className={`w-full min-h-screen font-gilroyRegular transition-colors duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isTouch
+          ? isDark
+            ? "bg-[#121212] text-[#f8edd1]"
+            : "bg-[#f8edd1] text-[#2a4756]"
+          : ""
+      }`}
+      style={mainStyle}
     >
       <div className="pt-16 md:pt-32 pb-16 px-5 md:px-16 max-w-7xl mx-auto">
 

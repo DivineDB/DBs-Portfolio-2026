@@ -8,8 +8,8 @@ import { motion } from "framer-motion";
 export default function BackToHome() {
   const pathname = usePathname();
 
-  // Hide the back-to-home button on the main landing page
-  if (pathname === "/") return null;
+  // Hide the back-to-home button on the main landing page or project case studies
+  if (pathname === "/" || pathname.startsWith("/work/")) return null;
 
   // Dynamically adapt to container widths matching other pages' layout boundaries
   const getLayoutClasses = (path: string) => {
