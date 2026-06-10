@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
 import { Coffee, Sun, Sunset, Moon, X, ArrowDown } from "lucide-react";
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
 
 export default function Home() {
@@ -19,7 +20,31 @@ export default function Home() {
   const [animationComplete, setAnimationComplete] = useState(false);
   const [isBirdHovered, setIsBirdHovered] = useState(false);
   const [birdMessage, setBirdMessage] = useState("hi...");
+  const [showSocialMenu, setShowSocialMenu] = useState(false);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const socialMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        socialMenuRef.current &&
+        !socialMenuRef.current.contains(event.target as Node)
+      ) {
+        const target = event.target as HTMLElement;
+        if (target.id === "contact-menu-btn" || target.closest("#contact-menu-btn")) {
+          return;
+        }
+        setShowSocialMenu(false);
+      }
+    }
+
+    if (showSocialMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSocialMenu]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -178,12 +203,13 @@ export default function Home() {
               >
                 Resume
               </a>
-              <Link
-                href="/hire-me"
-                className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756] relative overflow-hidden group py-1 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#2A4756] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              <button
+                id="contact-menu-btn"
+                onClick={() => setShowSocialMenu(!showSocialMenu)}
+                className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756] relative overflow-hidden group py-1 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#2A4756] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 cursor-pointer focus:outline-none"
               >
                 Contact
-              </Link>
+              </button>
             </motion.div>
           </motion.div>
 
@@ -195,39 +221,108 @@ export default function Home() {
             className="flex flex-col gap-[21px] pointer-events-auto"
           >
             <div className="flex items-center gap-3">
-              {/* Fixed-size Clock Button */}
-              <button
-                onClick={() => setShowLocation(!showLocation)}
-                className="w-[122px] h-[36px] flex justify-center items-center rounded-full bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] text-[15px] font-satoshi font-medium transition-transform hover:scale-105 active:scale-95 focus:outline-none select-none cursor-pointer"
+              {/* Fixed-size Clock / Social Morph Menu */}
+              <motion.div
+                ref={socialMenuRef}
+                layout
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                style={{ borderRadius: "9999px" }}
+                className={`h-[36px] flex justify-center items-center bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] transition-all select-none shadow-[#2a4756]/5 relative ${
+                  showSocialMenu ? "w-[185px] px-3.5" : "w-[122px]"
+                }`}
               >
                 <AnimatePresence mode="wait">
-                  {showLocation ? (
-                    <motion.span
-                      key="location"
-                      initial={{ y: 6, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -6, opacity: 0 }}
-                      className="will-change-transform"
+                  {showSocialMenu ? (
+                    <motion.div
+                      key="socials"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.08 } }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-3"
                     >
-                      Gwalior, IN
-                    </motion.span>
-                  ) : isMounted ? (
-                    <motion.span
-                      key="time"
-                      initial={{ y: 6, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -6, opacity: 0 }}
-                      className="will-change-transform"
-                    >
-                      {time || "15:23"}&nbsp;IST
-                    </motion.span>
+                      <a
+                        href="https://www.linkedin.com/in/divyansh-baghel/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:scale-115 active:scale-95 transition-transform text-[#26393A]/80 hover:text-[#26393A] flex items-center justify-center"
+                        aria-label="LinkedIn"
+                      >
+                        <FaLinkedin className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="mailto:divyanshbaghel456@gmail.com"
+                        className="hover:scale-115 active:scale-95 transition-transform text-[#26393A]/80 hover:text-[#26393A] flex items-center justify-center"
+                        aria-label="Email"
+                      >
+                        <FaEnvelope className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="https://github.com/DivineDB"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:scale-115 active:scale-95 transition-transform text-[#26393A]/80 hover:text-[#26393A] flex items-center justify-center"
+                        aria-label="GitHub"
+                      >
+                        <FaGithub className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="https://www.instagram.com/dbdoesstuff/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:scale-115 active:scale-95 transition-transform text-[#26393A]/80 hover:text-[#26393A] flex items-center justify-center"
+                        aria-label="Instagram"
+                      >
+                        <FaInstagram className="w-4 h-4" />
+                      </a>
+                      <button
+                        onClick={() => setShowSocialMenu(false)}
+                        className="ml-0.5 pl-1.5 border-l border-[#EADFC3] hover:scale-115 active:scale-90 transition-transform text-[#26393A]/40 hover:text-[#26393A] cursor-pointer focus:outline-none flex items-center justify-center"
+                        aria-label="Close"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </motion.div>
                   ) : (
-                    <span key="placeholder" className="text-transparent" aria-hidden="true">
-                      15:23 IST
-                    </span>
+                    <motion.button
+                      key="clock"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setShowLocation(!showLocation)}
+                      className="w-full h-full flex justify-center items-center text-[15px] font-satoshi font-medium hover:scale-105 active:scale-95 transition-transform cursor-pointer focus:outline-none"
+                    >
+                      <AnimatePresence mode="wait">
+                        {showLocation ? (
+                          <motion.span
+                            key="location"
+                            initial={{ y: 6, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -6, opacity: 0 }}
+                            className="will-change-transform"
+                          >
+                            Gwalior, IN
+                          </motion.span>
+                        ) : isMounted ? (
+                          <motion.span
+                            key="time"
+                            initial={{ y: 6, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -6, opacity: 0 }}
+                            className="will-change-transform"
+                          >
+                            {time || "15:23"}&nbsp;IST
+                          </motion.span>
+                        ) : (
+                          <span key="placeholder" className="text-transparent" aria-hidden="true">
+                            15:23 IST
+                          </span>
+                        )}
+                      </AnimatePresence>
+                    </motion.button>
                   )}
                 </AnimatePresence>
-              </button>
+              </motion.div>
 
               {/* ⌘K Command Palette Trigger — matches clock pill aesthetic (hidden on mobile due to FAB) */}
               <button
@@ -345,6 +440,14 @@ export default function Home() {
                 )}
               </AnimatePresence>
             </motion.div>
+
+            {/* Static Window Text Labels (Satoshi Bold, Non-Animated) */}
+            <div className="absolute inset-0 pointer-events-none select-none z-20">
+              <span className="window-text top-[39.9%] left-[38.05%]">About Me</span>
+              <span className="window-text top-[39.2%] left-[67.25%]">Selected Work</span>
+              <span className="window-text top-[76.5%] left-[38.25%]">Other things I do</span>
+              <span className="window-text top-[82.5%] left-[67.35%]">Hire Me</span>
+            </div>
 
             {/* Interactive Window Links — staggered fade-in after building lands */}
             <motion.div
