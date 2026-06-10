@@ -41,9 +41,5 @@ The project is architected with a strict hierarchy that mirrors the logical divi
 *   **`src/app/work`:** A strict full-viewport scroll-snapping work index, highlighting select software architectures.
 *   **`src/app/work/[slug]`:** Single-column dynamic case study reader layout optimized for uninterrupted editorial reading, utilizing geometric banners and split structure briefs.
 *   **`src/app/hire-me`:** A clean, minimal, functional inbound funnel layout.
-
-npm run build
-```
-
 ---
-*Crafted by Divyansh Baghel — Design Engineer.*
+*Crafted by Divyansh Baghel*
