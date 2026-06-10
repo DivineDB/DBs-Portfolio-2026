@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🏛️ DivineDB // Portfolio 2026
+=======
+# My Portfolio 2026
+>>>>>>> 379e48e45054b751172a3073eed63e87e41ee607
 
 An editorial-grade design engineering portfolio. Crafted with Next.js, Framer Motion, and Tailwind CSS, embodying a **Minimalist Editorial** aesthetic.
 
