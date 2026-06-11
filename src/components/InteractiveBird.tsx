@@ -6,24 +6,26 @@ interface InteractiveBirdProps {
   className?: string;
 }
 
+// Default sclera centers in SVG coordinates (0 0 104 108)
+const LEFT_SCLERA = { x: 29.08, y: 33.70 };
+const RIGHT_SCLERA = { x: 57.34, y: 34.22 };
+
 export default function InteractiveBird({ className }: InteractiveBirdProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  
-  // Default sclera centers in SVG coordinates (0 0 104 108)
-  const leftSclera = { x: 29.08, y: 33.70 };
-  const rightSclera = { x: 57.34, y: 34.22 };
 
   // Current pupil positions (animated) - Centered in the sclera by default
-  const leftPupilRef = useRef({ x: leftSclera.x, y: leftSclera.y });
-  const rightPupilRef = useRef({ x: rightSclera.x, y: rightSclera.y });
+  const leftPupilRef = useRef({ x: LEFT_SCLERA.x, y: LEFT_SCLERA.y });
+  const rightPupilRef = useRef({ x: RIGHT_SCLERA.x, y: RIGHT_SCLERA.y });
 
-  const [leftPupil, setLeftPupil] = useState({ x: leftSclera.x, y: leftSclera.y });
-  const [rightPupil, setRightPupil] = useState({ x: rightSclera.x, y: rightSclera.y });
+  const [leftPupil, setLeftPupil] = useState({ x: LEFT_SCLERA.x, y: LEFT_SCLERA.y });
+  const [rightPupil, setRightPupil] = useState({ x: RIGHT_SCLERA.x, y: RIGHT_SCLERA.y });
 
   // Mouse position ref to avoid React state re-renders on mousemove
   const mousePosRef = useRef<{ x: number; y: number } | null>(null);
   // Track if animation loop is active
   const isAnimatingRef = useRef(false);
+
+  const updatePositionsRef = useRef<() => void>(() => {});
 
   const updatePositions = () => {
     if (!svgRef.current) {
@@ -40,18 +42,18 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
     const mousePos = mousePosRef.current;
     
     // Default targets are the centers of the scleras so the pupils can move symmetrically in all directions
-    let targetLeft = { ...leftSclera };
-    let targetRight = { ...rightSclera };
+    const targetLeft = { ...LEFT_SCLERA };
+    const targetRight = { ...RIGHT_SCLERA };
 
     if (mousePos) {
       // Convert eye centers to screen coordinates
       const leftScreen = {
-        x: rect.left + (leftSclera.x / 104) * rect.width,
-        y: rect.top + (leftSclera.y / 108) * rect.height,
+        x: rect.left + (LEFT_SCLERA.x / 104) * rect.width,
+        y: rect.top + (LEFT_SCLERA.y / 108) * rect.height,
       };
       const rightScreen = {
-        x: rect.left + (rightSclera.x / 104) * rect.width,
-        y: rect.top + (rightSclera.y / 108) * rect.height,
+        x: rect.left + (RIGHT_SCLERA.x / 104) * rect.width,
+        y: rect.top + (RIGHT_SCLERA.y / 108) * rect.height,
       };
 
       // Calculate vector from eyes to mouse
@@ -71,15 +73,15 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
         // Travel distance increases with mouse distance, up to 40px (ultra-sensitive)
         const leftOffset = Math.min(MAX_OFFSET, (leftDist / 40) * MAX_OFFSET);
         const leftAngle = Math.atan2(leftDy, leftDx);
-        targetLeft.x = leftSclera.x + Math.cos(leftAngle) * leftOffset;
-        targetLeft.y = leftSclera.y + Math.sin(leftAngle) * leftOffset;
+        targetLeft.x = LEFT_SCLERA.x + Math.cos(leftAngle) * leftOffset;
+        targetLeft.y = LEFT_SCLERA.y + Math.sin(leftAngle) * leftOffset;
       }
 
       if (rightDist > 0) {
         const rightOffset = Math.min(MAX_OFFSET, (rightDist / 40) * MAX_OFFSET);
         const rightAngle = Math.atan2(rightDy, rightDx);
-        targetRight.x = rightSclera.x + Math.cos(rightAngle) * rightOffset;
-        targetRight.y = rightSclera.y + Math.sin(rightAngle) * rightOffset;
+        targetRight.x = RIGHT_SCLERA.x + Math.cos(rightAngle) * rightOffset;
+        targetRight.y = RIGHT_SCLERA.y + Math.sin(rightAngle) * rightOffset;
       }
     }
 
@@ -103,7 +105,7 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
       setRightPupil({ x: rightPupilRef.current.x, y: rightPupilRef.current.y });
 
       // Request next frame
-      requestAnimationFrame(updatePositions);
+      requestAnimationFrame(updatePositionsRef.current);
     } else {
       // Snap to exact target to avoid sub-pixel float drift and stop animation frame loop
       leftPupilRef.current = { ...targetLeft };
@@ -114,6 +116,10 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
     }
   };
 
+  useEffect(() => {
+    updatePositionsRef.current = updatePositions;
+  });
+
   // Track mouse coordinates & control animations dynamically
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -121,7 +127,7 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
       // Start animation loop only if it's not already running
       if (!isAnimatingRef.current) {
         isAnimatingRef.current = true;
-        requestAnimationFrame(updatePositions);
+        requestAnimationFrame(updatePositionsRef.current);
       }
     };
     
@@ -129,7 +135,7 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
     
     // Start once initially to position pupils relative to mouse position on page load
     isAnimatingRef.current = true;
-    requestAnimationFrame(updatePositions);
+    requestAnimationFrame(updatePositionsRef.current);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
@@ -151,8 +157,8 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
       <image href="/images/bird.svg" width="104" height="108" />
 
       {/* 2. Custom larger sclera background circles (radius 4.2, no outline) */}
-      <circle cx={leftSclera.x} cy={leftSclera.y} r="4.2" fill="#F4F0E4" />
-      <circle cx={rightSclera.x} cy={rightSclera.y} r="4.2" fill="#F4F0E4" />
+      <circle cx={LEFT_SCLERA.x} cy={LEFT_SCLERA.y} r="4.2" fill="#F4F0E4" />
+      <circle cx={RIGHT_SCLERA.x} cy={RIGHT_SCLERA.y} r="4.2" fill="#F4F0E4" />
 
       {/* 3. Dynamic tracking pupils (pitch dark #000000, radius 2.9) */}
       <circle cx={leftPupil.x} cy={leftPupil.y} r="2.9" fill="#000000" />

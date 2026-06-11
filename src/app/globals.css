@@ -224,7 +224,7 @@ html.lenis body {
   animation: noise-shift 0.4s steps(4) infinite;
 }
 
-/* Responsive window overlay text styling */
+/* Responsive window overlay text styling — positioned directly on the building image */
 .window-text {
   position: absolute;
   transform: translateX(-50%);
@@ -236,16 +236,63 @@ html.lenis body {
   user-select: none;
   letter-spacing: 0.03em;
   pointer-events: none;
-  
-  /* Mobile: scale smoothly with viewport width */
-  font-size: clamp(9.5px, 2.5vw, 15px);
+  z-index: 25;
+
+  /* Mobile: scale with the building container width */
+  font-size: clamp(6px, 1.6vw, 10px);
 }
 
 @media (min-width: 768px) {
   .window-text {
-    /* Desktop: scale with viewport height, since building height is in vh */
+    /* Desktop: scale with viewport height since building height is in vh */
     font-size: clamp(10px, 1.25vh, 16px);
   }
+}
+
+/* Per-label absolute positions — top is stable across breakpoints.
+   Mobile left values shift left-column labels left, right-column labels right.
+   Desktop left values are locked separately so desktop layout is untouched.  */
+
+/* Mobile positions */
+.wt-about-me      { top: 40.4%; left: 36%; }
+.wt-selected-work { top: 39.5%; left: 73%; }
+.wt-other-things  { top: 76.3%; left: 36%; }
+.wt-hire-me       { top: 82.9%; left: 73%; }
+
+/* Desktop overrides — no visual change from before */
+@media (min-width: 768px) {
+  .wt-about-me      { left: 38.3%; }
+  .wt-selected-work { left: 67.3%; }
+  .wt-other-things  { left: 38.3%; }
+  .wt-hire-me       { left: 67.4%; }
+}
+
+/* Override animations on return visits when 'has-visited' class is applied */
+html.has-visited .building-container {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+html.has-visited .boy-container {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html.has-visited .bird-container {
+  opacity: 1 !important;
+  transform: none !important;
+  scale: 1 !important;
+}
+
+html.has-visited .window-hotspot {
+  opacity: 1 !important;
+  transform: none !important;
+  scale: 1 !important;
+}
+
+html.has-visited .window-text {
+  opacity: 1 !important;
 }
 
 

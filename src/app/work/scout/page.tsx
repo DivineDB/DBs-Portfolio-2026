@@ -642,7 +642,7 @@ export default function ScoutCaseStudy() {
                   ].map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveShowcaseTab(tab.id as any)}
+                      onClick={() => setActiveShowcaseTab(tab.id as "surface" | "accent" | "typography" | "transitions")}
                       className="px-3.5 py-1.5 rounded-lg text-xs font-gilroyBold cursor-pointer transition-all duration-200"
                       style={{
                         background: activeShowcaseTab === tab.id ? "rgba(16, 185, 129, 0.15)" : "rgba(255, 255, 255, 0.02)",

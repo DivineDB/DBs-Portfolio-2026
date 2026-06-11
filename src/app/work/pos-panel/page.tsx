@@ -694,7 +694,7 @@ export default function POSCaseStudy() {
                   ].map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveShowcaseTab(tab.id as any)}
+                      onClick={() => setActiveShowcaseTab(tab.id as "grid" | "pastels" | "relief" | "animations")}
                       className="px-3.5 py-1.5 rounded-lg text-xs font-gilroyBold cursor-pointer transition-all duration-200"
                       style={{
                         background: activeShowcaseTab === tab.id ? "rgba(166, 231, 199, 0.15)" : "rgba(255, 255, 255, 0.02)",

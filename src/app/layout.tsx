@@ -46,7 +46,23 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} h-full`}
+      suppressHydrationWarning
     >
+      <head>
+        {typeof window === "undefined" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                try {
+                  if (sessionStorage.getItem("hasVisitedHome")) {
+                    document.documentElement.classList.add("has-visited");
+                  }
+                } catch (e) {}
+              `,
+            }}
+          />
+        )}
+      </head>
       <body className="min-h-full">
         <BackToHome />
         <CommandPaletteLoader />

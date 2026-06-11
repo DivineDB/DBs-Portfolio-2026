@@ -5,7 +5,6 @@ import { AnimatePresence, motion, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
-import Link from "next/link";
 import PageFooter from "@/components/PageFooter";
 
 const LiveWeather = dynamic(() => import("@/components/LiveWeather"), { ssr: false });
