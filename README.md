@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-# 🏛️ DivineDB // Portfolio 2026
-=======
 # My Portfolio 2026
->>>>>>> 379e48e45054b751172a3073eed63e87e41ee607
-
 An editorial-grade design engineering portfolio. Crafted with Next.js, Framer Motion, and Tailwind CSS, embodying a **Minimalist Editorial** aesthetic.
 
 ---
@@ -16,16 +11,6 @@ This portfolio is an exercise in restraint, typography, and micro-interactions. 
 *   **Warm Paper Canvas (`#F8EDD1`):** Represents analog touch, history, and archival paper. It is warm, welcoming, and immediately shifts the user's perception from a cold digital screen to a tangible physical layout.
 *   **Organic Contrast (`#2A4756`):** Opting for deep slate-blue instead of standard digital black. This reduces eye strain, maintains pure editorial structure, and conveys premium editorial typography.
 *   **Electric Utility (`#A2F991`):** Represents high-performance technology. An active, vibrant green that flashes across interactive nodes and live status widgets—a reminder of the fast, high-fidelity codebase underlying the static canvas.
-
----
-
-## ⚡ Interactive Features (Morphed Modules)
-
-### 🕰️ Clock Morphing Social Menu
-On clicking the **Contact** button, the live clock pill dynamically spring-morphs from `122px` width to `185px` width to reveal a menu containing the user's social links (LinkedIn, Email, GitHub, and Instagram), complete with custom spring physics and rapid exit animations on closure.
-
-### 🪟 SVG-to-HTML Window Typography Overlay
-Vector text labels inside the interactive windows of the building illustration were migrated from static SVG paths to native, screen-reader friendly HTML overlays. Custom fluid typography was styled with **Satoshi Bold** and responsive `clamp()` functions to scale perfectly across mobile viewports (`vw`-based) and desktop viewports (`vh`-based).
 
 ---
 
@@ -56,28 +41,5 @@ The project is architected with a strict hierarchy that mirrors the logical divi
 *   **`src/app/work`:** A strict full-viewport scroll-snapping work index, highlighting select software architectures.
 *   **`src/app/work/[slug]`:** Single-column dynamic case study reader layout optimized for uninterrupted editorial reading, utilizing geometric banners and split structure briefs.
 *   **`src/app/hire-me`:** A clean, minimal, functional inbound funnel layout.
-
 ---
-
-## 🚀 Local Development
-
-### 1. Installation
-Clone the repository and install the dependencies:
-```bash
-npm install
-```
-
-### 2. Run Dev Server
-Start the local development server:
-```bash
-npm run dev
-```
-
-### 3. Production Build
-Create an optimized production bundle:
-```bash
-npm run build
-```
-
----
-*Crafted by Divyansh Baghel — Design Engineer.*
+*Crafted by Divyansh Baghel*
