@@ -63,8 +63,8 @@
   - **Bento Tech Stack** (`grid grid-cols-1 md:grid-cols-2 gap-6`): 4 category cards with inline dot-grid SVG background + `bg-[#F8EDD1]/80` overlay. Tools as list rows (icon + label). Each `motion.li`: `whileHover={{ y: -2, opacity: 1, filter: 'grayscale(0)' }} initial={{ opacity: 0.7, filter: 'grayscale(1)' }}`.
     - Frontend Development: Next.js, React.js, Tailwind CSS, HTML5/CSS3
     - Design & Strategy: Figma, Rive, Framer, Information Architecture
-    - Core Languages: TypeScript, JavaScript ES6+
-    - Data & AI Systems: PostgreSQL, Groq, Serper.dev, Next.js API
+    - Core Languages: TypeScript, JavaScript ES6+, Python
+    - Data & AI Systems: PostgreSQL, Claude, Gemini, Groq, Next.js API
   - **Closing hook** (above `<PageFooter />`): `flex justify-center py-32`. Words split into `motion.span` inside `whileHover="hover"` parent. `rest: { y:0, color: slate-500 }` → `hover: { y:-6, color: var(--color-highlight), spring bounce:0.6, stagger:0.05s }`. Typography: `font-gilroyRegular text-lg md:text-xl tracking-wide text-slate-500` — non-bold, visually subordinate.
   - **Why hire me?** Reformatted the bulleted list into a 2x2 responsive grid matching the structural aesthetics and layout classes of the Preferences section, while preserving staggered fade-in scroll animations.
   - **Scroll Down indicator**: Hidden on mobile (`hidden md:flex`) to prevent any visual overlaps in short viewports.

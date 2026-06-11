@@ -16,13 +16,15 @@ import {
 	SiJavascript,
 	SiHtml5,
 	SiRive,
+	SiGooglegemini,
+	SiAnthropic,
+	SiPython,
 } from "react-icons/si";
 import {
 	LayoutTemplate,
 	MousePointer2,
 	Cpu,
 	BrainCircuit,
-	Globe,
 	ArrowDown,
 	Download,
 	Link2,
@@ -77,6 +79,7 @@ const TECH_CATEGORIES: {
 		tools: [
 			{ label: "TypeScript", Icon: SiTypescript, color: "#3178C6" },
 			{ label: "JavaScript ES6+", Icon: SiJavascript, color: "#F7DF1E" },
+			{ label: "Python", Icon: SiPython, color: "#3776AB" },
 		],
 	},
 	{
@@ -85,8 +88,9 @@ const TECH_CATEGORIES: {
 		categoryIcon: BrainCircuit,
 		tools: [
 			{ label: "PostgreSQL", Icon: SiPostgresql, color: "#4169E1" },
+			{ label: "Claude", Icon: SiAnthropic, color: "#D97756" },
+			{ label: "Gemini", Icon: SiGooglegemini, color: "#4F46E5" },
 			{ label: "Groq", Icon: BrainCircuit, color: "#10B981" },
-			{ label: "Serper.dev", Icon: Globe, color: "#6366F1" },
 			{ label: "Next.js API", Icon: SiNextdotjs, color: "#111111" },
 		],
 	},
