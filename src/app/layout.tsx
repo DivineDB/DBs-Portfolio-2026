@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import SmoothScroll from "../components/SmoothScroll";
 import CommandPaletteLoader from "../components/CommandPaletteLoader";
 import MobileCommandTrigger from "../components/MobileCommandTrigger";
