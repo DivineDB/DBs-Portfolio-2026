@@ -6,6 +6,8 @@ import CommandPaletteLoader from "../components/CommandPaletteLoader";
 import MobileCommandTrigger from "../components/MobileCommandTrigger";
 import BackToHome from "../components/BackToHome";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -68,6 +70,7 @@ export default function RootLayout({
         <CommandPaletteLoader />
         <MobileCommandTrigger />
         <SmoothScroll>{children}</SmoothScroll>
+        <Analytics />
       </body>
     </html>
   );
