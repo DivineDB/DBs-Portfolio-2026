@@ -50,7 +50,55 @@ export default function WorkPage() {
         </motion.div>
       </section>
 
-      {/* Featured Project 1: Scout */}
+      {/* Featured Project 1: POS Panel */}
+      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
+        <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
+          >
+            <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">RETAIL DASHBOARD</p>
+            <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">POS Panel</h2>
+            <p className="text-lg text-text_primary/70">
+              A high-density dashboard engineered to reduce cognitive fatigue for retail workers, featuring Optimistic UI patterns.
+            </p>
+            <div className="pt-4">
+               <Link href="/work/pos-panel" className="group inline-flex items-center gap-2 font-gilroyBold text-text_primary transition-opacity hover:opacity-70">
+                 Read Case Study
+                 <span className="transition-transform group-hover:translate-x-1">→</span>
+               </Link>
+            </div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+            transition={{ duration: 0.8 }}
+            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
+          >
+            {/* Abstract geometric visual dot-matrix UI */}
+            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+                 style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(42, 71, 86, 0.1) 1px, transparent 0)', backgroundSize: '24px 24px' }}>
+               <div className="absolute inset-0 flex flex-col p-8 gap-4 items-center justify-center">
+                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center">
+                     <div className="h-4 w-16 bg-text_primary/20 rounded"></div>
+                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
+                  </div>
+                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center opacity-80 translate-x-4">
+                     <div className="h-4 w-24 bg-text_primary/20 rounded"></div>
+                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
+                  </div>
+               </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured Project 2: Scout */}
       <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
           <motion.div 
@@ -99,54 +147,6 @@ export default function WorkPage() {
                        <div className="h-3 w-5/6 rounded bg-text_primary/10"></div>
                     </div>
                  </div>
-               </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Project 2: POS Panel */}
-      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
-        <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
-          >
-            <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">RETAIL DASHBOARD</p>
-            <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">POS Panel</h2>
-            <p className="text-lg text-text_primary/70">
-              A high-density dashboard engineered to reduce cognitive fatigue for retail workers, featuring Optimistic UI patterns.
-            </p>
-            <div className="pt-4">
-               <Link href="/work/pos-panel" className="group inline-flex items-center gap-2 font-gilroyBold text-text_primary transition-opacity hover:opacity-70">
-                 Read Case Study
-                 <span className="transition-transform group-hover:translate-x-1">→</span>
-               </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
-          >
-            {/* Abstract geometric visual dot-matrix UI */}
-            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
-                 style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(42, 71, 86, 0.1) 1px, transparent 0)', backgroundSize: '24px 24px' }}>
-               <div className="absolute inset-0 flex flex-col p-8 gap-4 items-center justify-center">
-                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center">
-                     <div className="h-4 w-16 bg-text_primary/20 rounded"></div>
-                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
-                  </div>
-                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center opacity-80 translate-x-4">
-                     <div className="h-4 w-24 bg-text_primary/20 rounded"></div>
-                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
-                  </div>
                </div>
             </div>
           </motion.div>
