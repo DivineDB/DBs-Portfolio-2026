@@ -232,12 +232,6 @@ export default function Home() {
 			{/* A subtle, animated noise overlay for texture */}
 			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
-			{/* Developer Test Buttons for Toast */}
-			<div className="fixed bottom-10 left-1/2 -translate-x-1/2 md:bottom-10 md:left-10 md:translate-x-0 z-[99999] flex gap-2 pointer-events-auto bg-white/80 p-2 rounded-lg shadow-xl backdrop-blur-md">
-				<button onClick={() => testMilestone(50)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 50</button>
-				<button onClick={() => testMilestone(100)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 100</button>
-				<button onClick={() => testMilestone(150)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 150+</button>
-			</div>
 
 			{/* Achievement Toast (Center of screen) */}
 			<AnimatePresence>
