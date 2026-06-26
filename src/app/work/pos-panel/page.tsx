@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import PageFooter from "@/components/PageFooter";
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 
 // Custom GitHub icon component
 function GithubIcon({
@@ -318,7 +319,7 @@ export default function POSCaseStudy() {
 			</div>
 
 			{/* ── Article content ── */}
-			<div className="mx-auto max-w-[800px] px-6 py-12 flex flex-col gap-10">
+			<div className="mx-auto max-w-[860px] px-6 py-16 md:py-24 flex flex-col gap-16">
 				{/* Project Header Identity */}
 				<motion.div
 					initial={{ opacity: 0, y: 24 }}
@@ -438,67 +439,71 @@ export default function POSCaseStudy() {
 				</motion.div>
 
 				{/* Narrative Flow */}
-				<div className="flex flex-col gap-12 mt-8 font-satoshi text-base leading-relaxed text-slate-800">
+				<div className="flex flex-col gap-24 mt-16 md:gap-32 md:mt-24 font-satoshi text-[16px] md:text-[17px] leading-relaxed text-slate-750">
 					{/* TLDR / Brief */}
-					<section
-						className="flex flex-col gap-2 border-l-2 pl-4"
-						style={{ borderColor: "rgba(162,249,145,0.5)" }}
-					>
-						<span className="text-[10px] font-gilroyBold uppercase tracking-widest text-[#2a4756]/50">
-							Summary
-						</span>
-						<p className="text-lg text-[#2a4756] font-gilroyBold leading-snug">
-							SSG Store is a high-density, touch-first cashier console
-							custom-built to maximize order throughput and minimize visual
-							strain during long checkout shifts.
+					<section className="relative overflow-hidden rounded-3xl border border-[#2a4756]/10 bg-white/50 p-8 md:p-12 shadow-sm backdrop-blur-sm">
+						<div className="absolute top-0 left-0 w-1.5 h-full bg-[#a2f991]" />
+						<span className="text-[10px] font-gilroyBold uppercase tracking-[0.25em] text-[#2a4756]/60">Overview</span>
+						<p className="text-xl md:text-2xl text-[#2a4756] font-gilroyBold leading-relaxed mt-3">
+							SSG Store is a high-density, touch-first cashier console custom-built to maximize order throughput and minimize visual strain during long checkout shifts.
 						</p>
 					</section>
 
 					{/* Section 1: The Challenge */}
-					<section className="flex flex-col gap-4">
-						<h2 className="text-xl font-gilroyBold text-[#2a4756]">
-							UX Challenge: Cash Register Friction
-						</h2>
-						<p>
-							In fast-paced retail checkout environments, operators cannot
-							afford layout shifts, deep hierarchical menus, or laggy feedback.
-							The challenge was building an integrated workspace aggregating
-							catalog browsing, cart operations, pricing math, and receipt
-							printing without visual clutter.
+					<section className="flex flex-col gap-6 max-w-[760px] mx-auto text-center md:text-left pt-6">
+						<div className="flex flex-col gap-2">
+							<span className="text-[10px] font-gilroyBold uppercase tracking-[0.2em] text-[#2a4756]/40">Problem Statement</span>
+							<h2 className="text-3xl md:text-4xl font-gilroyBold text-[#2a4756] tracking-tight leading-tight">
+								UX Challenge: Cash Register Friction
+							</h2>
+						</div>
+						<p className="text-slate-700 text-[16px] md:text-[18px] leading-relaxed">
+							In fast-paced retail checkout environments, operators cannot afford layout shifts, deep hierarchical menus, or laggy feedback. The challenge was building an integrated workspace aggregating catalog browsing, cart operations, pricing math, and receipt printing without visual clutter.
 						</p>
 					</section>
 
 					{/* Section 2: Locked Grid Spatial System */}
 					<section
-						className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8"
-						style={{ borderColor: "rgba(42,71,86,0.1)" }}
+						className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center border-t pt-16 md:pt-24"
+						style={{ borderColor: "rgba(42,71,86,0.06)" }}
 					>
-						<div className="flex flex-col gap-4">
-							<h2 className="text-xl font-gilroyBold text-[#2a4756]">
-								01. Locked-Grid Spatial System
-							</h2>
-							<p>
-								Unlike fluid web layouts, a Point of Sale (POS) terminal
-								requires constant grid alignment. The checkout panel uses a
-								locked, asymmetric grid that never shifts during operation.
+						<div className="lg:col-span-6 flex flex-col gap-6">
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<span className="text-[9px] font-gilroyBold tracking-[0.2em] uppercase text-[#a6e7c7] bg-[#2a4756] px-2 py-0.5 rounded">01</span>
+									<span className="text-[10px] font-gilroyBold tracking-widest uppercase text-[#2a4756]/40">Architecture</span>
+								</div>
+								<h2 className="text-2xl md:text-3xl font-gilroyBold text-[#2a4756] tracking-tight leading-tight">
+									Locked-Grid Spatial System
+								</h2>
+							</div>
+							<p className="text-slate-700 text-sm md:text-base leading-relaxed">
+								Unlike fluid web layouts, a Point of Sale (POS) terminal requires constant grid alignment. The checkout panel uses a locked, asymmetric grid that never shifts during operation.
 							</p>
-							<ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-								<li>
-									<strong className="text-slate-900">Fixed Coordinates:</strong>{" "}
-									Anchors the Product Catalog, Active Cart, and Checkout Summary
-									in absolute visual positions to build cashier muscle memory.
-								</li>
-								<li>
-									<strong className="text-slate-900">
-										Touch-Safe Targets:
-									</strong>{" "}
-									Buttons, item tiles, and cart controls are constrained to a
-									minimum bounding box of <strong>48x48 pixels</strong> to
-									prevent misaligned taps.
-								</li>
-							</ul>
+							
+							<div className="flex flex-col gap-4 mt-2">
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">A</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">Fixed Coordinates</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Anchors the Product Catalog, Active Cart, and Checkout Summary in absolute visual positions to build cashier muscle memory.</p>
+										</div>
+									</div>
+								</div>
+								
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">B</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">Touch-Safe Targets</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Buttons, item tiles, and cart controls are constrained to a minimum bounding box of <strong>48x48 pixels</strong> to prevent misaligned taps in high-stress retail checkouts.</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div className="flex flex-col gap-2">
+						<div className="lg:col-span-6 flex flex-col gap-3">
 							<span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
 								Workflow Visual: Grid Layout Mockup
 							</span>
@@ -508,42 +513,58 @@ export default function POSCaseStudy() {
 
 					{/* Section 3: Color-Coded Pastels & Landmark Grids */}
 					<section
-						className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8"
-						style={{ borderColor: "rgba(42,71,86,0.1)" }}
+						className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center border-t pt-16 md:pt-24"
+						style={{ borderColor: "rgba(42,71,86,0.06)" }}
 					>
-						<div className="md:order-2 flex flex-col gap-4">
-							<h2 className="text-xl font-gilroyBold text-[#2a4756]">
-								02. Pastel Landmarking
-							</h2>
-							<p>
-								Instead of raw, saturated colors that cause optic fatigue during
-								long shifts, the POS Panel employs a system of soft,
-								high-contrast pastels:
+						<div className="lg:col-span-6 lg:order-2 flex flex-col gap-6">
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<span className="text-[9px] font-gilroyBold tracking-[0.2em] uppercase text-[#a6e7c7] bg-[#2a4756] px-2 py-0.5 rounded">02</span>
+									<span className="text-[10px] font-gilroyBold tracking-widest uppercase text-[#2a4756]/40">Interface</span>
+								</div>
+								<h2 className="text-2xl md:text-3xl font-gilroyBold text-[#2a4756] tracking-tight leading-tight">
+									Pastel Landmarking
+								</h2>
+							</div>
+							<p className="text-slate-700 text-sm md:text-base leading-relaxed">
+								Instead of raw, saturated colors that cause optic fatigue during long shifts, the POS Panel employs a system of soft, high-contrast pastels:
 							</p>
-							<ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-								<li>
-									<strong className="text-slate-900">Brand Mint:</strong>{" "}
-									Highlights active state items and primary checkouts.
-								</li>
-								<li>
-									<strong className="text-slate-900">Rose Pastel:</strong>{" "}
-									Signals low stock, errors, or supervisor approvals.
-								</li>
-								<li>
-									<strong className="text-slate-900">
-										Blue & Lavender Slate:
-									</strong>{" "}
-									Segregates categories (e.g. food, drinks) to speed up
-									navigation.
-								</li>
-								<li>
-									<strong className="text-slate-900">Active Ink:</strong> Dark,
-									high-contrast typography layered over pastel tiles to remain
-									readable under varied lighting.
-								</li>
-							</ul>
+							
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+								<div className="group p-4 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:shadow-sm">
+									<div className="flex items-center gap-2.5">
+										<span className="w-2.5 h-2.5 rounded-full bg-[#a6e7c7]" />
+										<h4 className="font-gilroyBold text-sm text-[#2a4756]">Brand Mint</h4>
+									</div>
+									<p className="text-[11px] md:text-xs text-[#2a4756]/70 leading-relaxed mt-2">Highlights active state items, selections, and primary checkout actions.</p>
+								</div>
+								
+								<div className="group p-4 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:shadow-sm">
+									<div className="flex items-center gap-2.5">
+										<span className="w-2.5 h-2.5 rounded-full bg-[#fbc4c5]" />
+										<h4 className="font-gilroyBold text-sm text-[#2a4756]">Rose Pastel</h4>
+									</div>
+									<p className="text-[11px] md:text-xs text-[#2a4756]/70 leading-relaxed mt-2">Signals low stock, transactional errors, or supervisor approvals.</p>
+								</div>
+								
+								<div className="group p-4 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:shadow-sm">
+									<div className="flex items-center gap-2.5">
+										<span className="w-2.5 h-2.5 rounded-full bg-[#abcbf4]" />
+										<h4 className="font-gilroyBold text-sm text-[#2a4756]">Blue Slate</h4>
+									</div>
+									<p className="text-[11px] md:text-xs text-[#2a4756]/70 leading-relaxed mt-2">Segregates categories (e.g. food, drinks) to speed up checkout navigation.</p>
+								</div>
+								
+								<div className="group p-4 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:shadow-sm">
+									<div className="flex items-center gap-2.5">
+										<span className="w-2.5 h-2.5 rounded-full bg-[#2a4756]" />
+										<h4 className="font-gilroyBold text-sm text-[#2a4756]">Active Ink</h4>
+									</div>
+									<p className="text-[11px] md:text-xs text-[#2a4756]/70 leading-relaxed mt-2">Dark typography layered on pastel tiles to maximize contrast and readability.</p>
+								</div>
+							</div>
 						</div>
-						<div className="md:order-1 flex flex-col gap-2">
+						<div className="lg:col-span-6 lg:order-1 flex flex-col gap-3">
 							<span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
 								Workflow Visual: Checkout Cart Grid
 							</span>
@@ -551,40 +572,53 @@ export default function POSCaseStudy() {
 						</div>
 					</section>
 
-					{/* Section 4: Zustand Offline State & Sync */}
+					{/* Section 4: State Lifecycle & Offline Resilience */}
 					<section
-						className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8"
-						style={{ borderColor: "rgba(42,71,86,0.1)" }}
+						className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center border-t pt-16 md:pt-24"
+						style={{ borderColor: "rgba(42,71,86,0.06)" }}
 					>
-						<div className="flex flex-col gap-4">
-							<h2 className="text-xl font-gilroyBold text-[#2a4756]">
-								03. State Lifecycle & Offline Resilience
-							</h2>
-							<p>
-								Traditional architectures make database requests to compute
-								totals, causing register lag. SSG Store decouples transactions
-								via client-side Zustand store slices.
+						<div className="lg:col-span-6 flex flex-col gap-6">
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<span className="text-[9px] font-gilroyBold tracking-[0.2em] uppercase text-[#a6e7c7] bg-[#2a4756] px-2 py-0.5 rounded">03</span>
+									<span className="text-[10px] font-gilroyBold tracking-widest uppercase text-[#2a4756]/40">Engine</span>
+								</div>
+								<h2 className="text-2xl md:text-3xl font-gilroyBold text-[#2a4756] tracking-tight leading-tight">
+									State Lifecycle & Offline Resilience
+								</h2>
+							</div>
+							<p className="text-slate-700 text-sm md:text-base leading-relaxed">
+								Traditional architectures make database requests to compute totals, causing register lag. SSG Store decouples transactions via client-side Zustand store slices.
 							</p>
-							<ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-								<li>
-									<strong className="text-slate-900">Zustand Slices:</strong>{" "}
-									Computes tax, wholesale pricing, and discounts locally in
-									under <strong>1.5ms</strong>.
-								</li>
-								<li>
-									<strong className="text-slate-900">Async Queue Sync:</strong>{" "}
-									Transactions write to Supabase asynchronously in the
-									background, allowing terminal operations during connection
-									dropouts.
-								</li>
-							</ul>
+							
+							<div className="flex flex-col gap-4 mt-2">
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">1</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">Zustand Slices</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Computes tax, wholesale pricing, and discounts locally in under <strong>1.5ms</strong>, avoiding server roundtrips.</p>
+										</div>
+									</div>
+								</div>
+								
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">2</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">Async Queue Sync</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Transactions write to Supabase asynchronously in the background, allowing terminal operations during connection dropouts.</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div className="flex flex-col gap-2">
+						<div className="lg:col-span-6 flex flex-col gap-3">
 							<span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
 								Workflow Diagram: Transaction Lifecycle
 							</span>
 							<div
-								className="rounded-2xl p-5 flex flex-col gap-4"
+								className="rounded-2xl p-6 flex flex-col gap-5"
 								style={{
 									background: "rgba(5,5,5,0.92)",
 									border: "1px solid rgba(166,231,199,0.1)",
@@ -616,7 +650,7 @@ export default function POSCaseStudy() {
 									{
 										stage: "04",
 										name: "Database Edge Trigger",
-										desc: "Stock adjustments & proactive low-stock system alerts",
+										desc: "Stock adjustments & low-stock system alerts",
 										color: "rgba(166,231,199,0.25)",
 									},
 								].map((step, i) => (
@@ -648,7 +682,7 @@ export default function POSCaseStudy() {
 											>
 												{step.name}
 											</span>
-											<span className="text-[10px] text-white/40">
+											<span className="text-[10px] text-white/40 leading-normal">
 												{step.desc}
 											</span>
 										</div>
@@ -660,36 +694,46 @@ export default function POSCaseStudy() {
 
 					{/* Section 5: jsPDF Local Print */}
 					<section
-						className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8"
-						style={{ borderColor: "rgba(42,71,86,0.1)" }}
+						className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center border-t pt-16 md:pt-24"
+						style={{ borderColor: "rgba(42,71,86,0.06)" }}
 					>
-						<div className="md:order-2 flex flex-col gap-4">
-							<h2 className="text-xl font-gilroyBold text-[#2a4756]">
-								04. In-Memory Cache & Thermal Receipts
-							</h2>
-							<p>
-								To safeguard the register from complete network outages, a local
-								thermal receipt printer workflow runs entirely client-side.
+						<div className="lg:col-span-6 lg:order-2 flex flex-col gap-6">
+							<div className="flex flex-col gap-2">
+								<div className="flex items-center gap-2">
+									<span className="text-[9px] font-gilroyBold tracking-[0.2em] uppercase text-[#a6e7c7] bg-[#2a4756] px-2 py-0.5 rounded">04</span>
+									<span className="text-[10px] font-gilroyBold tracking-widest uppercase text-[#2a4756]/40">Offline</span>
+								</div>
+								<h2 className="text-2xl md:text-3xl font-gilroyBold text-[#2a4756] tracking-tight leading-tight">
+									In-Memory Cache & Thermal Receipts
+								</h2>
+							</div>
+							<p className="text-slate-700 text-sm md:text-base leading-relaxed">
+								To safeguard the register from complete network outages, a local thermal receipt printer workflow runs entirely client-side.
 							</p>
-							<ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-								<li>
-									<strong className="text-slate-900">
-										Local jsPDF Pipeline:
-									</strong>{" "}
-									Constructs and streams invoice vector graphics locally,
-									enabling checkout receipts during full internet dropouts.
-								</li>
-								<li>
-									<strong className="text-slate-900">
-										5-Min Catalog Cache:
-									</strong>{" "}
-									Locks metadata catalog records in memory, reducing database
-									read load by 80% to protect supabase infrastructure during
-									peak traffic hours.
-								</li>
-							</ul>
+							
+							<div className="flex flex-col gap-4 mt-2">
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">A</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">Local jsPDF Pipeline</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Constructs and streams invoice vector graphics locally, enabling checkout receipts during full internet dropouts.</p>
+										</div>
+									</div>
+								</div>
+								
+								<div className="group relative p-5 rounded-2xl border border-[#2a4756]/6 bg-white/40 transition-all hover:bg-white/70 hover:border-[#2a4756]/12 hover:shadow-sm">
+									<div className="flex items-start gap-4">
+										<span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a4756]/5 text-[#2a4756] text-xs font-gilroyBold shrink-0 mt-0.5">B</span>
+										<div className="flex flex-col gap-1">
+											<h4 className="font-gilroyBold text-sm text-[#2a4756] leading-none">5-Min Catalog Cache</h4>
+											<p className="text-xs md:text-sm text-[#2a4756]/70 leading-relaxed mt-1">Locks catalog metadata records in memory, reducing database read load by 80% to protect supabase infrastructure during peak traffic hours.</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div className="md:order-1 flex flex-col gap-2">
+						<div className="lg:col-span-6 lg:order-1 flex flex-col gap-3">
 							<span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
 								Workflow Visual: Thermal Receipt Streamer
 							</span>
@@ -699,8 +743,8 @@ export default function POSCaseStudy() {
 
 					{/* Section 6: Specifications Panel Reference */}
 					<section
-						className="border-t pt-10 flex flex-col gap-6"
-						style={{ borderColor: "rgba(42,71,86,0.1)" }}
+						className="border-t pt-16 md:pt-24 flex flex-col gap-8"
+						style={{ borderColor: "rgba(42,71,86,0.06)" }}
 					>
 						<div className="flex flex-col gap-1">
 							<h2 className="text-xl font-gilroyBold text-[#2a4756]">
@@ -1122,8 +1166,63 @@ export default function POSCaseStudy() {
 				</div>
 			</div>
 
+			{/* ── Case Study Footer Additions ── */}
+			<section className="mx-auto max-w-[800px] px-6 mt-20 border-t pt-16 flex flex-col gap-16" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
+				{/* Thanks for reading & Contact icons */}
+				<div className="flex flex-col sm:flex-row justify-between items-center gap-8">
+					<div className="flex flex-col gap-2 text-center sm:text-left">
+						<h3 className="font-gilroyBold text-2xl text-[#2a4756]">Thanks for reading!</h3>
+						<p className="text-sm font-satoshi text-[#2a4756]/60">Let's build something beautiful together.</p>
+					</div>
+					<div className="flex items-center gap-4 text-[#2a4756]/70">
+						<a href="https://github.com/DivineDB" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-[#2a4756] p-2" aria-label="GitHub">
+							<FaGithub size={20} />
+						</a>
+						<a href="https://www.linkedin.com/in/divyansh-baghel/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-[#2a4756] p-2" aria-label="LinkedIn">
+							<FaLinkedin size={20} />
+						</a>
+						<a href="https://www.instagram.com/dbdoesstuff/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-[#2a4756] p-2" aria-label="Instagram">
+							<FaInstagram size={20} />
+						</a>
+						<a href="mailto:divyanshbaghel456@gmail.com" className="hover:scale-110 active:scale-95 transition-transform hover:text-[#2a4756] p-2" aria-label="Email">
+							<FaEnvelope size={20} />
+						</a>
+					</div>
+				</div>
+
+				{/* Check out other projects */}
+				<div className="flex flex-col gap-6">
+					<h4 className="font-gilroyBold text-xs tracking-wider uppercase text-[#2a4756]/40 text-center sm:text-left">Check out other projects</h4>
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+						{/* Scout card */}
+						<Link href="/work/scout" className="group flex flex-col justify-between gap-4 rounded-xl border border-[#2a4756]/10 bg-white/30 p-6 transition-all hover:bg-white/60 hover:shadow-md hover:scale-[1.01]">
+							<div className="flex flex-col gap-2">
+								<p className="font-gilroyBold text-[10px] tracking-wider text-[#2a4756]/40 uppercase">AI-NATIVE PIPELINE</p>
+								<h5 className="font-gilroyBold text-lg text-[#2a4756]">Scout</h5>
+								<p className="text-xs font-satoshi text-[#2a4756]/70">An automated intelligence engine that crawls raw data and maps listings into context-aware verticals.</p>
+							</div>
+							<span className="font-gilroyBold text-xs text-[#2a4756] inline-flex items-center gap-1 mt-2">
+								Read Case Study <span className="transition-transform group-hover:translate-x-1">→</span>
+							</span>
+						</Link>
+
+						{/* Home / More work link */}
+						<Link href="/work" className="group flex flex-col justify-between gap-4 rounded-xl border border-[#2a4756]/10 bg-[#2a4756]/5 p-6 transition-all hover:bg-[#2a4756]/10 hover:shadow-md hover:scale-[1.01]">
+							<div className="flex flex-col gap-2">
+								<p className="font-gilroyBold text-[10px] tracking-wider text-[#2a4756]/40 uppercase">PORTFOLIO</p>
+								<h5 className="font-gilroyBold text-lg text-[#2a4756]">All Projects</h5>
+								<p className="text-xs font-satoshi text-[#2a4756]/70">Explore my full gallery of design concepts, interface engineering builds, and experiments.</p>
+							</div>
+							<span className="font-gilroyBold text-xs text-[#2a4756] inline-flex items-center gap-1 mt-2">
+								View Gallery <span className="transition-transform group-hover:translate-x-1">→</span>
+							</span>
+						</Link>
+					</div>
+				</div>
+			</section>
+
 			{/* ── Footer spacer + Footer ── */}
-			<div className="mt-32" />
+			<div className="mt-24" />
 			<PageFooter />
 		</main>
 	);

@@ -5,9 +5,11 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coffee, Sun, Sunset, Moon, X, ArrowDown } from "lucide-react";
+import { Coffee, Sun, Sunset, Moon, X, ArrowDown, PartyPopper } from "lucide-react";
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
+import { cn } from "@/lib/cn";
+import confetti from "canvas-confetti";
 
 export default function Home() {
 	const [time, setTime] = useState("");
@@ -20,6 +22,8 @@ export default function Home() {
 	const [toastIcon, setToastIcon] = useState<
 		"morning" | "afternoon" | "evening" | "night"
 	>("morning");
+	const [isMilestone, setIsMilestone] = useState(false);
+	const [visitorCount, setVisitorCount] = useState<number | null>(null);
 	const [animationComplete, setAnimationComplete] = useState(false);
 	const [isBirdHovered, setIsBirdHovered] = useState(false);
 	const [birdMessage, setBirdMessage] = useState("hi...");
@@ -62,7 +66,7 @@ export default function Home() {
 		}
 		setIsMounted(true);
 
-		// Set custom toast greeting based on local time
+		// Set custom toast greeting based on local time (Default fallback)
 		const hours = new Date().getHours();
 		let greeting = "";
 		let iconType: "morning" | "afternoon" | "evening" | "night" = "morning";
@@ -81,21 +85,64 @@ export default function Home() {
 			iconType = "night";
 		}
 
-		setTimeout(() => {
-			setToastMessage(greeting);
-			setToastIcon(iconType);
-		}, 0);
-
-		// Show toast after a delay based on whether it is a first or subsequent visit
+		// Calculate delay time for toast
 		const delayTime = firstVisit ? 5800 : 1500;
-		const toastTimeout = setTimeout(() => {
-			setShowToast(true);
-		}, delayTime);
+		let toastTimeout: NodeJS.Timeout;
+		let dismissTimeout: NodeJS.Timeout;
 
-		// Auto-dismiss toast after 6 seconds
-		const dismissTimeout = setTimeout(() => {
-			setShowToast(false);
-		}, delayTime + 6000);
+		const registerVisitAndGetToast = async () => {
+			const hasRecorded = sessionStorage.getItem("hasRecordedVisit");
+			let isMilestoneVisit = false;
+			let currentCount = 0;
+
+			if (!hasRecorded) {
+				try {
+					const response = await fetch("/api/visitor-count", { method: "POST" });
+					if (response.ok) {
+						const data = await response.json();
+						currentCount = data.count;
+						sessionStorage.setItem("hasRecordedVisit", "true");
+						if (currentCount > 0 && currentCount % 50 === 0) {
+							isMilestoneVisit = true;
+						}
+					}
+				} catch (error) {
+					console.error("Failed to register visitor count:", error);
+				}
+			}
+
+			if (isMilestoneVisit) {
+				setIsMilestone(true);
+				setVisitorCount(currentCount);
+				let milestoneCopy = "";
+				if (currentCount === 50) {
+					milestoneCopy = "🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
+				} else if (currentCount === 100) {
+					milestoneCopy = "✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
+				} else {
+					milestoneCopy = `🏆 Milestone unlocked! You are visitor #${currentCount}! Thank you for landing on my corner of the internet. Enjoy your stay! 🌟`;
+				}
+				setToastMessage(milestoneCopy);
+			} else {
+				setToastMessage(greeting);
+				setToastIcon(iconType);
+			}
+
+			// Trigger toast display
+			toastTimeout = setTimeout(() => {
+				setShowToast(true);
+				if (isMilestoneVisit) {
+					triggerCelebration(currentCount);
+				}
+			}, delayTime);
+
+			// Auto-dismiss toast after a slightly longer duration for milestone readability
+			dismissTimeout = setTimeout(() => {
+				setShowToast(false);
+			}, delayTime + (isMilestoneVisit ? 8000 : 6000));
+		};
+
+		registerVisitAndGetToast();
 
 		const updateTime = () => {
 			const options: Intl.DateTimeFormatOptions = {
@@ -111,8 +158,8 @@ export default function Home() {
 
 		return () => {
 			clearInterval(interval);
-			clearTimeout(toastTimeout);
-			clearTimeout(dismissTimeout);
+			if (toastTimeout) clearTimeout(toastTimeout);
+			if (dismissTimeout) clearTimeout(dismissTimeout);
 			if (hoverTimeoutRef.current) {
 				clearTimeout(hoverTimeoutRef.current);
 			}
@@ -125,21 +172,142 @@ export default function Home() {
 		}
 	}, []);
 
+	const triggerCelebration = (count: number) => {
+		confetti({
+			particleCount: 150,
+			spread: 80,
+			origin: { y: 0.6 },
+			zIndex: 100000,
+		});
+		setTimeout(() => {
+			confetti({
+				particleCount: 100,
+				spread: 100,
+				origin: { y: 0.7 },
+				zIndex: 100000,
+			});
+		}, 400);
+
+		const coolMessages = [
+			`OMGGGG! Milestone visitor #${count}! 🏆`,
+			`You are visitor #${count}! ABSOLUTE LEGEND! 🥳`,
+			`Whoa, visitor #${count}! Golden achievement unlocked! 🔥`,
+			`We have a winner! Visitor #${count}! ⭐`,
+			`Holy moly! You're officially visitor #${count}! 🎉`,
+		];
+		const randomMessage = coolMessages[Math.floor(Math.random() * coolMessages.length)];
+		setBirdMessage(randomMessage);
+		setIsBirdHovered(true);
+
+		setTimeout(() => {
+			setIsBirdHovered(false);
+		}, 10000);
+	};
+
+	const testMilestone = (count: number) => {
+		setShowToast(false);
+		setTimeout(() => {
+			setIsMilestone(true);
+			setVisitorCount(count);
+			let milestoneCopy = "";
+			if (count === 50) {
+				milestoneCopy = "🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
+			} else if (count === 100) {
+				milestoneCopy = "✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
+			} else {
+				milestoneCopy = `🏆 Milestone unlocked! You are visitor #${count}! Thank you for landing on my corner of the internet. Enjoy your stay! 🌟`;
+			}
+			setToastMessage(milestoneCopy);
+			setShowToast(true);
+			triggerCelebration(count);
+
+			setTimeout(() => {
+				setShowToast(false);
+			}, 10000);
+		}, 300);
+	};
+
 	return (
 		<main className="relative w-full min-h-screen md:h-screen overflow-y-auto md:overflow-hidden bg-background">
 			{/* A subtle, animated noise overlay for texture */}
 			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
+			{/* Developer Test Buttons for Toast */}
+			<div className="fixed bottom-10 left-1/2 -translate-x-1/2 md:bottom-10 md:left-10 md:translate-x-0 z-[99999] flex gap-2 pointer-events-auto bg-white/80 p-2 rounded-lg shadow-xl backdrop-blur-md">
+				<button onClick={() => testMilestone(50)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 50</button>
+				<button onClick={() => testMilestone(100)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 100</button>
+				<button onClick={() => testMilestone(150)} className="px-4 py-2 bg-[#26393A] text-white text-sm font-bold rounded-md shadow-md hover:bg-black transition-colors cursor-pointer">Test 150+</button>
+			</div>
+
+			{/* Achievement Toast (Center of screen) */}
+			<AnimatePresence>
+				{showToast && isMilestone && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+						className="fixed inset-0 z-[1000] flex items-center justify-center pointer-events-none p-4 bg-black/15 backdrop-blur-[4px]"
+					>
+						<motion.div
+							initial={{ opacity: 0, scale: 0.92, y: 16 }}
+							animate={{ opacity: 1, scale: 1, y: 0 }}
+							exit={{ opacity: 0, scale: 0.95, y: 12 }}
+							transition={{ 
+								type: "spring", 
+								stiffness: 380, 
+								damping: 30, 
+								mass: 0.9
+							}}
+							className="pointer-events-auto select-none flex flex-col items-center gap-4 md:gap-6 p-6 md:p-8 rounded-2xl md:rounded-3xl bg-gradient-to-b from-[#FFFDF0]/98 via-[#FFF9D6]/98 to-[#FFEFA6]/98 border-2 border-[#E5C158] text-[#5C4308] shadow-2xl w-full max-w-[360px] md:max-w-[420px] text-center relative"
+						>
+							{/* Celebration graphics or icon */}
+							<motion.div
+								animate={{
+									rotate: [0, -15, 15, -15, 0],
+									scale: [1, 1.15, 1.15, 1],
+								}}
+								transition={{
+									repeat: Infinity,
+									repeatType: "reverse",
+									duration: 1.5,
+									ease: "easeInOut",
+								}}
+								className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#FFEFA6] border border-[#E5C158]/50 shadow-inner"
+							>
+								<PartyPopper className="w-6 h-6 md:w-8 md:h-8 text-[#E5C158]" />
+							</motion.div>
+
+							<div className="flex flex-col gap-1 md:gap-2">
+								<h3 className="font-gilroyBold text-lg md:text-xl tracking-tight text-[#5C4308]">
+									Milestone Unlocked!
+								</h3>
+								<p className="font-satoshi text-xs md:text-sm leading-relaxed text-[#5C4308]/90">
+									{toastMessage}
+								</p>
+							</div>
+
+							<button
+								onClick={() => setShowToast(false)}
+								className="mt-1 md:mt-2 px-5 py-1.5 md:px-6 md:py-2 rounded-full bg-[#5C4308] text-[#FFFDF0] hover:bg-[#5C4308]/90 active:scale-95 transition-all text-[10px] md:text-xs font-gilroyBold tracking-wider cursor-pointer"
+							>
+								Awesome!
+							</button>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
 			{/* Custom Toast Notification */}
 			<div className="fixed top-4 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
 				<AnimatePresence>
-					{showToast && (
+					{showToast && !isMilestone && (
 						<motion.div
 							initial={{ opacity: 0, y: -20, scale: 0.95 }}
 							animate={{ opacity: 1, y: 0, scale: 1 }}
 							exit={{ opacity: 0, y: -20, scale: 0.95 }}
 							transition={{ type: "spring", stiffness: 300, damping: 25 }}
-							className="pointer-events-auto select-none flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl md:rounded-full bg-[#F9FFD9]/95 backdrop-blur-md border border-[#EADFC3] text-[#26393A] shadow-lg shadow-[#2a4756]/5 w-full max-w-[360px] md:w-auto"
+							className="pointer-events-auto select-none flex items-center justify-between gap-3 px-4 py-2.5 rounded-2xl md:rounded-full backdrop-blur-md shadow-lg shadow-[#2a4756]/5 w-full bg-[#F9FFD9]/95 border border-[#EADFC3] text-[#26393A] max-w-[360px] md:w-auto"
 						>
 							<div className="flex items-center gap-2.5">
 								{toastIcon === "morning" && (
@@ -162,7 +330,7 @@ export default function Home() {
 
 							<button
 								onClick={() => setShowToast(false)}
-								className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#EADFC3]/40 active:scale-90 transition-all cursor-pointer focus:outline-none shrink-0"
+								className="w-5 h-5 flex items-center justify-center rounded-full active:scale-90 transition-all cursor-pointer focus:outline-none shrink-0 hover:bg-[#EADFC3]/40"
 								aria-label="Dismiss greeting"
 							>
 								<X className="w-3.5 h-3.5 text-[#26393A]/60" />
