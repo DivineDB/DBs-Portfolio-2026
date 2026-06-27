@@ -5,7 +5,15 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
-import { Coffee, Sun, Sunset, Moon, X, ArrowDown, PartyPopper } from "lucide-react";
+import {
+	Coffee,
+	Sun,
+	Sunset,
+	Moon,
+	X,
+	ArrowDown,
+	PartyPopper,
+} from "lucide-react";
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
 import { cn } from "@/lib/cn";
@@ -77,11 +85,11 @@ export default function Home() {
 		} else if (hours >= 12 && hours < 17) {
 			greeting = "Good Afternoon Visitor! ☀️ Thanks for dropping by.";
 			iconType = "afternoon";
-		} else if (hours >= 17 && hours < 22) {
+		} else if (hours >= 17 && hours < 23) {
 			greeting = "Good Evening Visitor! 🌇 Keep Browsing.";
 			iconType = "evening";
 		} else {
-			greeting = "🌙 Hello, fellow night owl.";
+			greeting = "Hello, fellow night owl.";
 			iconType = "night";
 		}
 
@@ -97,7 +105,9 @@ export default function Home() {
 
 			if (!hasRecorded) {
 				try {
-					const response = await fetch("/api/visitor-count", { method: "POST" });
+					const response = await fetch("/api/visitor-count", {
+						method: "POST",
+					});
 					if (response.ok) {
 						const data = await response.json();
 						currentCount = data.count;
@@ -116,9 +126,11 @@ export default function Home() {
 				setVisitorCount(currentCount);
 				let milestoneCopy = "";
 				if (currentCount === 50) {
-					milestoneCopy = "🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
+					milestoneCopy =
+						"🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
 				} else if (currentCount === 100) {
-					milestoneCopy = "✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
+					milestoneCopy =
+						"✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
 				} else {
 					milestoneCopy = `🏆 Milestone unlocked! You are visitor #${currentCount}! Thank you for landing on my corner of the internet. Enjoy your stay! 🌟`;
 				}
@@ -137,9 +149,12 @@ export default function Home() {
 			}, delayTime);
 
 			// Auto-dismiss toast after a slightly longer duration for milestone readability
-			dismissTimeout = setTimeout(() => {
-				setShowToast(false);
-			}, delayTime + (isMilestoneVisit ? 8000 : 6000));
+			dismissTimeout = setTimeout(
+				() => {
+					setShowToast(false);
+				},
+				delayTime + (isMilestoneVisit ? 8000 : 6000),
+			);
 		};
 
 		registerVisitAndGetToast();
@@ -195,7 +210,8 @@ export default function Home() {
 			`We have a winner! Visitor #${count}! ⭐`,
 			`Holy moly! You're officially visitor #${count}! 🎉`,
 		];
-		const randomMessage = coolMessages[Math.floor(Math.random() * coolMessages.length)];
+		const randomMessage =
+			coolMessages[Math.floor(Math.random() * coolMessages.length)];
 		setBirdMessage(randomMessage);
 		setIsBirdHovered(true);
 
@@ -211,9 +227,11 @@ export default function Home() {
 			setVisitorCount(count);
 			let milestoneCopy = "";
 			if (count === 50) {
-				milestoneCopy = "🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
+				milestoneCopy =
+					"🎉 Woohoo! You are officially my 50th visitor! You just unlocked the golden milestone toast. Thanks for stopping by! 🚀";
 			} else if (count === 100) {
-				milestoneCopy = "✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
+				milestoneCopy =
+					"✨ Landmark moment! You're visitor #100! That officially makes you a VIP. Thank you for being a part of my journey! 🥳";
 			} else {
 				milestoneCopy = `🏆 Milestone unlocked! You are visitor #${count}! Thank you for landing on my corner of the internet. Enjoy your stay! 🌟`;
 			}
@@ -232,7 +250,6 @@ export default function Home() {
 			{/* A subtle, animated noise overlay for texture */}
 			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
-
 			{/* Achievement Toast (Center of screen) */}
 			<AnimatePresence>
 				{showToast && isMilestone && (
@@ -247,11 +264,11 @@ export default function Home() {
 							initial={{ opacity: 0, scale: 0.92, y: 16 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: 12 }}
-							transition={{ 
-								type: "spring", 
-								stiffness: 380, 
-								damping: 30, 
-								mass: 0.9
+							transition={{
+								type: "spring",
+								stiffness: 380,
+								damping: 30,
+								mass: 0.9,
 							}}
 							className="pointer-events-auto select-none flex flex-col items-center gap-4 md:gap-6 p-6 md:p-8 rounded-2xl md:rounded-3xl bg-gradient-to-b from-[#FFFDF0]/98 via-[#FFF9D6]/98 to-[#FFEFA6]/98 border-2 border-[#E5C158] text-[#5C4308] shadow-2xl w-full max-w-[360px] md:max-w-[420px] text-center relative"
 						>
@@ -655,9 +672,7 @@ export default function Home() {
 							onLoad={() => setBuildingLoaded(true)}
 						/>
 
-						<div
-							className="pointer-events-none absolute top-[45.2%] md:top-[42.5%] left-[23%] md:left-[24.5%] z-30 h-auto w-[28%] overflow-hidden"
-						>
+						<div className="pointer-events-none absolute top-[45.2%] md:top-[42.5%] left-[23%] md:left-[24.5%] z-30 h-auto w-[28%] overflow-hidden">
 							<motion.div
 								key={playIntro ? "intro-boy" : "static-boy"}
 								className="boy-container"
@@ -716,7 +731,12 @@ export default function Home() {
 								!isMounted
 									? { duration: 0 }
 									: playIntro
-										? { type: "spring", stiffness: 400, damping: 17, delay: 0.1 }
+										? {
+												type: "spring",
+												stiffness: 400,
+												damping: 17,
+												delay: 0.1,
+											}
 										: { duration: 0 }
 							}
 							onMouseEnter={() => {
@@ -729,9 +749,9 @@ export default function Home() {
 										"sup?",
 										"peek-a-boo!",
 										"looking at me?",
-										"tweet tweet!",
 										"need help?",
 										"coo coo!",
+										"what's cooking?",
 									];
 									const randomGreeting =
 										greetings[Math.floor(Math.random() * greetings.length)];
