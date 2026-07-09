@@ -43,6 +43,66 @@ interface OtherThingsClientProps {
   photos: PhotoItem[];
 }
 
+/* ─────────────────────────────────────────────
+   Parallax Photo Card Component
+───────────────────────────────────────────── */
+function ParallaxPhotoCard({
+  item,
+  i,
+  isOrphanOnMobile,
+  onClick,
+}: {
+  item: PhotoItem;
+  i: number;
+  isOrphanOnMobile: boolean;
+  onClick: () => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Mathematically calculated translation range to prevent empty spaces:
+  // For height = 116% and top = -8%, range [-6.8%, 6.8%] is fully safe.
+  // We map the active translation to the middle 70% of scroll progress [0.15, 0.85]
+  // to make the parallax feel more intense and active while the image is in the center viewport.
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.85, 1],
+    ["-6.8%", "-6.8%", "6.8%", "6.8%"]
+  );
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onClick={onClick}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: (i % 3) * 0.05 }}
+      className={`relative overflow-hidden rounded-3xl border border-current/10 cursor-pointer group aspect-[9/16] will-change-[transform,opacity] ${
+        isOrphanOnMobile ? "hidden sm:block" : ""
+      }`}
+    >
+      <motion.div
+        style={{ y }}
+        className="absolute -top-[8%] left-0 w-full h-[116%] will-change-transform transform-gpu"
+      >
+        <Image
+          src={item.src}
+          alt={item.alt}
+          fill
+          quality={90}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+          priority={i < 6}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
@@ -240,27 +300,16 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                 photos.length % 2 !== 0 && i === photos.length - 1;
 
               return (
-                <motion.div
+                <ParallaxPhotoCard
                   key={i}
+                  item={item}
+                  i={i}
+                  isOrphanOnMobile={isOrphanOnMobile}
                   onClick={() => {
                     setDirection(0);
                     setActiveIndex(i);
                   }}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, ease: "easeOut", delay: (i % 3) * 0.05 }}
-                  className={`relative overflow-hidden rounded-3xl border border-current/10 cursor-pointer group aspect-[9/16] will-change-[transform,opacity]${isOrphanOnMobile ? " hidden sm:block" : ""}`}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-                    priority={i < 6}
-                  />
-                </motion.div>
+                />
               );
             })}
           </div>
@@ -371,7 +420,8 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                       src={photos[activeIndex].src}
                       alt={photos[activeIndex].alt}
                       fill
-                      sizes="90vw"
+                      quality={95}
+                      sizes="(max-width: 768px) 100vw, 90vw"
                       priority
                       className="object-contain rounded-2xl md:rounded-3xl pointer-events-none select-none"
                     />
