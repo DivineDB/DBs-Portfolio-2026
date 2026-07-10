@@ -40,6 +40,39 @@ export default function Home() {
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
 	const buildingRef = useRef<HTMLImageElement | null>(null);
 
+	const triggerCelebration = (count: number) => {
+		confetti({
+			particleCount: 150,
+			spread: 80,
+			origin: { y: 0.6 },
+			zIndex: 100000,
+		});
+		setTimeout(() => {
+			confetti({
+				particleCount: 100,
+				spread: 100,
+				origin: { y: 0.7 },
+				zIndex: 100000,
+			});
+		}, 400);
+
+		const coolMessages = [
+			`OMGGGG! Milestone visitor #${count}! 🏆`,
+			`You are visitor #${count}! ABSOLUTE LEGEND! 🥳`,
+			`Whoa, visitor #${count}! Golden achievement unlocked! 🔥`,
+			`We have a winner! Visitor #${count}! ⭐`,
+			`Holy moly! You're officially visitor #${count}! 🎉`,
+		];
+		const randomMessage =
+			coolMessages[Math.floor(Math.random() * coolMessages.length)];
+		setBirdMessage(randomMessage);
+		setIsBirdHovered(true);
+
+		setTimeout(() => {
+			setIsBirdHovered(false);
+		}, 10000);
+	};
+
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
 			if (
@@ -186,39 +219,6 @@ export default function Home() {
 			setBuildingLoaded(true);
 		}
 	}, []);
-
-	const triggerCelebration = (count: number) => {
-		confetti({
-			particleCount: 150,
-			spread: 80,
-			origin: { y: 0.6 },
-			zIndex: 100000,
-		});
-		setTimeout(() => {
-			confetti({
-				particleCount: 100,
-				spread: 100,
-				origin: { y: 0.7 },
-				zIndex: 100000,
-			});
-		}, 400);
-
-		const coolMessages = [
-			`OMGGGG! Milestone visitor #${count}! 🏆`,
-			`You are visitor #${count}! ABSOLUTE LEGEND! 🥳`,
-			`Whoa, visitor #${count}! Golden achievement unlocked! 🔥`,
-			`We have a winner! Visitor #${count}! ⭐`,
-			`Holy moly! You're officially visitor #${count}! 🎉`,
-		];
-		const randomMessage =
-			coolMessages[Math.floor(Math.random() * coolMessages.length)];
-		setBirdMessage(randomMessage);
-		setIsBirdHovered(true);
-
-		setTimeout(() => {
-			setIsBirdHovered(false);
-		}, 10000);
-	};
 
 	const testMilestone = (count: number) => {
 		setShowToast(false);

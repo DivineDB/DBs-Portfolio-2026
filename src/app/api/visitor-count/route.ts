@@ -22,8 +22,9 @@ export async function POST() {
 					let fileContent = "";
 					try {
 						fileContent = await fs.readFile(dataFilePath, "utf8");
-					} catch (readError: any) {
-						if (readError.code === "ENOENT") {
+					} catch (readError) {
+						const err = readError as { code?: string };
+						if (err.code === "ENOENT") {
 							// If the file does not exist, initialize it
 							const initialData = JSON.stringify({ count: 0 }, null, 2);
 							await fs.mkdir(path.dirname(dataFilePath), { recursive: true });
