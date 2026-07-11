@@ -244,10 +244,17 @@ export default function HireMePage() {
 					</div>
 
 					<h1 className="text-5xl font-gilroyBold tracking-tight md:text-7xl">
-						<HighlightBox className="font-gilroyBold tracking-tight">
+					<HighlightBox className="font-gilroyBold tracking-tight overflow-hidden inline-flex">
+						<motion.span
+							initial={{ y: "105%", opacity: 0 }}
+							animate={{ y: "0%", opacity: 1 }}
+							transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+							className="inline-block will-change-transform"
+						>
 							Hire me!
-						</HighlightBox>
-					</h1>
+						</motion.span>
+					</HighlightBox>
+				</h1>
 
 					<p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-700 md:text-lg">
 						If you are a recruiter or someone working at a company who has an
@@ -344,7 +351,15 @@ export default function HireMePage() {
 							<h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
 								My{" "}
 								<HighlightBox className="font-gilroyBold tracking-tight">
-									Tech Stack
+									<motion.span
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+										className="inline-block will-change-transform"
+									>
+										Tech Stack
+									</motion.span>
 								</HighlightBox>
 							</h2>
 							<p className="mt-3 text-base leading-relaxed text-slate-700 md:text-lg">
@@ -428,7 +443,15 @@ export default function HireMePage() {
 					<h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
 						Why must you{" "}
 						<HighlightBox className="font-gilroyBold tracking-tight">
-							hire me?
+							<motion.span
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+								className="inline-block will-change-transform"
+							>
+								hire me?
+							</motion.span>
 						</HighlightBox>
 					</h2>
 
@@ -491,7 +514,15 @@ export default function HireMePage() {
 					<h2 className="text-3xl font-gilroyBold tracking-tight md:text-5xl">
 						My{" "}
 						<HighlightBox className="font-gilroyBold tracking-tight">
-							Preferences
+							<motion.span
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+								className="inline-block will-change-transform"
+							>
+								Preferences
+							</motion.span>
 						</HighlightBox>
 					</h2>
 

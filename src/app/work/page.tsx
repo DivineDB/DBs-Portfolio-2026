@@ -13,15 +13,18 @@ export default function WorkPage() {
       {/* Hero Section */}
       <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-6">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl will-change-transform"
-          >
-            <HighlightBox>Selected Work</HighlightBox>
-          </motion.h1>
+          <h1 className="font-gilroyBold text-6xl tracking-tight text-text_primary md:text-8xl">
+            <HighlightBox className="overflow-hidden inline-flex">
+              <motion.span
+                initial={{ y: "105%", opacity: 0 }}
+                animate={{ y: "0%", opacity: 1 }}
+                transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block will-change-transform"
+              >
+                Selected Work
+              </motion.span>
+            </HighlightBox>
+          </h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -156,15 +159,19 @@ export default function WorkPage() {
       {/* More Builds */}
       <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
-          <motion.h2 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="font-gilroyBold text-4xl text-text_primary md:text-5xl will-change-transform"
-          >
-            <HighlightBox>More Builds</HighlightBox>
-          </motion.h2>
+          <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">
+            <HighlightBox className="overflow-hidden inline-flex">
+              <motion.span
+                initial={{ y: "105%", opacity: 0 }}
+                whileInView={{ y: "0%", opacity: 1 }}
+                viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+                transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block will-change-transform"
+              >
+                More Builds
+              </motion.span>
+            </HighlightBox>
+          </h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {[

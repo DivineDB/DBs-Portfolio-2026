@@ -7,7 +7,7 @@ import Image from "next/image";
 import PageFooter from "@/components/PageFooter";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import IndiaMap from "@/components/IndiaMap";
+
 
 /* ─────────────────────────────────────────────
    Shared animation variant helpers
@@ -21,22 +21,12 @@ const sectionVariant: Variants = {
   },
 };
 
-/* ─────────────────────────────────────────────
-   Section header component
-───────────────────────────────────────────── */
-function SectionHeader({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <p
-      className={`font-gilroyBold text-xs uppercase tracking-widest opacity-40 ${className}`}
-    >
-      {label}
-    </p>
-  );
-}
+
 
 type PhotoItem = {
   src: string;
   alt: string;
+  isLandscape?: boolean;
 };
 
 interface OtherThingsClientProps {
@@ -93,10 +83,21 @@ function ParallaxPhotoCard({
           src={item.src}
           alt={item.alt}
           fill
-          quality={90}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-          priority={i < 6}
+          // Landscape images in a 9:16 portrait container need the full original
+          // pixel data to avoid blur — Next.js would serve a width-sized crop
+          // that's far too narrow to cover the container's height.
+          {...(item.isLandscape
+            ? { unoptimized: true }
+            : {
+                quality: 95,
+                sizes: "(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 34vw",
+              })}
+          className={`object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            item.src.includes("photography-bff77c8e55")
+              ? "scale-[0.90] group-hover:scale-[0.95]"
+              : "group-hover:scale-[1.04]"
+          }`}
+          priority={i < 9}
         />
       </motion.div>
     </motion.div>
@@ -106,7 +107,17 @@ function ParallaxPhotoCard({
 export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
+  const [isAtTop, setIsAtTop] = useState(true);
   const lenis = useLenis();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY < 80);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Init status
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -259,28 +270,32 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
       <div className="pt-16 md:pt-32 pb-16 px-5 md:px-16 max-w-7xl mx-auto">
 
         {/* ── Hero ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-6 will-change-transform"
-        >
+        <div className="mb-6">
           <h1 className="font-gilroyBold text-6xl md:text-8xl leading-none tracking-tight">
-            <HighlightBox className="text-5xl md:text-7xl">Off-Hours</HighlightBox>
+            <HighlightBox className="text-5xl md:text-7xl overflow-hidden inline-flex">
+              <motion.span
+                initial={{ y: "105%", opacity: 0 }}
+                animate={{ y: "0%", opacity: 1 }}
+                transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+                className="inline-block will-change-transform"
+              >
+                Off-Hours
+              </motion.span>
+            </HighlightBox>
           </h1>
-        </motion.div>
+        </div>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="max-w-2xl font-satoshi text-lg opacity-80 leading-relaxed mb-[50vh]"
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
+          className="max-w-2xl font-satoshi text-lg opacity-80 leading-relaxed mb-[85vh] md:mb-[50vh]"
         >
           Design and engineering pay the bills. This is what keeps the creative engine running.
           A collection of visual storytelling and movement.
         </motion.p>
 
-        {/* ── Phase 2 – The Lens ── */}
+        {/* ── Photography Gallery ── */}
         <motion.section
           ref={galleryRef}
           variants={sectionVariant}
@@ -290,9 +305,53 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
           className="relative will-change-transform"
           style={{ position: "relative" }}
         >
-          <SectionHeader label="01 The Lens" />
+          {/* Large animated Photography heading */}
+          <div className="overflow-hidden mb-12 mt-16">
+            <motion.h2
+              className="font-gilroyBold text-5xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight"
+              animate={isAtTop ? "hidden" : "visible"}
+              variants={{
+                hidden: {
+                  transition: {
+                    staggerChildren: 0.015,
+                    staggerDirection: -1
+                  }
+                },
+                visible: { transition: { staggerChildren: 0.035, delayChildren: 0.05 } },
+              }}
+            >
+              {"Photography".split("").map((char, idx) => (
+                <motion.span
+                  key={idx}
+                  className="inline-block will-change-transform"
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: "40%",
+                      rotateX: 10,
+                      transition: {
+                        duration: 0.8,
+                        ease: [0.16, 1, 0.3, 1]
+                      }
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: "0%",
+                      rotateX: 0,
+                      transition: {
+                        duration: 0.75,
+                        ease: [0.16, 1, 0.3, 1],
+                      },
+                    },
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h2>
+          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
             {photos.map((item, i) => {
               // On mobile (2-col grid), hide the last item when total count is odd
               // so the grid always ends with a complete row.
@@ -301,7 +360,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
 
               return (
                 <ParallaxPhotoCard
-                  key={i}
+                  key={item.src}
                   item={item}
                   i={i}
                   isOrphanOnMobile={isOrphanOnMobile}
@@ -313,21 +372,6 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
               );
             })}
           </div>
-        </motion.section>
-
-        {/* ── Phase 4 – Movement / Travel ── */}
-        <motion.section
-          variants={sectionVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.05 }}
-          className="mt-56 will-change-transform"
-        >
-          <SectionHeader label="02 Movement" />
-          <p className="mt-4 max-w-xl font-satoshi text-base opacity-60 leading-relaxed mb-8">
-            I also love to travel and explore new horizons. It keeps my creative engine running, whether wandering through mountain trails or navigating bustling metro cities. Here are some of the places I&apos;ve visited.
-          </p>
-          <IndiaMap />
         </motion.section>
 
       </div>
@@ -347,7 +391,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
             <div className="w-full flex justify-end items-center z-10 px-4">
               <button
                 onClick={closeSlideshow}
-                className="p-2 -mr-2 text-white/60 hover:text-white transition-colors cursor-pointer focus:outline-none"
+                className="p-3 -mr-3 text-white/60 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full hover:bg-white/5 active:bg-white/10"
                 aria-label="Close slideshow"
               >
                 <X size={20} />
@@ -357,7 +401,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
             {/* Middle Main Content */}
             <div 
               onClick={handleBackdropClick}
-              className="relative flex-grow flex items-center justify-center w-full h-[95vh]"
+              className="relative flex-grow flex items-center justify-center w-full"
             >
               {/* Prev Button */}
               <button
@@ -420,8 +464,8 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                       src={photos[activeIndex].src}
                       alt={photos[activeIndex].alt}
                       fill
-                      quality={95}
-                      sizes="(max-width: 768px) 100vw, 90vw"
+                      quality={97}
+                      sizes="100vw"
                       priority
                       className="object-contain rounded-2xl md:rounded-3xl pointer-events-none select-none"
                     />
@@ -439,10 +483,13 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
               </button>
             </div>
 
-            {/* Bottom Photo Count */}
-            <div className="w-full flex justify-center items-center py-2 z-10 select-none">
+            {/* Bottom Photo Count + Mobile Swipe Hint */}
+            <div className="w-full flex flex-col items-center gap-1 py-2 z-10 select-none">
               <span className="font-satoshi text-[10px] tracking-[0.2em] text-white/40 uppercase">
                 {activeIndex + 1} / {photos.length}
+              </span>
+              <span className="md:hidden font-satoshi text-[9px] tracking-widest text-white/20 uppercase">
+                swipe to navigate
               </span>
             </div>
           </motion.div>

@@ -25,8 +25,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 186,
     y: 118,
     photos: [
-      "/images/photography-1.jpg",
-      "/images/photography-2.jpg"
+      "/images/photography-f6904751ef.jpg",
+      "/images/photography-83b61a5e97.jpg"
     ],
     textAnchor: "start",
     dx: 10,
@@ -39,8 +39,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 242,
     y: 168,
     photos: [
-      "/images/photography-3.jpg",
-      "/images/photography-4.jpg"
+      "/images/photography-85f16b110c.jpg",
+      "/images/photography-ad2e4b5eb8.jpg"
     ],
     textAnchor: "start",
     dx: 10,
@@ -53,8 +53,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 226,
     y: 180,
     photos: [
-      "/images/photography-5.jpg",
-      "/images/photography-6.jpg"
+      "/images/photography-62d808e6f3.jpg",
+      "/images/photography-8de57bc609.jpg"
     ],
     textAnchor: "start",
     dx: 10,
@@ -67,8 +67,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 220,
     y: 188,
     photos: [
-      "/images/photography-7.jpg",
-      "/images/photography-8.jpg"
+      "/images/photography-b928901a18.jpg",
+      "/images/photography-e218e7ee4e.jpg"
     ],
     textAnchor: "end",
     dx: -10,
@@ -81,8 +81,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 186,
     y: 210,
     photos: [
-      "/images/photography-9.jpg",
-      "/images/photography-10.jpg"
+      "/images/photography-50fc3ed9c5.jpg",
+      "/images/photography-850f2988e6.jpg"
     ],
     textAnchor: "end",
     dx: -10,
@@ -95,8 +95,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 142,
     y: 236,
     photos: [
-      "/images/photography-11.jpg",
-      "/images/photography-12.jpg"
+      "/images/photography-7b053a700d.jpg",
+      "/images/photography-fb049bd2eb.jpg"
     ],
     textAnchor: "end",
     dx: -10,
@@ -109,8 +109,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 124,
     y: 465,
     photos: [
-      "/images/photography-13.jpg",
-      "/images/photography-14.jpg"
+      "/images/photography-4f88f165b2.jpg",
+      "/images/photography-0dc11b1618.jpg"
     ],
     textAnchor: "start",
     dx: 10,
@@ -123,8 +123,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 212,
     y: 256,
     photos: [
-      "/images/photography-15.jpg",
-      "/images/photography-16.jpg"
+      "/images/photography-f401dba843.jpg",
+      "/images/photography-8d82cf9a2d.jpg"
     ],
     textAnchor: "end",
     dx: -10,
@@ -137,8 +137,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 208,
     y: 230,
     photos: [
-      "/images/photography-17.jpg",
-      "/images/photography-18.jpg"
+      "/images/photography-c62c5b2df6.jpg",
+      "/images/photography-d27c04f466.jpg"
     ],
     textAnchor: "start",
     dx: 10,
@@ -151,8 +151,8 @@ const VISITED_CITIES: VisitedCity[] = [
     x: 282,
     y: 352,
     photos: [
-      "/images/photography-19.jpg",
-      "/images/photography-20.jpg"
+      "/images/photography-f6904751ef.jpg",
+      "/images/photography-83b61a5e97.jpg"
     ],
     textAnchor: "start",
     dx: 10,
