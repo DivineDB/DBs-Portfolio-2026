@@ -160,6 +160,16 @@ export default function WorkPage() {
                       className="w-[82%] aspect-[686.669/386.25] object-contain pointer-events-none select-none"
                       draggable={false}
                     />
+                    {/* Coming Soon Overlay */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#A7D4D7]/60 backdrop-blur-[6px] rounded-[24px]">
+                      <div className="flex items-center gap-2.5 bg-white/40 border border-white/50 backdrop-blur-md px-5 py-2.5 rounded-full shadow-lg">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-text_primary/60 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-text_primary/80" />
+                        </span>
+                        <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/80">Coming Soon</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
