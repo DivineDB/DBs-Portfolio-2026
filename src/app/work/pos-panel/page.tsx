@@ -74,6 +74,19 @@ export default function POSCaseStudy() {
     restDelta: 0.001
   });
 
+  // Ensure the page always starts at the top when navigated to
+  const hasResetScroll = useRef(false);
+  useEffect(() => {
+    // Reset native scroll immediately
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (lenis && !hasResetScroll.current) {
+      hasResetScroll.current = true;
+      lenis.scrollTo(0, { immediate: true });
+    }
+  }, [lenis]);
+
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       if (isManualScrolling.current) return;
