@@ -97,24 +97,18 @@ html.lenis-stopped body::-webkit-scrollbar {
   display: none !important;
 }
 
+/* Completely hide default browser scrollbars globally */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.premium-scrollbar::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbar-track, transparent);
-  transition: background-color 0.4s ease;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2));
-  border-radius: 10px;
-  transition: background-color 0.4s ease;
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, rgba(42, 71, 86, 0.2)) var(--scrollbar-track, transparent);
+  scrollbar-width: none !important;
   /* Remove iOS tap blue flash — active: states provide feedback instead */
   -webkit-tap-highlight-color: transparent;
 }

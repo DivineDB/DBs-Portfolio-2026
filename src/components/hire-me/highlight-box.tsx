@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/cn";
+
 type HighlightBoxProps = {
   children: React.ReactNode;
   className?: string;
@@ -8,15 +10,12 @@ type HighlightBoxProps = {
 export function HighlightBox({ children, className }: HighlightBoxProps) {
   return (
     <span
-      className={[
+      className={cn(
         "inline-block bg-accent_highlight px-3 py-1 leading-none text-[#2A4756] font-gilroyBold rounded-sm shadow-sm",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+        className
+      )}
     >
       {children}
     </span>
   );
 }
-

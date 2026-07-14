@@ -1,15 +1,72 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowDown } from "lucide-react";
+import { ArrowUpRight, ArrowDown } from "lucide-react";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
 import PageFooter from "@/components/PageFooter";
 
+const PROJECTS = [
+  {
+    id: "pos-panel",
+    index: "01",
+    title: "BreezePOS",
+    highlight: "Breeze",
+    rest: "POS",
+    subtitle: "Point-of-Sale System",
+    year: "2026",
+    role: "Design & Engineering",
+    description:
+      "A touchscreen-optimized register and analytics dashboard built for convenience store operations — checkout under 12 seconds, real-time inventory sync, zero log loss.",
+    image: "/images/Group 5.png",
+    imageAlt: "BreezePOS Order Register Workspace",
+    imageBg: "#9AD8B6",
+    liveUrl: "https://ssg-store.vercel.app",
+    liveLabel: "Live Preview",
+    wip: false,
+  },
+  {
+    id: "scout",
+    index: "02",
+    title: "Scout Engine",
+    highlight: "Scout",
+    rest: " Engine",
+    subtitle: "Autonomous Data Intelligence",
+    year: "2026 —",
+    role: "Systems Design",
+    description:
+      "An intelligence engine that crawls raw commercial datasets, runs categorization LLMs, and maps listing schemas into context-aware verticals.",
+    image: "/images/scout_mockup.png",
+    imageAlt: "Scout Engine Data Intelligence Console",
+    imageBg: "#A7D4D7",
+    liveUrl: "https://github.com/DivineDB/Scout",
+    liveLabel: "GitHub",
+    wip: false,
+  },
+];
+
 export default function WorkPage() {
+  const router = useRouter();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToFirstProject = () => {
+    const el = document.getElementById("project-01");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <main className="w-full bg-bg font-gilroyRegular text-text_primary">
-      
+
       {/* Hero Section */}
       <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
         <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-6">
@@ -40,7 +97,8 @@ export default function WorkPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0, duration: 0.5, ease: "easeOut" }}
-          className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50"
+          className="pointer-events-auto cursor-pointer absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50"
+          onClick={scrollToFirstProject}
         >
           <span className="font-gilroyBold text-xs tracking-[0.2em] uppercase">Scroll Down</span>
           <motion.div
@@ -53,106 +111,94 @@ export default function WorkPage() {
         </motion.div>
       </section>
 
-      {/* Featured Project 1: POS Panel */}
-      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
-        <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
-          >
-            <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">RETAIL DASHBOARD</p>
-            <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">POS Panel</h2>
-            <p className="text-lg text-text_primary/70">
-              A high-density dashboard engineered to reduce cognitive fatigue for retail workers, featuring Optimistic UI patterns.
-            </p>
-            <div className="pt-4">
-               <Link href="/work/pos-panel" className="group inline-flex items-center gap-2 font-gilroyBold text-text_primary transition-opacity hover:opacity-70">
-                 Read Case Study
-                 <span className="transition-transform group-hover:translate-x-1">→</span>
-               </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
-          >
-            {/* Abstract geometric visual dot-matrix UI */}
-            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
-                 style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(42, 71, 86, 0.1) 1px, transparent 0)', backgroundSize: '24px 24px' }}>
-               <div className="absolute inset-0 flex flex-col p-8 gap-4 items-center justify-center">
-                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center">
-                     <div className="h-4 w-16 bg-text_primary/20 rounded"></div>
-                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
-                  </div>
-                  <div className="w-full max-w-[300px] bg-white/60 backdrop-blur-md border border-text_primary/10 p-4 rounded-lg shadow-lg flex justify-between items-center opacity-80 translate-x-4">
-                     <div className="h-4 w-24 bg-text_primary/20 rounded"></div>
-                     <div className="h-6 w-12 bg-accent_highlight rounded border border-text_primary/10 shadow-inner"></div>
-                  </div>
-               </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Project 2: Scout */}
-      <section className="relative flex min-h-screen w-full flex-col justify-center px-6 md:px-12 py-24 md:py-0">
-        <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-12 lg:grid-cols-12 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col gap-6 lg:col-span-5 will-change-transform"
-          >
-            <p className="font-gilroyBold text-sm tracking-wide text-text_primary/50 uppercase">AI-NATIVE PIPELINE</p>
-            <h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">Scout</h2>
-            <p className="text-lg text-text_primary/70">
-              An automated intelligence engine that autonomously crawls raw data and maps listings into context-aware verticals.
-            </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              {['Next.js', 'Groq', 'TypeScript'].map(tag => (
-                <span key={tag} className="rounded-full border border-text_primary/10 px-4 py-1.5 text-sm text-text_primary/60">
-                  {tag}
+      {/* ── Project list ─────────────────────────────────────────── */}
+      <section className="px-6 md:px-12 py-12">
+        <div className="mx-auto max-w-[1000px] flex flex-col gap-24 md:gap-32">
+          {PROJECTS.map((project, i) => (
+            <motion.article
+              key={project.id}
+              id={`project-${project.index}`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+              transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+              className="group/article flex flex-col w-full"
+            >
+              {/* Meta row above image */}
+              <div className="flex items-baseline justify-between mb-6 gap-4">
+                <span className="font-mono text-xs text-text_primary/35 tracking-widest">
+                  {project.index}
                 </span>
-              ))}
-            </div>
-            <div className="pt-4">
-               <Link href="/work/scout" className="group inline-flex items-center gap-2 font-gilroyBold text-text_primary transition-opacity hover:opacity-70">
-                 Read Case Study
-                 <span className="transition-transform group-hover:translate-x-1">→</span>
-               </Link>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "0px 0px -15% 0px" }}
-            transition={{ duration: 0.8 }}
-            className="group relative aspect-[4/3] w-full overflow-hidden rounded border border-text_primary/10 bg-text_primary/5 lg:col-span-7 will-change-transform"
-          >
-            {/* Abstract geometric visual */}
-            <div className="absolute inset-0 flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-               <div className="relative h-64 w-64">
-                 <div className="absolute top-10 left-10 h-32 w-32 rounded-full bg-accent_highlight/40 mix-blend-multiply blur-2xl filter transition-transform group-hover:translate-x-4"></div>
-                 <div className="absolute bottom-10 right-10 h-32 w-32 rounded-full bg-text_primary/10 mix-blend-multiply blur-2xl filter transition-transform group-hover:-translate-x-4"></div>
-                 <div className="absolute inset-8 rounded-lg border border-text_primary/15 bg-white/40 backdrop-blur-sm shadow-xl flex items-center justify-center">
-                    <div className="flex flex-col gap-3 w-full px-6">
-                       <div className="h-3 w-3/4 rounded bg-text_primary/20"></div>
-                       <div className="h-3 w-1/2 rounded bg-text_primary/10"></div>
-                       <div className="h-3 w-5/6 rounded bg-text_primary/10"></div>
-                    </div>
-                 </div>
-               </div>
-            </div>
-          </motion.div>
+                <span className="font-gilroyRegular text-xs text-text_primary/40 tracking-wide">
+                  {project.subtitle} · {project.year}
+                </span>
+              </div>
+
+              {/* Image Container with curated background and precise bleed/sizing */}
+              <div
+                className={`relative w-full aspect-[943/533] rounded-[24px] cursor-pointer transition-transform duration-500 hover:scale-[1.01] ${
+                  project.id === "pos-panel" ? "overflow-visible" : "overflow-hidden"
+                }`}
+                style={{ backgroundColor: project.imageBg }}
+                onClick={() => router.push(`/work/${project.id}`)}
+                title={project.imageAlt ?? undefined}
+              >
+                {project.id === "pos-panel" ? (
+                  /* BreezePOS Bleed Mockup (Group 5.png) */
+                  <img
+                    src={project.image!}
+                    alt={project.imageAlt!}
+                    className="absolute left-[-6.575%] top-0 w-[113.15%] h-full object-fill pointer-events-none select-none"
+                    draggable={false}
+                  />
+                ) : (
+                  /* Scout Centered Mockup (scout_mockup.png) */
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img
+                      src={project.image!}
+                      alt={project.imageAlt!}
+                      className="w-[82%] aspect-[686.669/386.25] object-contain pointer-events-none select-none"
+                      draggable={false}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Details row below image */}
+              <div className="mt-12 md:mt-16 flex flex-col md:flex-row md:items-start md:justify-between gap-6 px-1">
+                {/* Title + description */}
+                <div className="flex flex-col gap-3 max-w-2xl">
+                  <h2 className="font-gilroyBold text-2xl md:text-3xl text-text_primary tracking-tight">
+                    <HighlightBox className="pr-1.5">{project.highlight}</HighlightBox>
+                    {project.rest}
+                  </h2>
+                  <p className="font-gilroyRegular text-sm text-text_primary/60 leading-relaxed">
+                    {project.description}
+                  </p>
+                </div>
+
+                {/* Links */}
+                <div className="flex items-center gap-6 shrink-0 pt-1.5">
+                  <Link
+                    href={`/work/${project.id}`}
+                    className="group flex items-center gap-1.5 text-sm font-gilroyBold text-text_primary hover:text-text_primary/70 transition-colors"
+                  >
+                    Case Study
+                    <ArrowUpRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </Link>
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-1.5 text-sm font-gilroyRegular text-text_primary/50 hover:text-text_primary transition-colors"
+                  >
+                    {project.liveLabel}
+                    <ArrowUpRight size={14} className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </div>
+              </div>
+            </motion.article>
+          ))}
         </div>
       </section>
 
@@ -203,6 +249,22 @@ export default function WorkPage() {
       </section>
 
       <PageFooter />
+
+      {/* Scroll to top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-8 right-8 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-text_primary/15 bg-bg/90 backdrop-blur-md text-text_primary/60 hover:text-text_primary hover:border-text_primary/30 transition-all cursor-pointer"
+            aria-label="Scroll to top"
+          >
+            <ArrowUpRight size={16} className="-rotate-45" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
     </main>
   );

@@ -1,6 +1,6 @@
 # Portfolio State (@context.md)
 
-## Phase: 9 — Premium Off-Hours Photography Gallery & Lightbox Slideshow
+## Phase: 10 — Selected Work Premium Layout & Typography Refinement
 
 ## Stack
 
@@ -13,6 +13,18 @@
 
 ## Accomplishments (UI Elevation, Mobile Strategy, & Polish)
 
+- **Selected Work Premium Layout & Editorial Overhaul (Phase 10):**
+  - Restructured the `/work` page to place screenshots/interactive mockups in the left-hand column using an enlarged grid span (`lg:col-span-8`) and details/metadata in a narrower right-hand column (`lg:col-span-4`), establishing visual dominance of project assets.
+  - Replicated exact visual specifications from `Work.svg` for the card containers: set BreezePOS background color to `#9AD8B6` and Scout to `#A7D4D7`, rounded corners to `rounded-[24px]` (`rx="24"` in the SVG), and locked them to the Figma aspect ratio `aspect-[943/533]`.
+  - Integrated the composite mockup asset `/images/Group 5.png` for BreezePOS, applying precise pixel-perfect bleed offsets (`left-[-5.94%] w-[113.15%] h-full object-contain`) so that the floating helper screens and drop shadows bleed outside the card container edges exactly like in Figma.
+  - Balanced the Scout card preview to center the React-based mockup at a matching `w-[72.8%]` width and aspect ratio `aspect-[686.669/386.25]`.
+  - Switched project card elements to stack as a normal vertical list with compact paddings (`py-16 md:py-24`) instead of full `min-h-screen` viewport sections.
+  - Simplified the details column by removing category tags and tag arrays, showing only Title, description, and timeline/location.
+  - Replaced the bulky pill buttons with elegant inline links: *Read Case Study →* and *Live Preview ↗* (underlined via CSS).
+  - Enabled clickable card wrappers with direct routing using Next.js `useRouter.push()` for seamless case study navigation.
+  - Removed external/placeholder projects to focus exclusively on core projects (BreezePOS System and Scout Engine).
+  - Enabled clicking on the scroll-down indicator to scroll smoothly to the first project, removing the `pointer-events-none` block.
+  - Integrated a glassmorphic back-to-top floating button that fades in smoothly on scroll.
 - **Interactive Building & Mobile Layout Strategy:** Kept and optimized the interactive building illustration on both desktop and mobile viewports. On mobile, the building collapses cleanly below the editorial content to preserve readability and access to interactive pages via window hotspots. Switch building container to `h-auto w-full max-w-[450px] mx-auto` to preserve the building aspect ratio on mobile screens without viewport clipping.
 - **Mobile Viewport Optimization:** Resolved mobile viewport clipping on `/work`, `/about`, and `/hire-me` by switching sections from fixed `h-screen` to `min-h-screen` and adding responsive vertical padding (`py-24 md:py-0`).
 - **Other Things page Mobile Refinements:** Optimized the `/other-things` layout on mobile by reducing hero top padding (`pt-16` instead of `pt-32`), wrapping the 5-col options trading terminal in an `overflow-x-auto` container with a minimum width, and updating interaction hints dynamically based on touch capabilities.
@@ -25,7 +37,7 @@
 - **Typographic Alignment:** Replaced simulated browser-level `font-extrabold` with mapped local `font-gilroyBold` on the landing page's main heading, adding a left padding offset (`pl-1`) to align the text edge with other left-aligned items.
 - **Theme Blended Shortcut Prompt:** Redesigned the desktop `⌘K` command shortcut button with the warm, cozy greenish-cream background (`bg-[#F0F5E1]`), matching text colors (`text-[#2a4756]/70`), a `rounded-full` pill structure, and an inner kbd element (`bg-bg`) to fully integrate with the Swiss design system.
 - **Smooth Command Palette Scroll:** Added `scroll-smooth` to the list container inside the Command Palette to animate programmatic scroll transitions during arrow-key navigation.
-- **Character & Hotspot Optimization:** Layered `boy.svg` above window overlays with `z-30` so the character graphic remains fully visible and doesn't get obscured by hover backdrops. Refined all window coordinates and hotspot bounds ("About Me" shifted left to `left-[29.5%]` with width `w-[17.5%]`, "Selected Work", "Other Things", "Hire Me") to match the updated visual layout. Nudged the character position to `top-[42.5%] left-[24.5%]` to align perfectly inside the window frame.
+- **Character & Hotspot Optimization:** Layered `boy.svg` above window overlays with `z-30` so the character graphic remains fully visible and doesn't get obscured by hover backdrops. Refined all window coordinates and hotspots bounds ("About Me" shifted left to `left-[29.5%]` with width `w-[17.5%]`, "Selected Work", "Other Things", "Hire Me") to match the updated visual layout. Nudged the character position to `top-[42.5%] left-[24.5%]` to align perfectly inside the window frame.
 
 - **Developer Experience & Console Warning Fixes:**
   - **Cross-Origin Dev Support:** Added `allowedDevOrigins: ["eight-pets-greet.loca.lt", "*.loca.lt"]` inside `next.config.ts` to allow localtunnel/ngrok development proxies.
@@ -50,7 +62,6 @@
   - Added full keyboard accessibility (arrows to slide, ESC to close), touch/drag swiping gestures, static button positioning (`top-1/2 -translate-y-1/2` to prevent layout shift), and automated Lenis scroll freezing while the modal is open.
   - Resolved browser console warnings by adding the `relative` positioning class to the scroll-target section container, and refactoring color animations to use native CSS transitions instead of Framer Motion string color interpolators.
 
-
 ## Narrative tabs (morphing pill)
 
 - Tabs: **Story**, **TL;DR** (shared `layoutId` pill).
@@ -70,7 +81,7 @@
   - **Scroll Down indicator**: Hidden on mobile (`hidden md:flex`) to prevent any visual overlaps in short viewports.
   - **Other sections**: Preferences 2-col grid, `<PageFooter />`.
 
-## Phase 4 — Global Command Palette & Interactive Keywords
+## Global Command Palette & Interactive Keywords
 
 - **`cmdk` installed** (`npm install cmdk`).
 - **`src/components/CommandPalette.tsx`** (new `"use client"`): Global `keydown` listener for `Ctrl+K` / `Cmd+K`. `Command.Dialog` (cmdk) with glassmorphic palette (`bg-[#f8edd1]/90 backdrop-blur-xl`) at `mt-[15vh]`. Groups: **Navigation** (Home, About, Work, Hire Me — `useRouter.push`) and **Actions** (Download Resume → `window.open('/Divyansh_Baghel_Resume.pdf')`, Copy Email → clipboard API with 1.4 s "Copied!" feedback). Footer keyboard hint. Adds/removes `lenis-stopped` on `<html>` to freeze Lenis scroll while open.
@@ -79,10 +90,10 @@
 - **`src/app/about/page.tsx`** — Two new inline keyword components in `StoryContent`:
   - `CodeKeyword`: `motion.span` (`cursor-crosshair`). Hover → dark `#1e293b` pill fades in, word cross-fades to `font-mono text-[#4ade80]` showing `<code />`.
   - `DesignEngineeringKeyword`: `motion.span` (`cursor-default`). Hover → faint 6×6 px CSS grid scales out beyond text bounds + `#a2f991` underline draws left-to-right. Wraps the existing `<Highlight>` component.
-- `TldrContent` uses `motion.div` / `motion.p` wrappers (restored after accidental strip).
+  - `TldrContent` uses `motion.div` / `motion.p` wrappers (restored after accidental strip).
 - **Build verified:** `next build` exits 0 with all 6 routes static (`/`, `/about`, `/hire-me`, `/other-things`, `/work`, `/_not-found`) + 1 dynamic (`/work/[slug]`).
 
-## Phase: 8 — Interactive Chimney Bird & Custom Pupil Tracking
+## Interactive Chimney Bird & Custom Pupil Tracking
 
 - **SVG Bird Conversion & Cursor Tracking (`src/components/InteractiveBird.tsx`)**:
   - Replaced the static building chimney ornament with an interactive React component rendering the bird illustration inline.
@@ -106,32 +117,3 @@
 
 - Perform final responsive checks across desktop and mobile devices.
 - Ready for deploy.
-
-
-# AI Skill: Emil Kowalski UI & Animation Guidelines
-
-When writing, reviewing, or refactoring UI components, you must evaluate all animations and layout choices against these 4 core tenets:
-
-## 1. Interaction Frequency Rules
-- High Frequency (Keyboard shortcuts, opening command palette): NO animation. Ever. It makes power users feel delayed.
-- Medium Frequency (Hover states, sidebar toggles, list selection): Micro-animations under 150ms or instant transitions.
-- Low Frequency (Modals, drawers, multi-step forms): Smooth, expressive spring animations under 300ms.
-
-## 2. Easing & Timing Constraints
-- Never use standard CSS `ease-in`. It delays initial feedback where the eye watches closest.
-- Default to snappy `ease-out` configurations for immediate interactive response.
-- All spatial motion must use Spring Physics instead of hard durations:
-  - Snappy Micro-interactions: stiffness: 450, damping: 30
-  - Light Interactive Press/Tap: stiffness: 500, damping: 15 (Scale down slightly to 0.97 on active press).
-  - Heavy Modals/Sheets: stiffness: 350, damping: 28
-
-## 3. Property Selection (Zero Layout Thrash)
-- CRITICAL: Only animate `transform` (x, y, scale, rotate) and `opacity`.
-- NEVER animate layout-triggering properties (`width`, `height`, `top`, `left`, `margin`) as they force the browser to recalculate layouts on every frame.
-- If an element changes visually on mount/unmount, use `clip-path` for fluid reveals instead of animating raw wrapper sizes.
-- Force hardware layers by adding `will-change-transform` or `will-change-[transform,opacity]` to animated elements.
-
-## 4. Visual Polish Principles
-- Blur Bridging: When crossfading states, animate a quick 4px -> 0px blur filter in tandem with opacity. It tricks the eye into seeing a seamless morph rather than two overlapping objects.
-- Spatial Consistency: If a component enters from the bottom, it must exit toward the bottom.
-- Initial Delay Bypass: Tooltips or menus should delay on the first hover, but open instantaneously on subsequent near items to make toolbars feel hyper-fast.

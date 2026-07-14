@@ -1,41 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
+import { useLenis } from "lenis/react";
 import { 
   ArrowLeft, 
-  ArrowRight,
   ExternalLink, 
-  User, 
-  Target, 
-  Zap, 
-  ShieldAlert, 
   Check, 
   Sparkles,
-  BarChart3,
-  Clock,
-  Briefcase,
-  Search,
-  ShoppingCart,
-  CheckCircle2,
   Database,
-  Smartphone,
+  Terminal,
+  Mail,
+  Info,
   Layers,
-  CreditCard,
-  Banknote,
-  Printer
+  Activity,
+  UserCheck,
+  CheckCircle2,
+  FileText,
+  Sliders,
+  DollarSign,
+  AlertTriangle,
+  ArrowRight
 } from "lucide-react";
 import PageFooter from "@/components/PageFooter";
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 
-// Framer motion variants for clean scroll-reveal animations
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } 
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } 
   }
 };
 
@@ -44,31 +40,215 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15
+      staggerChildren: 0.1
     }
   }
 };
 
-export default function POSCaseStudy() {
-  const [activeBranch, setActiveBranch] = useState<"cash" | "digital" | null>(null);
+const SECTIONS = [
+  { id: "hero", label: "Intro" },
+  { id: "overview", label: "Overview" },
+  { id: "story", label: "Empathy" },
+  { id: "observations", label: "Observations" },
+  { id: "painpoints", label: "Friction" },
+  { id: "synthesis", label: "Synthesis" },
+  { id: "scope", label: "Scope" },
+  { id: "personas", label: "Personas" },
+  { id: "strategy", label: "Strategy" },
+  { id: "5ws", label: "5 Ws" },
+  { id: "walkthrough", label: "Interfaces" },
+  { id: "architecture", label: "Resiliency" },
+  { id: "roadmap", label: "Future" },
+];
 
-  // Metadata block configuration
-  const projectMeta = [
-    { label: "Role", value: "Lead UI/UX Designer & Frontend Developer" },
-    { label: "Timeline", value: "Apr 2026 — May 2026 (4 Weeks)" },
-    { label: "Core Tools", value: "Figma, React, Tailwind CSS, Framer Motion" },
-    { label: "Platform", value: "Desktop & Tablet Web-App (Touch-First)" }
-  ];
+export default function POSCaseStudy() {
+  const { scrollYProgress } = useScroll();
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isHovered, setIsHovered] = useState(false);
+  const lenis = useLenis();
+  const isManualScrolling = useRef(false);
+
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  useEffect(() => {
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      if (isManualScrolling.current) return;
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-75px 0px -40% 0px",
+      threshold: 0.05,
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    SECTIONS.forEach((section) => {
+      const el = document.getElementById(section.id);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleScrollTo = (id: string) => {
+    setActiveSection(id);
+    isManualScrolling.current = true;
+
+    const el = document.getElementById(id);
+    if (el) {
+      if (lenis) {
+        lenis.scrollTo(el, {
+          offset: -80,
+          duration: 1.2,
+          onComplete: () => {
+            setTimeout(() => {
+              isManualScrolling.current = false;
+            }, 50);
+          }
+        });
+      } else {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+
+        setTimeout(() => {
+          isManualScrolling.current = false;
+        }, 1000);
+      }
+    } else {
+      isManualScrolling.current = false;
+    }
+  };
 
   return (
-    <main className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 antialiased" style={{ background: "#f8edd1" }}>
+    <main className="min-h-screen bg-bg text-text_primary font-gilroyRegular antialiased pb-16">
       
-      {/* ── STICKY NAVIGATION HEADER ── */}
-      <nav className="sticky top-0 z-50 w-full backdrop-blur-md border-b transition-colors duration-300" style={{ background: "rgba(248, 237, 209, 0.85)", borderColor: "rgba(42, 71, 86, 0.08)" }}>
+      {/* ── STYLISH APPLE-AESTHETIC SCROLLBAR ── */}
+      <div 
+        className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden md:block cursor-pointer select-none"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <motion.div
+          animate={{
+            width: isHovered ? 146 : 8,
+            height: isHovered ? 420 : 180,
+            backgroundColor: isHovered ? "rgba(248, 237, 209, 0.85)" : "rgba(248, 237, 209, 0)",
+            backdropFilter: isHovered ? "blur(20px)" : "blur(0px)",
+            borderColor: isHovered ? "rgba(42, 71, 86, 0.12)" : "rgba(42, 71, 86, 0)",
+            boxShadow: isHovered 
+              ? "0 20px 25px -5px rgba(42, 71, 86, 0.1), 0 8px 10px -6px rgba(42, 71, 86, 0.05)" 
+              : "0 0px 0px rgba(0,0,0,0)"
+          }}
+          transition={{ type: "spring", stiffness: 260, damping: 32, mass: 0.9 }}
+          className="rounded-2xl border border-transparent flex flex-col justify-center items-center relative overflow-hidden"
+        >
+          {/* Inactive Mode: Minimal Progress Bar */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 0 : 1,
+              pointerEvents: isHovered ? "none" : "auto",
+            }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 flex flex-col justify-center items-center py-4"
+          >
+            <div className="w-[2px] h-[140px] bg-text_primary/15 rounded-full relative overflow-hidden">
+              <motion.div
+                style={{ scaleY: scrollYProgress, originY: 0 }}
+                className="absolute top-0 left-0 w-full h-full bg-text_primary rounded-full"
+              />
+            </div>
+          </motion.div>
+
+          {/* Active Hover Mode: Table of Contents */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              pointerEvents: isHovered ? "auto" : "none",
+            }}
+            transition={{ duration: 0.2, delay: isHovered ? 0.05 : 0 }}
+            className="w-full h-full flex flex-col justify-between py-6 px-4 relative"
+          >
+            {/* Background vertical connector line behind dots */}
+            <div className="absolute right-[22px] top-7 bottom-7 w-[1px] bg-text_primary/10 -z-10" />
+
+            {SECTIONS.map((section, index) => (
+              <div
+                key={section.id}
+                onClick={() => handleScrollTo(section.id)}
+                className="group flex items-center justify-end gap-2.5 py-0.5 cursor-pointer w-full text-right"
+              >
+                <motion.span
+                  animate={{
+                    opacity: isHovered ? 1 : 0,
+                    x: isHovered ? 0 : 8,
+                  }}
+                  transition={{
+                    opacity: { duration: 0.25, delay: isHovered ? index * 0.015 : 0, ease: "easeOut" },
+                    x: { type: "spring", stiffness: 200, damping: 25, delay: isHovered ? index * 0.015 : 0 }
+                  }}
+                  className={`text-[9px] font-gilroyBold uppercase tracking-wider transition-colors duration-200 ${
+                    activeSection === section.id
+                      ? "text-text_primary font-bold"
+                      : "text-text_primary/40 group-hover:text-text_primary/75"
+                  }`}
+                >
+                  {section.label}
+                </motion.span>
+                
+                <div className="relative flex items-center justify-center w-3 h-3 flex-shrink-0">
+                  {/* Outer ring for active state */}
+                  {activeSection === section.id && (
+                    <motion.div
+                      layoutId="activeDotRing"
+                      className="absolute w-3.5 h-3.5 rounded-full border border-text_primary/40"
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    />
+                  )}
+                  {/* Central Dot */}
+                  <div
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                      activeSection === section.id
+                        ? "bg-text_primary scale-110"
+                        : "bg-text_primary/25 group-hover:bg-text_primary/60"
+                    }`}
+                  />
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+
+      
+      {/* ── NAVIGATION HEADER ── */}
+      <nav className="sticky top-0 z-50 w-full bg-bg/85 backdrop-blur-md border-b border-text_primary/10 shadow-sm">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             href="/work"
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+            className="group inline-flex items-center gap-2 text-sm font-gilroyBold transition-opacity hover:opacity-75"
           >
             <ArrowLeft
               size={16}
@@ -76,935 +256,1038 @@ export default function POSCaseStudy() {
             />
             Selected Work
           </Link>
-          <div className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-            Case Study Draft
+          
+          {/* Top navigation contact icons */}
+          <div className="flex items-center gap-3">
+            <a 
+              href="mailto:divyanshbaghel456@gmail.com" 
+              className="p-2 rounded-full hover:bg-text_primary/5 text-text_primary/80 hover:text-text_primary transition-colors"
+              aria-label="Email"
+              title="Email Divyansh Baghel"
+            >
+              <Mail size={18} strokeWidth={2} />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/divyansh-baghel/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="p-2 rounded-full hover:bg-text_primary/5 text-text_primary/80 hover:text-text_primary transition-colors"
+              aria-label="LinkedIn"
+              title="LinkedIn Profile"
+            >
+              <FaLinkedin size={18} />
+            </a>
           </div>
         </div>
       </nav>
 
-      {/* ── SECTION 1: HERO & PROJECT OVERVIEW (bg-white) ── */}
-      <section className="w-full bg-transparent">
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
-          {/* Header Identity */}
+      {/* ── HERO HEADER SECTION ── */}
+      <section id="hero" className="w-full min-h-[calc(100vh-76px)] relative overflow-hidden flex flex-col justify-center items-start py-20">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[300px] rounded-full bg-accent_highlight/25 blur-[120px] pointer-events-none -z-10" />
+
+        <div className="max-w-5xl w-full mx-auto px-6">
           <motion.div 
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-6 md:gap-8"
           >
-            <motion.div variants={fadeInUp} className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold uppercase tracking-wider">
-                Case Study
+            <motion.div variants={fadeInUp} className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full text-[10px] font-gilroyBold uppercase tracking-wider bg-accent_highlight text-text_primary border border-text_primary/10 shadow-sm">
+                UX Case Study
               </span>
-              <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold uppercase tracking-wider">
-                FinTech
-              </span>
-              <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold uppercase tracking-wider">
-                Touch-First
+              <span className="w-1 h-1 rounded-full bg-text_primary/30" />
+              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-text_primary/60">
+                Retail Finance &amp; Ops
               </span>
             </motion.div>
 
             <motion.h1 
               variants={fadeInUp}
-              className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-tight max-w-4xl"
+              className="text-5xl md:text-8xl font-gilroyBold tracking-tight leading-[0.95] text-text_primary"
             >
-              POS Panel: A Touch-First Retail Checkout Console
+              BreezePOS
             </motion.h1>
 
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-xl text-slate-600 font-normal leading-relaxed max-w-3xl"
+              className="text-lg md:text-2xl font-gilroyRegular leading-relaxed text-text_primary/80 max-w-3xl"
             >
-              A clean, modern, and high-throughput point of sale panel template designed to bridge cashier efficiency with zero-latency visual validation.
+              A touch-first retail register engine designed to streamline store checkouts under 12 seconds, protect transaction ledger integrity with JSONB snapshots, and guarantee offline resilience.
             </motion.p>
+
+            {/* Action buttons */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mt-2">
+              <a 
+                href="https://pos-panel.divyanshbaghel.in" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-gilroyBold bg-accent_highlight text-text_primary transition-transform hover:scale-[1.02] active:scale-95 shadow-md border border-text_primary/10"
+              >
+                <Sparkles size={16} className="text-text_primary" />
+                <span>Launch Live System Demo</span>
+                <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a 
+                href="https://github.com/DivineDB/POS-System" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-gilroyBold bg-text_primary text-bg transition-transform hover:scale-[1.02] active:scale-95 shadow-md"
+              >
+                <FaGithub size={16} />
+                <span>Explore Codebase</span>
+                <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </motion.div>
+
+            {/* Case Study Metadata Grid */}
+            <motion.div 
+              variants={fadeInUp} 
+              className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 border-t border-text_primary/10 pt-8 mt-4 max-w-4xl"
+            >
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Role</span>
+                <span className="text-sm font-gilroyBold text-text_primary/80">UX Design &amp; Full-Stack Eng.</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Target Device</span>
+                <span className="text-sm font-gilroyBold text-text_primary/80">10&quot; Countertop Register</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Core Tech</span>
+                <span className="text-sm font-gilroyBold text-text_primary/80">Next.js, Zustand, Supabase</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Performance</span>
+                <span className="text-sm font-gilroyBold text-text_primary/80">&lt; 12s Checkout Flow</span>
+              </div>
+            </motion.div>
           </motion.div>
+        </div>
 
-          {/* Connective Line */}
-          <div className="w-full h-px bg-slate-100 my-16" />
+        {/* Scroll down indicator */}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: [0, 1, 0], y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer text-text_primary/40 select-none z-10"
+          onClick={() => {
+            const el = document.getElementById("overview");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          <span className="font-gilroyRegular text-[10px] uppercase tracking-[0.2em]">Scroll to start</span>
+          <span className="text-xs">▼</span>
+        </motion.div>
+      </section>
+      
+      {/* ── CASE STUDY DATA ── */}
+      <section className="w-full max-w-5xl mx-auto px-6 py-4">
+        
+        {/* ── 01. EXECUTIVE BRIEF ── */}
+        <motion.div 
+          id="overview"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">01. Executive Summary</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Project Overview</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          <p className="font-gilroyRegular text-base md:text-lg leading-relaxed text-text_primary/90 max-w-3xl">
+            Design a fast, touchscreen-optimized Point of Sale (POS) tablet web application for a local household convenience store. The platform must streamline customer checkout under 12 seconds, manage real-time inventory balances, track store earnings statistics, and replace traditional handwritten logs.
+          </p>
+        </motion.div>
 
-          {/* 3-Column Overview Grid */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-12"
-          >
-            {/* Column 1: The Problem */}
-            <motion.div variants={fadeInUp} className="lg:col-span-4 flex flex-col gap-4">
-              <div className="flex items-center gap-2 text-slate-900">
-                <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
-                  <ShieldAlert size={20} />
-                </div>
-                <h3 className="text-lg font-bold">The Problem</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Traditional cash registers suffer from complex menu hierarchies, layout shifts, and visual clutter. Clerks working long, high-stress shifts frequently experience eye strain and tap-friction, resulting in slower transaction rates and cashier errors.
+        {/* ── 02. THE HUMAN STORY ── */}
+        <motion.div 
+          id="story"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">02. Empathy & Context</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Introduction & Empathy</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg leading-relaxed text-text_primary/95 space-y-6 max-w-3xl">
+            <p>
+              This POS system started out of a real-world problem close to home. A close friend of mine, <strong>Krish Agrawal</strong>, runs a local retail convenience store selling daily household goods like plastic containers, microfiber sponges, brooms, and detergents. For years, his entire billing, inventory tracking, and customer account ledgers (<strong>hisaab</strong>) lived inside stacks of paper notebooks and handwritten diaries.
+            </p>
+            <p>
+              It was an operational nightmare. Pages would frequently tear or get misplaced, entries were easily forgotten, and manually tallying up sales at the end of the month meant sitting with a calculator for hours. During peak evening rushes, writing physical bills by hand created long customer queues and visual chaos at the counter.
+            </p>
+            <p>
+              I decided to design and build a tablet-native POS for his counter register. The mission was clear: scrap the paper diaries, prevent billing records from getting lost, and give him a touch interface that works instantly during checkout rushes.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 03. FIELD DISCOVERY ── */}
+        <motion.div 
+          id="observations"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">03. Field Observations</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Observations</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="space-y-12 max-w-3xl">
+            <div className="relative pl-6 border-l-2 border-text_primary/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-text_primary mb-2">Forming a retail order takes a lot of effort</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-text_primary/85 leading-relaxed">
+                I observed that manual register log writing requires cashiers to copy details twice (once in the checkout log, and once in outstanding debit notebooks). This redundant data-entry loop demands heavy coordination, slows down the check-out flow, and frequently introduces transcription mistakes.
               </p>
-            </motion.div>
-
-            {/* Column 2: The Solution */}
-            <motion.div variants={fadeInUp} className="lg:col-span-4 flex flex-col gap-4">
-              <div className="flex items-center gap-2 text-slate-900">
-                <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                  <Sparkles size={20} />
-                </div>
-                <h3 className="text-lg font-bold">The Solution</h3>
-              </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                A locked, asymmetric layout that prioritizes spatial consistency over animation speed. Combining color-coded pastels for instant grid landmarking, touch targets sized explicitly for manual speed, and offline calculations to build permanent cashier muscle memory.
+            </div>
+            <div className="relative pl-6 border-l-2 border-text_primary/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-text_primary mb-2">Multiple pricing configurations before billing</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-text_primary/85 leading-relaxed">
+                The shop owner creates different wholesale and retail calculations depending on item pack sizes. He constantly calculates price options in his head mid-transaction, delaying final billing until he feels comfortable with the final checkout total.
               </p>
-            </motion.div>
+            </div>
+          </div>
+        </motion.div>
 
-            {/* Column 3: Timeline / Metadata */}
-            <motion.div variants={fadeInUp} className="lg:col-span-4 flex flex-col gap-4">
-              <div className="flex items-center gap-2 text-slate-900">
-                <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                  <Briefcase size={20} />
+        {/* ── 04. PAIN POINTS ── */}
+        <motion.div 
+          id="painpoints"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">04. Friction &amp; Blockers</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Friction &amp; Blockers</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl">
+            <div className="p-6 md:p-8 bg-red-500/[0.03] border border-red-500/10 rounded-2xl flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="font-gilroyBold text-xl text-text_primary mb-3 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                  Information Overload
+                </h4>
+                <p className="font-gilroyRegular text-base text-text_primary/85 leading-relaxed">
+                  Friction occurs due to the availability of too many counter options and manual billing methods. Cluttered workspaces and notebook piles confuse cashiers, causing ordering errors and visual chaos at the counter during peak hours.
+                </p>
+              </div>
+            </div>
+            <div className="p-6 md:p-8 bg-red-500/[0.03] border border-red-500/10 rounded-2xl flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="font-gilroyBold text-xl text-text_primary mb-3 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                  Losing Track of Account Logs
+                </h4>
+                <p className="font-gilroyRegular text-base text-text_primary/85 leading-relaxed">
+                  By documenting outstanding transactions across separate notebooks and loose credit sheets, the shop owner loses physical oversight. There is a high financial risk of losing customer debit summaries entirely.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 05. INFERENCE ── */}
+        <motion.div 
+          id="synthesis"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">05. Research Synthesis</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Research Synthesis</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="space-y-12 max-w-3xl">
+            <div className="relative pl-6 border-l-2 border-text_primary/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-text_primary mb-2">Adding items and checking out should be a breeze</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-text_primary/85 leading-relaxed">
+                To streamline customer lines under 12 seconds, cashiers must search and select store catalog purchases with minimal screen taps and zero nested menus.
+              </p>
+            </div>
+            <div className="relative pl-6 border-l-2 border-text_primary/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-text_primary mb-2">Data persistence is key</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-text_primary/85 leading-relaxed">
+                Traditional paper logs or spreadsheet entries fail to freeze pricing configurations. The system must record immutable item parameters at the exact moment of checkout to prevent subsequent catalog edits from altering history.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 06. PRODUCT BOUNDARIES ── */}
+        <motion.div 
+          id="scope"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">06. Project Scope</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Scope of Work</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg leading-relaxed text-text_primary/85 space-y-6 max-w-3xl">
+            <p>
+              Within the spectrum of digital utility services used at present for retail checkout, shop owners and cashiers require a highly collaborative, fast, and touchscreen-optimized platform that simplifies stock auditing and transaction management.
+            </p>
+            <p>
+              The solution is a tablet-native web application designed specifically for counter registers, which operates instantly without database lag, buffers offline transactions during power drops, and integrates seamlessly into the daily workflows of store operators rather than forcing them to master complex systems.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 07. USER SEGMENTATION ── */}
+        <motion.div 
+          id="personas"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">07. Target Personas</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Research &amp; User Personas</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg text-text_primary/90 space-y-6 max-w-3xl mb-12">
+            <p>
+              By translating the Observations and Pain Points into operational parameters, I detailed the primary cashier requirements:
+            </p>
+            <ul className="space-y-4">
+              <li className="flex gap-3">
+                <span className="font-gilroyBold text-text_primary/40 text-lg select-none">▪</span>
+                <span><strong>Time and Place:</strong> Checkout happens in a fast-paced retail zone. Cashiers do not have time to navigate nested settings menus or wait for database loading screens.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-gilroyBold text-text_primary/40 text-lg select-none">▪</span>
+                <span><strong>Communication:</strong> The owner manages calculations and base wholesale configurations, whereas cashiers and workers only handle register checkouts and stock shelf listings.</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-gilroyBold text-text_primary/40 text-lg select-none">▪</span>
+                <span><strong>Order of Events:</strong> Cashiers scan or select items, modify cart numbers, pick cash/online formats, apply store discounts, and print invoices.</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Personas vertical stack (1x1 grid) */}
+          <div className="flex flex-col gap-24 mt-16 max-w-4xl">
+            
+            {/* Persona 1: Krish Agrawal */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start pb-16 border-b border-text_primary/5">
+              {/* Left Column: Image & Centered Details */}
+              <div className="sm:col-span-4 flex flex-col items-center text-center">
+                <div className="w-full aspect-[3/4] max-w-[200px] rounded-2xl overflow-hidden mb-4 shadow-md border border-text_primary/5 bg-white select-none">
+                  <img 
+                    src="/images/pos-panel/friend.png" 
+                    alt="Krish Agrawal" 
+                    className="w-full h-full object-cover filter contrast-[1.02]"
+                  />
                 </div>
-                <h3 className="text-lg font-bold">Project Details</h3>
+                <h4 className="font-gilroyBold text-lg text-text_primary leading-tight">Krish Agrawal</h4>
+                <p className="font-gilroyRegular text-xs text-text_primary/60 mt-1">Store Owner &amp; Manager</p>
+                <p className="font-gilroyRegular text-xs text-text_primary/50 mt-0.5">Experience: 8+ years</p>
+              </div>
+
+              {/* Right Column: Content */}
+              <div className="sm:col-span-8 flex flex-col gap-6">
+                <p className="font-gilroyRegular text-base text-text_primary/80 italic leading-relaxed pl-4 border-l-2 border-text_primary/20">
+                  &ldquo;I just need a register screen that never freezes, is large enough to tap without making mistakes, and automatically logs customer transactions so I don&apos;t lose my accounts book.&rdquo;
+                </p>
+                
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-text_primary/40 mb-1">Goals</h5>
+                  <p className="text-xs md:text-sm text-text_primary/75 leading-relaxed">
+                    Ditch handwritten ledger files for secure, auto-logged digital receipt records. Restrict register cashiers from editing pricing scales and audit revenue tallies in seconds.
+                  </p>
+                </div>
+
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-text_primary/40 mb-1">Frustrations</h5>
+                  <p className="text-xs md:text-sm text-text_primary/75 leading-relaxed">
+                    Losing written logs or forgetting customer credit summaries. Operations halting completely when counter local Wi-Fi shuts down.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Persona 2: Rahul */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start">
+              {/* Left Column: Image & Centered Details */}
+              <div className="sm:col-span-4 flex flex-col items-center text-center">
+                <div className="w-full aspect-[3/4] max-w-[200px] rounded-2xl overflow-hidden mb-4 shadow-md border border-text_primary/5 bg-white select-none">
+                  <img 
+                    src="/images/pos-panel/cashier_avatar.png" 
+                    alt="Rahul" 
+                    className="w-full h-full object-cover filter contrast-[1.02]"
+                  />
+                </div>
+                <h4 className="font-gilroyBold text-lg text-text_primary leading-tight">Rahul</h4>
+                <p className="font-gilroyRegular text-xs text-text_primary/60 mt-1">Store Cashier &amp; Operator</p>
+                <p className="font-gilroyRegular text-xs text-text_primary/50 mt-0.5">Experience: 1 year</p>
+              </div>
+
+              {/* Right Column: Content */}
+              <div className="sm:col-span-8 flex flex-col gap-6">
+                <p className="font-gilroyRegular text-base text-text_primary/80 italic leading-relaxed pl-4 border-l-2 border-text_primary/20">
+                  &ldquo;I need an interface that lets me select items and process checkouts under 12 seconds. It has to be dead simple so I don&apos;t hit wrong buttons when customer queues get long.&rdquo;
+                </p>
+                
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-text_primary/40 mb-1">Goals</h5>
+                  <p className="text-xs md:text-sm text-text_primary/75 leading-relaxed">
+                    Fast checkout taps using high-accuracy items selectors. Instant toggle switches between billing configurations and client receipts.
+                  </p>
+                </div>
+
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-text_primary/40 mb-1">Frustrations</h5>
+                  <p className="text-xs md:text-sm text-text_primary/75 leading-relaxed">
+                    Accidentally tapping administrative configuration dials. Getting confused by complex inventory breakdown graphs and finance analytics dashboards.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 08. DESIGN SPECIFICATION ── */}
+        <motion.div 
+          id="strategy"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">08. Design Strategy</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Core Objectives &amp; Strategy</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <p className="font-gilroyRegular text-base md:text-lg text-text_primary/90 mb-8 max-w-3xl">
+            Based on the inferences and the working of the solution, the key objectives of the app are the following:
+          </p>
+
+          {/* Design planning grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-gilroyRegular">
+            
+            <div className="flex flex-col gap-2 p-6 bg-white/50 backdrop-blur-sm border border-text_primary/10 rounded-2xl shadow-sm hover:bg-white/60 transition-all duration-300">
+              <span className="text-base font-gilroyBold text-text_primary">1. Touch-Optimized Register Layout</span>
+              <p className="text-sm text-text_primary/75 leading-relaxed">
+                All navigation controls and product grids are locked to a minimum of 56px to ensure cashiers can select items and modify cart quantities quickly without visual searching or misclicks.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/50 backdrop-blur-sm border border-text_primary/10 rounded-2xl shadow-sm hover:bg-white/60 transition-all duration-300">
+              <span className="text-base font-gilroyBold text-text_primary">2. Instant Retail / Wholesale Pricing</span>
+              <p className="text-sm text-text_primary/75 leading-relaxed">
+                A single tap switches checkout pricing models. The calculations run client-side immediately, allowing immediate adjustments during checkout rushes.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/50 backdrop-blur-sm border border-text_primary/10 rounded-2xl shadow-sm hover:bg-white/60 transition-all duration-300">
+              <span className="text-base font-gilroyBold text-text_primary">3. Offline Zustand Fallback Buffer</span>
+              <p className="text-sm text-text_primary/75 leading-relaxed">
+                If the internet goes offline, checkout carts queue transactions locally. Once the connection is restored, the queue syncs with the database automatically.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/50 backdrop-blur-sm border border-text_primary/10 rounded-2xl shadow-sm hover:bg-white/60 transition-all duration-300">
+              <span className="text-base font-gilroyBold text-text_primary">4. Local Client-Side PDF Receipts</span>
+              <p className="text-sm text-text_primary/75 leading-relaxed">
+                Invoices compile directly on the tablet register using jsPDF vectors, avoiding server-side delays and printing instantly.
+              </p>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 09. THE 5 Ws ALIGNMENT ── */}
+        <motion.div 
+          id="5ws"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">09. Strategic Alignment</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">The 5 Ws Alignment</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-x-12">
+            
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">What?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                A localized, cloud-first POS tablet dashboard that manages checkout carts, stock alert thresholds, customer billing history, and business parameters.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">Why?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                To prevent handwritten accounts from being damaged or lost, reduce cashier arithmetic errors, and automate hours of month-end billing tallies.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">When?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                At the counter register during peak retail evening rushes, where sales processes must run cleanly without screen freezing or database lags.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">Who?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                A local convenience shop owner (who audits profits and updates catalog parameters) and cashiers (who register items quickly).
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">Where?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                Directly on a 10&quot; touchscreen Android tablet mounted at the store checkout counter.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-text_primary">How?</span>
+              <p className="text-sm text-text_primary/80 leading-relaxed">
+                Using Next.js 15, Zustand persistent storage (for offline queueing buffers), PostgreSQL database syncer, and client-side jsPDF compilers.
+              </p>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 10. INTERFACE SYSTEM ── */}
+        <motion.div 
+          id="walkthrough"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">10. System Interfaces</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Introducing my POS</h2>
+          
+          <div className="flex flex-col gap-60 mt-12">
+            
+            {/* Screen 1: New Order */}
+            <div id="screen-1" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 1</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">New Order register workspace</h4>
               </div>
               
-              <div className="flex flex-col gap-3.5 mt-1 border-t border-slate-100 pt-3">
-                {projectMeta.map((meta, i) => (
-                  <div key={i} className="flex justify-between items-start text-xs border-b border-slate-50 pb-2">
-                    <span className="font-semibold text-slate-400 uppercase tracking-wider">{meta.label}</span>
-                    <span className="font-medium text-slate-700 text-right max-w-[200px]">{meta.value}</span>
-                  </div>
-                ))}
+              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+                <img 
+                  src="/images/pos-panel/new-order.png" 
+                  alt="POS Register Screen Interface" 
+                  className="w-full h-auto object-contain"
+                />
               </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* ── SECTION 2: USER RESEARCH & INSIGHTS (bg-gray-50) ── */}
-      <section className="w-full bg-white/35 backdrop-blur-sm border-y border-[#2a4756]/8">
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase tracking-widest text-blue-600 font-bold">Quantitative Data</span>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">User Research & Insights</h2>
+              {/* Explanations Grid below image */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Layers size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Main navigation tabs</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Sidebar navigation options are grouped on the left, keeping screen switches close to the cashier&apos;s thumb for single-hand tablet register operations.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Sliders size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Pricing Profile switch</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Toggles checkout pricing between Retail and Wholesale instantly mid-session. The system recalulates item rates locally, bypassing network latency.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Touch-First item cards</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Product and category selector cards are designed with a minimum of 56px targets to ensure high tap accuracy and prevent cashier misclicks.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Terminal size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Keyboard-only checkout binds</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Pressing the <code>Enter</code> key shortcut triggers the payment flow and client invoice generation immediately, speeding up checkout counter lanes.
+                  </p>
+                </div>
+              </div>
             </div>
-            
-            {/* Tag Pills */}
-            <div className="flex flex-wrap gap-1.5 max-w-md">
-              {["Target Audience Traits:", "Ages 18-45", "Retail Store Clerks", "High-stress Environments", "Multi-Hour Shifts"].map((trait, idx) => (
-                <span 
-                  key={idx} 
-                  className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                    idx === 0 
-                      ? "bg-slate-200/50 text-slate-600 border-transparent font-semibold"
-                      : "bg-white text-slate-700 border-slate-200"
-                  }`}
-                >
-                  {trait}
-                </span>
-              ))}
+
+            {/* Screen 2: Dashboard */}
+            <div id="screen-2" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 2</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Analytics Dashboard</h4>
+              </div>
+              
+              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+                <img 
+                  src="/images/pos-panel/dashboard.png" 
+                  alt="POS Admin Analytics dashboard" 
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Info size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Sensitive data obscurity mask</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Revenue and profit statistics cards are blurred by default. Clicking the eye toggle icon reveals numerical values, keeping store financials safe from customer view.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <AlertTriangle size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Low-Stock depletion warnings</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Tracks inventory limits against warning thresholds, flashing red alerts for products running low to prompt timely restocking.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <UserCheck size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Role-Aware Quick Actions</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Features a shortcuts dock displaying specific settings key options depending on logged-in roles (Owner, Cashier, or Worker).
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Activity size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Horizontal Sales charts</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Product sales distribution is formatted into clean horizontal progress bars, keeping layout visual density simple and easy to scan.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* CSS-Only Data Visualization Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            
-            {/* Bar Chart Visualization (Left) */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="lg:col-span-7 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between"
-            >
-              <div className="flex flex-col gap-1 mb-6">
-                <div className="flex items-center gap-2 text-slate-900">
-                  <BarChart3 size={18} className="text-blue-600" />
-                  <h4 className="font-bold text-base">Key Cashier Friction Points</h4>
-                </div>
-                <p className="text-xs text-slate-400">Percentage of surveyed cashiers identifying workflow bottlenecks</p>
+            {/* Screen 3: Bill History */}
+            <div id="screen-3" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 3</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Immutable Ledger Log</h4>
+              </div>
+              
+              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+                <img 
+                  src="/images/pos-panel/bill-history.png" 
+                  alt="POS Transactions ledger Screen" 
+                  className="w-full h-auto object-contain"
+                />
               </div>
 
-              {/* Dynamic Mock Bar Chart Rows */}
-              <div className="flex flex-col gap-5">
-                {[
-                  { label: "System latency in inventory search", pct: 85, color: "bg-blue-600" },
-                  { label: "Manual validation & checkout changes", pct: 72, color: "bg-blue-500" },
-                  { label: "Visual exhaustion from screen glare", pct: 64, color: "bg-slate-400" },
-                  { label: "Accidental double-taps on grid buttons", pct: 48, color: "bg-slate-300" }
-                ].map((row, idx) => (
-                  <div key={idx} className="flex flex-col gap-1.5 group">
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span className="text-slate-700">{row.label}</span>
-                      <span className="text-slate-900">{row.pct}%</span>
-                    </div>
-                    <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${row.pct}%` }}
-                        transition={{ duration: 1, delay: idx * 0.1, ease: "easeOut" }}
-                        className={`h-full ${row.color} rounded-full transition-all`}
-                      />
-                    </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Database size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Immutable JSONB snapshots</h5>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Circular Chart & Metric Display (Right) */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="lg:col-span-5 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between items-center text-center"
-            >
-              <div className="flex flex-col gap-1 mb-4 w-full text-left">
-                <div className="flex items-center gap-2 text-slate-900">
-                  <Clock size={18} className="text-blue-600" />
-                  <h4 className="font-bold text-base">Efficiency Gains</h4>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Freezes invoice product logs at checkout time, preventing pricing fluctuations in the catalog from retroactively altering transaction reports.
+                  </p>
                 </div>
-                <p className="text-xs text-slate-400">Post-implementation benchmark analysis</p>
-              </div>
-
-              {/* Radial Chart Visualizer */}
-              <div className="relative w-40 h-40 flex items-center justify-center my-4">
-                <svg className="w-full h-full transform -rotate-90">
-                  {/* Background Ring */}
-                  <circle
-                    cx="80"
-                    cy="80"
-                    r="68"
-                    className="stroke-slate-100 fill-none"
-                    strokeWidth="8"
-                  />
-                  {/* Accent Progress Ring */}
-                  <motion.circle
-                    cx="80"
-                    cy="80"
-                    r="68"
-                    className="stroke-blue-600 fill-none"
-                    strokeWidth="8"
-                    strokeDasharray="427"
-                    initial={{ strokeDashoffset: 427 }}
-                    whileInView={{ strokeDashoffset: 427 - (427 * 85) / 100 }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {/* Center Content */}
-                <div className="absolute flex flex-col items-center justify-center">
-                  <span className="text-3xl font-extrabold text-slate-900">85%</span>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Success</span>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <FileText size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Flat Table Ledger</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Logs rows detail invoice IDs, retail/wholesale types, pay formats (Cash vs Online), and total calculations inside a single, filterable view.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Fast client receipt downloads</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Invoices are compiled client-side using jsPDF vectors, outputting compact thermal layouts in 0ms without server database traffic.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <ExternalLink size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Instant Share modal</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Provides quick action shortcuts (WhatsApp formatting templates, native Web Share dialog triggers, and copy links) to support paperless billing.
+                  </p>
                 </div>
               </div>
+            </div>
 
-              {/* Key Metrics Columns */}
-              <div className="grid grid-cols-2 gap-4 w-full mt-2 pt-4 border-t border-slate-100">
-                <div className="flex flex-col text-left">
-                  <span className="text-2xl font-extrabold text-blue-600">+140%</span>
-                  <span className="text-[10px] text-slate-500 font-medium leading-tight mt-1">Clerk processing speed multiplier.</span>
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-2xl font-extrabold text-slate-800">1.8s</span>
-                  <span className="text-[10px] text-slate-500 font-medium leading-tight mt-1">Average screen transaction sync rate.</span>
-                </div>
+            {/* Screen 4: Inventory */}
+            <div id="screen-4" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 4</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Catalog Inventory Manager</h4>
+              </div>
+              
+              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+                <img 
+                  src="/images/pos-panel/inventory.png" 
+                  alt="POS Catalog inventory manager screen" 
+                  className="w-full h-auto object-contain"
+                />
               </div>
 
-            </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Layers size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Split-pane category tree</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Displays catalog folders on the left pane and product listings on the right, keeping index navigation simple and reducing cognitive fatigue.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <DollarSign size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Inline pricing configurations</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Admins modify retail/wholesale prices directly inside row table fields, removing slow, multi-page settings menus.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <ArrowRight size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Slide-over product drawer</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Adding new products or editing configurations slides out from the right margin, keeping operators in context.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Cascading cleanup</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Deleting catalog categories automatically triggers cleanups on related items, maintaining database structural integrity.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 5: Settings */}
+            <div id="screen-5" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 5</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Business Customizations</h4>
+              </div>
+              
+              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+                <img 
+                  src="/images/pos-panel/settings.png" 
+                  alt="POS invoice template settings screen" 
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Database size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Zustand persisted form store</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Business credentials, address layouts, and tax structures are cached locally in the browser, surviving power outages or register resets.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Sliders size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">Printer paper ratio sizing</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Toggles template spacing between standard A4 prints and 58mm compact thermal papers, formatting invoice vectors dynamically.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-text_primary/30 md:col-span-2 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-text_primary/70" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-text_primary leading-none">GSTIN &amp; Tax validations</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-text_primary/80 leading-relaxed">
+                    Official store tax percentages and registration numbers are validated inline, ensuring invoice generation matches auditing guidelines.
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* ── SECTION 3: TARGET PERSONAS (bg-white) ── */}
-      <section className="w-full bg-transparent">
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
+        {/* ── 11. SYSTEM ARCHITECTURE ── */}
+        <motion.div 
+          id="architecture"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs text-text_primary/75 font-bold block tracking-[0.18em] mb-1.5 uppercase">11. Technical Resiliency</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Engineering for Resiliency</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
           
-          <div className="flex flex-col gap-2 mb-16 max-w-xl">
-            <span className="text-xs uppercase tracking-widest text-blue-600 font-bold font-mono">User Archetypes</span>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">Target Personas</h2>
-            <p className="text-sm text-slate-500">Developing solutions tailored to the core motivations, backgrounds, and specific workflow limits of our store staff.</p>
+          <div className="font-gilroyRegular text-base md:text-lg text-text_primary/90 space-y-6 max-w-3xl mb-12">
+            <p>
+              A clean interface design is only half the battle. If a cashier tab crashes during checkout, or a network drop corrupts stock calculations, the user experience falls apart. 
+            </p>
+            <p>
+              I chose Next.js 15, Zustand, and Supabase to build a fast front-end architecture designed for real-world resilience:
+            </p>
           </div>
 
-          {/* Persona Card Grid */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {[
-              {
-                name: "Sarah Lin",
-                archetype: "The Speed Runner",
-                quote: "“I need to process customers as fast as possible. Any modal popup slows me down.”",
-                goals: [
-                  "Quick item updates with minimal taps",
-                  "Audio confirmations for tap actions",
-                  "Reliable offline billing generation"
-                ],
-                frustrations: [
-                  "Accordion menus that hide visual grid",
-                  "Search fields with typing delays",
-                  "Internet lag freezing the cash drawer"
-                ],
-                avatar: "bg-blue-50 text-blue-600 font-extrabold text-lg",
-                initial: "SL"
-              },
-              {
-                name: "Marcus Cole",
-                archetype: "The Store Owner",
-                quote: "“I need clean control over stock levels and fast analytics updates at shift shifts.”",
-                goals: [
-                  "Direct visibility of low-inventory items",
-                  "Instant manager override codes",
-                  "Synced catalog records on registers"
-                ],
-                frustrations: [
-                  "Dashboards that require complex training",
-                  "Price tags not matching server files",
-                  "Data dropouts missing evening reports"
-                ],
-                avatar: "bg-indigo-50 text-indigo-600 font-extrabold text-lg",
-                initial: "MC"
-              },
-              {
-                name: "Diana Cruz",
-                archetype: "The Part-time Cashier",
-                quote: "“I only work occasional shifts. If the register interface is complex, I make errors.”",
-                goals: [
-                  "Color landmarks to grouping categories",
-                  "Self-explanatory cash change layouts",
-                  "Accident undo buttons on grid"
-                ],
-                frustrations: [
-                  "Subtle, small text difficult to check",
-                  "No validation feedback for transactions",
-                  "Cryptic database offline system flags"
-                ],
-                avatar: "bg-emerald-50 text-emerald-600 font-extrabold text-lg",
-                initial: "DC"
-              }
-            ].map((persona, index) => (
-              <motion.div 
-                key={index}
-                variants={fadeInUp}
-                className="flex flex-col bg-white border border-slate-150 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group"
-              >
-                {/* Decorative border highlight */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-blue-600 transition-colors" />
-
-                {/* Persona Profile */}
-                <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-inner shrink-0 ${persona.avatar}`}>
-                    {persona.initial}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            
+            {/* Left: Zustand store code snippet */}
+            <div className="md:col-span-6 flex flex-col justify-between">
+              <div className="p-6 rounded-2xl border border-text_primary/10 bg-white/40 flex flex-col h-full shadow-sm">
+                <div className="flex items-center justify-between border-b border-text_primary/10 pb-3 mb-4">
+                  <div className="flex items-center gap-2 text-text_primary/70">
+                    <Terminal size={14} className="text-text_primary" />
+                    <span className="text-[10px] font-gilroyBold">useCartStore.ts</span>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 leading-tight">{persona.name}</h4>
-                    <span className="text-xs font-semibold text-blue-600">{persona.archetype}</span>
-                  </div>
+                  <span className="text-[8px] uppercase tracking-widest bg-text_primary/5 border border-text_primary/10 text-text_primary px-2 py-0.5 rounded font-gilroyBold">Zustand Store</span>
                 </div>
 
-                <p className="text-xs italic text-slate-500 mb-6 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                  {persona.quote}
+                <div className="font-mono text-[11px] leading-relaxed overflow-x-auto premium-scrollbar text-text_primary/80 flex-grow select-text animate-none">
+                  <span className="text-blue-800">const</span> useCartStore = create()(
+                  <br />
+                  &nbsp;&nbsp;persist(
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;(set, get) =&gt; (&#123;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cart: [],
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offlineQueue: [], <span className="text-text_primary/40">// Offline buffer</span>
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkout: <span className="text-blue-800">async</span> () =&gt; &#123;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-800">const</span> tx = &#123; id: genId(), items: get().cart &#125;;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-800">if</span> (!navigator.onLine) &#123;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set(s =&gt; (&#123; 
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offlineQueue: [...s.offlineQueue, tx],
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cart: []
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125;));
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;triggerLocalInvoice(tx);
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-800">return</span>;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-800">await</span> supabase.from(<span className="text-green-800">&apos;bill_history&apos;</span>).insert(tx);
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&#125;)
+                  <br />
+                  &nbsp;&nbsp;)
+                  );
+                </div>
+              </div>
+            </div>
+
+            {/* Right: PostgreSQL Schema for Data Integrity */}
+            <div className="md:col-span-6 flex flex-col justify-between h-full">
+              <div className="p-6 rounded-2xl border border-text_primary/10 bg-white/40 flex flex-col h-full gap-4 font-gilroyRegular shadow-sm">
+                <h3 className="text-base font-gilroyBold text-text_primary flex items-center gap-2">
+                  <Database size={16} className="text-text_primary" />
+                  Preserving History with JSONB
+                </h3>
+                
+                <p className="text-xs md:text-sm text-text_primary/85 leading-relaxed">
+                  In transaction recording systems, linking items purely through dynamic relationships to a <code>products</code> table introduces tax audit vulnerabilities. If an item&apos;s price, stock tax level, or title is updated in the future, past transaction statistics will retroactively skew. 
+                </p>
+                <p className="text-xs md:text-sm text-text_primary/85 leading-relaxed">
+                  To prevent this, our checkout stores the full transaction item details in an immutable <code>JSONB</code> array snapshot in the database. This permanently freezes cart parameters as they existed at the exact millisecond of purchase.
                 </p>
 
-                {/* Goals */}
-                <div className="flex flex-col gap-2 mb-4 flex-grow">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Goals</span>
-                  <ul className="flex flex-col gap-2">
-                    {persona.goals.map((goal, i) => (
-                      <li key={i} className="text-xs text-slate-650 flex items-start gap-2">
-                        <div className="w-4 h-4 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                          <Check size={10} strokeWidth={3} />
-                        </div>
-                        <span>{goal}</span>
-                      </li>
-                    ))}
-                  </ul>
+                {/* Migration SQL code */}
+                <div className="border-t border-text_primary/10 pt-4 mt-2">
+                  <div className="flex items-center justify-between mb-2 text-[10px] font-gilroyBold text-text_primary/60">
+                    <span>SQL Schema Definition</span>
+                    <span className="text-text_primary font-gilroyBold">bill_history.sql</span>
+                  </div>
+                  <div className="p-3 rounded-lg font-mono text-[9px] leading-relaxed bg-white/60 border border-text_primary/10 text-text_primary/95 overflow-x-auto premium-scrollbar select-text">
+                    <span className="text-blue-800">CREATE TABLE</span> bill_history (
+                    <br />
+                    &nbsp;&nbsp;id UUID PRIMARY KEY,
+                    <br />
+                    &nbsp;&nbsp;total_amount DECIMAL(10, 2),
+                    <br />
+                    &nbsp;&nbsp;<span className="font-bold">line_items JSONB NOT NULL</span>,
+                    <br />
+                    &nbsp;&nbsp;created_at TIMESTAMP DEFAULT NOW()
+                    <br />
+                    );
+                  </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Frustrations */}
-                <div className="flex flex-col gap-2 border-t border-slate-100 pt-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Frustrations</span>
-                  <ul className="flex flex-col gap-2">
-                    {persona.frustrations.map((frust, i) => (
-                      <li key={i} className="text-xs text-slate-650 flex items-start gap-2">
-                        <div className="w-4 h-4 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 mt-0.5">
-                          <span className="text-[9px] font-black leading-none">!</span>
-                        </div>
-                        <span>{frust}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
+
+        {/* ── 12. ROADMAP & FUTURE SCOPE ── */}
+        <motion.div 
+          id="roadmap"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs text-text_primary/75 font-bold block tracking-[0.18em] mb-1.5 uppercase">12. Future Companion</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Future Scope: Mobile Sync Companion</h2>
+          <div className="w-full h-px bg-text_primary/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg leading-relaxed text-text_primary/90 space-y-4 max-w-3xl">
+            <p>
+              Operating a local retail store means my friend has to run around to warehouses, check stocks on shelf displays, and coordinates deliveries. Being stuck behind the checkout counter tablet all day is impossible.
+            </p>
+            <p>
+              In the next iteration of the project, I plan to develop a companion **mobile application**. This mobile version will sync real-time sales revenue, low-stock notifications, and transactional bill databases via Supabase, allowing him to check dashboard reports and update catalog prices remotely from his phone while on the move.
+            </p>
+          </div>
+        </motion.div>
       </section>
 
-      {/* ── SECTION 4: USER FLOW & ARCHITECTURE (bg-gray-50) ── */}
-      <section className="w-full bg-white/35 backdrop-blur-sm border-y border-[#2a4756]/8">
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
+      {/* ── PORTFOLIO FOOTER ── */}
+      <section className="w-full py-16 border-t border-text_primary/10">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col gap-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs uppercase tracking-widest text-blue-600 font-bold font-mono">Structural Journey</span>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">User Journey & Flow</h2>
-              <p className="text-sm text-slate-500 max-w-xl">Interactive flow rendering the terminal transaction lifecycle. Hover or click choices below to simulate routing branching.</p>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-b border-text_primary/5 pb-8">
+            <div className="flex flex-col gap-1 text-center sm:text-left">
+              <h3 className="text-xl font-gilroyBold text-text_primary">Thanks for reading!</h3>
+              <p className="text-xs text-text_primary/60">Let&apos;s collaborate to design and engineer premium interface systems.</p>
             </div>
             
-            {/* Interactive Toggle for Branching */}
-            <div className="flex bg-white p-1 rounded-xl border border-slate-200 shrink-0 select-none shadow-sm">
-              <button 
-                onClick={() => setActiveBranch(null)} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeBranch === null ? "bg-slate-900 text-white" : "text-slate-500 hover:text-slate-900"
-                }`}
+            <div className="flex items-center gap-3">
+              <a 
+                href="https://github.com/DivineDB" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2.5 rounded-full border border-text_primary/15 bg-white/40 text-text_primary hover:bg-accent_highlight transition-all"
+                aria-label="GitHub"
               >
-                Show All
-              </button>
-              <button 
-                onClick={() => setActiveBranch("cash")} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeBranch === "cash" ? "bg-blue-600 text-white" : "text-slate-500 hover:text-blue-600"
-                }`}
+                <FaGithub size={16} />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/divyansh-baghel/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2.5 rounded-full border border-text_primary/15 bg-white/40 text-text_primary hover:bg-accent_highlight transition-all"
+                aria-label="LinkedIn"
               >
-                Cash Branch
-              </button>
-              <button 
-                onClick={() => setActiveBranch("digital")} 
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeBranch === "digital" ? "bg-blue-600 text-white" : "text-slate-500 hover:text-blue-600"
-                }`}
+                <FaLinkedin size={16} />
+              </a>
+              <a 
+                href="https://www.instagram.com/dbdoesstuff/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2.5 rounded-full border border-text_primary/15 bg-white/40 text-text_primary hover:bg-accent_highlight transition-all"
+                aria-label="Instagram"
               >
-                Digital Branch
-              </button>
+                <FaInstagram size={16} />
+              </a>
+              <a 
+                href="mailto:divyanshbaghel456@gmail.com" 
+                className="p-2.5 rounded-full border border-text_primary/15 bg-white/40 text-text_primary hover:bg-accent_highlight transition-all"
+                aria-label="Email"
+              >
+                <FaEnvelope size={16} />
+              </a>
             </div>
           </div>
 
-          {/* Flowchart Layout Container */}
-          <div className="relative w-full max-w-3xl mx-auto">
-            {/* Vertical Flow Track Line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-blue-100 -translate-x-1/2 z-0" />
-
-            {/* FLOW STEPS */}
-            <div className="flex flex-col gap-12 relative z-10">
-
-              {/* Node 1: Start (Centered) */}
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="flex flex-col md:items-center relative"
-              >
-                {/* Step Circle Indicator */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white border-4 border-white flex items-center justify-center text-xs font-bold shadow-md z-20">
-                  1
-                </div>
-                <div className="ml-16 md:ml-0 md:w-80 md:text-center mt-8 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Initialization</span>
-                  <h4 className="font-bold text-slate-900 text-sm">App Launch & Database Sync</h4>
-                  <p className="text-xs text-slate-500 mt-1">Queries index database locally in the browser cache, locking item coordinates for static landmarking.</p>
-                </div>
-              </motion.div>
-
-              {/* Node 2: Catalog Selection (Centered) */}
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="flex flex-col md:items-center relative"
-              >
-                {/* Step Circle Indicator */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white border-4 border-white flex items-center justify-center text-xs font-bold shadow-md z-20">
-                  2
-                </div>
-                <div className="ml-16 md:ml-0 md:w-80 md:text-center mt-8 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cart Assembly</span>
-                  <h4 className="font-bold text-slate-900 text-sm">Catalog Browsing & Search</h4>
-                  <p className="text-xs text-slate-500 mt-1">Cashier triggers items directly from grids or barcode scanner. System updates total prices instantly via local Zustand states.</p>
-                </div>
-              </motion.div>
-
-              {/* Node 3: Branching Node Header (Centered) */}
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="flex flex-col md:items-center relative"
-              >
-                {/* Step Circle Indicator */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white border-4 border-white flex items-center justify-center text-xs font-bold shadow-md z-20">
-                  3
-                </div>
-                <div className="ml-16 md:ml-0 md:w-80 md:text-center mt-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-blue-50/50">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Decision Point</span>
-                  <h4 className="font-bold text-slate-900 text-sm">Select Payment Method</h4>
-                  <p className="text-xs text-slate-500 mt-1">Cashier selects payment type. Workflow forks dynamically based on checkout conditions.</p>
-                </div>
-              </motion.div>
-
-              {/* BRANCH CONTAINER (Split) */}
-              <div className="relative w-full">
-                
-                {/* Visual Branch Line Connector Lines (For Desktop grid paths) */}
-                <div className="hidden md:block absolute top-0 left-1/4 right-1/4 h-0.5 bg-blue-100 z-0" />
-                <div className="hidden md:block absolute top-0 left-1/4 bottom-1/2 w-0.5 bg-blue-100 z-0" />
-                <div className="hidden md:block absolute top-0 right-1/4 bottom-1/2 w-0.5 bg-blue-100 z-0" />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 pl-16 md:pl-0 pt-4">
-                  
-                  {/* Left Column: Cash Payment Path */}
-                  <motion.div 
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeInUp}
-                    className={`flex flex-col gap-4 relative transition-all duration-300 ${
-                      activeBranch !== null && activeBranch !== "cash" ? "opacity-35 blur-[1px]" : "opacity-100"
-                    }`}
-                  >
-                    {/* Tiny connector node */}
-                    <div className="hidden md:block absolute top-1/2 right-[-8px] w-4 h-4 rounded-full bg-blue-400 border-4 border-white shadow-sm z-10" />
-                    
-                    <div 
-                      className={`p-5 rounded-2xl border bg-white transition-all shadow-sm ${
-                        activeBranch === "cash" ? "border-blue-500 shadow-md ring-2 ring-blue-50" : "border-slate-100"
-                      }`}
-                      onClick={() => setActiveBranch("cash")}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-md">
-                          <Banknote size={15} />
-                        </div>
-                        <h5 className="font-bold text-slate-950 text-xs">Path A: Cash Payment</h5>
-                      </div>
-                      <p className="text-xs text-slate-500">Cashier inputs bill amounts, system triggers offline change-return calculations, and opens mechanical drawer.</p>
-                    </div>
-                  </motion.div>
-
-                  {/* Right Column: Digital UPI/Card Path */}
-                  <motion.div 
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeInUp}
-                    className={`flex flex-col gap-4 relative transition-all duration-300 ${
-                      activeBranch !== null && activeBranch !== "digital" ? "opacity-35 blur-[1px]" : "opacity-100"
-                    }`}
-                  >
-                    {/* Tiny connector node */}
-                    <div className="hidden md:block absolute top-1/2 left-[-8px] w-4 h-4 rounded-full bg-blue-400 border-4 border-white shadow-sm z-10" />
-
-                    <div 
-                      className={`p-5 rounded-2xl border bg-white transition-all shadow-sm ${
-                        activeBranch === "digital" ? "border-blue-500 shadow-md ring-2 ring-blue-50" : "border-slate-100"
-                      }`}
-                      onClick={() => setActiveBranch("digital")}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 bg-blue-50 text-blue-600 rounded-md">
-                          <CreditCard size={15} />
-                        </div>
-                        <h5 className="font-bold text-slate-950 text-xs">Path B: Digital Checkout</h5>
-                      </div>
-                      <p className="text-xs text-slate-500">Renders digital QR or streams payment details to card terminals. Triggers async listeners waiting for transaction updates.</p>
-                    </div>
-                  </motion.div>
-
-                </div>
-              </div>
-
-              {/* Node 4: Receipt (Centered) */}
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="flex flex-col md:items-center relative mt-4"
-              >
-                {/* Step Circle Indicator */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white border-4 border-white flex items-center justify-center text-xs font-bold shadow-md z-20">
-                  4
-                </div>
-                <div className="ml-16 md:ml-0 md:w-80 md:text-center mt-8 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Receipt Output</span>
-                  <h4 className="font-bold text-slate-900 text-sm flex items-center justify-start md:justify-center gap-1.5">
-                    <Printer size={14} className="text-slate-400" /> Local Receipt Stream
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-1">Generates printable vector receipt files directly in browser storage, printing locally in under 150ms.</p>
-                </div>
-              </motion.div>
-
-              {/* Node 5: Sync End (Centered) */}
-              <motion.div 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="flex flex-col md:items-center relative"
-              >
-                {/* Step Circle Indicator */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-emerald-600 text-white border-4 border-white flex items-center justify-center text-xs font-bold shadow-md z-20">
-                  ✓
-                </div>
-                <div className="ml-16 md:ml-0 md:w-80 md:text-center mt-8 bg-white p-5 rounded-2xl border border-emerald-150 shadow-sm hover:shadow-md transition-shadow">
-                  <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest block mb-1">Completed</span>
-                  <h4 className="font-bold text-slate-900 text-sm flex items-center justify-start md:justify-center gap-1.5">
-                    <Database size={14} className="text-emerald-500" /> Database Edge Sync
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-1">Pushes final transaction models to database edge servers asynchronously, resetting current cart variables to idle.</p>
-                </div>
-              </motion.div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 5: HIGH-FIDELITY MOCKUPS (bg-white) ── */}
-      <section className="w-full bg-transparent">
-        <div className="max-w-5xl mx-auto px-6 py-24 md:py-32">
-          
-          <div className="flex flex-col gap-2 mb-16 text-center max-w-2xl mx-auto">
-            <span className="text-xs uppercase tracking-widest text-blue-600 font-bold font-mono">Mockups</span>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">Final Design Presentation</h2>
-            <p className="text-sm text-slate-500">Coded mockup wireframes mapping the device scale constraints. In your project, replace these wireframes with raw design export png files.</p>
-          </div>
-
-          {/* 3-Column Mobile Screen Mockups Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+          {/* Links grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             
-            {/* Phone Mockup 1: Dashboard */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="flex flex-col items-center gap-4"
+            <Link 
+              href="/work/scout" 
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-text_primary/10 p-5 bg-white/40 hover:bg-white/60 transition-colors"
             >
-              {/* Device Container */}
-              <div className="relative w-[280px] aspect-[9/18.5] bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-slate-950 overflow-hidden flex flex-col group hover:scale-[1.02] transition-transform duration-500">
-                {/* Notch / Dynamic Island */}
-                <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-24 h-4.5 bg-slate-950 rounded-full z-30 flex items-center justify-between px-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-900"></span>
-                  <span className="w-3.5 h-1 bg-slate-900 rounded-full"></span>
-                </div>
-
-                {/* Status Bar */}
-                <div className="absolute top-8 left-6 right-6 flex justify-between text-[9px] font-bold text-slate-400 z-20 select-none">
-                  <span>9:41</span>
-                  <div className="flex items-center gap-1.5">
-                    <span>5G</span>
-                    <span className="w-4 h-2 bg-slate-400 rounded-sm"></span>
-                  </div>
-                </div>
-
-                {/* Screen Content Area (HTML/CSS Wireframe UI) */}
-                <div className="relative w-full h-full bg-white rounded-[2rem] overflow-hidden flex flex-col pt-12 pb-4 px-4.5 select-none border border-slate-200">
-                  
-                  {/* Fake UI Header */}
-                  <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
-                    <span className="text-[10px] font-extrabold text-slate-800">Terminal #04</span>
-                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
-                      <User size={10} className="text-slate-500" />
-                    </div>
-                  </div>
-
-                  {/* Search Bar */}
-                  <div className="w-full bg-slate-50 border border-slate-200/60 rounded-lg p-1.5 flex items-center gap-1.5 mb-3">
-                    <Search size={10} className="text-slate-400" />
-                    <span className="text-[9px] text-slate-400">Search items...</span>
-                  </div>
-
-                  {/* Categories */}
-                  <div className="flex gap-1 mb-3.5 overflow-hidden">
-                    <span className="px-2 py-0.5 bg-blue-600 text-white rounded text-[8px] font-bold">All</span>
-                    <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[8px] font-bold">Coffee</span>
-                    <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[8px] font-bold">Pastries</span>
-                  </div>
-
-                  {/* Wireframe Grid */}
-                  <div className="grid grid-cols-2 gap-2 flex-grow overflow-hidden max-h-[220px]">
-                    {[
-                      { name: "Matcha Latte", price: "$4.50", bg: "bg-emerald-50 text-emerald-700" },
-                      { name: "Iced Cappuccino", price: "$4.80", bg: "bg-blue-50 text-blue-700" },
-                      { name: "Butter Croissant", price: "$3.20", bg: "bg-amber-50 text-amber-700" },
-                      { name: "Choco Muffin", price: "$3.50", bg: "bg-amber-50 text-amber-700" }
-                    ].map((item, i) => (
-                      <div key={i} className="bg-slate-50 border border-slate-100 rounded-lg p-2 flex flex-col justify-between">
-                        <div className={`w-full aspect-video rounded ${item.bg} flex items-center justify-center text-[9px] font-bold`}>
-                          UI Shot
-                        </div>
-                        <span className="text-[9px] font-bold text-slate-800 truncate mt-1.5 block">{item.name}</span>
-                        <div className="flex items-center justify-between mt-1">
-                          <span className="text-[9px] font-bold text-blue-600">{item.price}</span>
-                          <span className="w-4 h-4 bg-slate-200 text-slate-700 text-[10px] font-black rounded flex items-center justify-center">+</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bottom Bar Drawer */}
-                  <div className="mt-auto bg-blue-600 text-white p-2.5 rounded-xl flex justify-between items-center text-[10px] font-bold shadow-md shadow-blue-100">
-                    <span className="flex items-center gap-1"><ShoppingCart size={10} /> 3 Items</span>
-                    <span className="flex items-center gap-1">Pay $12.50 <ArrowRight size={10} /></span>
-                  </div>
-                  
-                  {/* Home Indicator */}
-                  <div className="w-20 h-1 bg-slate-200 rounded-full mx-auto mt-2"></div>
-                </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[9px] font-gilroyRegular text-text_primary/60 uppercase tracking-[0.15em]">AI-Native Pipeline</span>
+                <h5 className="font-gilroyBold text-base text-text_primary">Scout</h5>
+                <p className="text-xs text-text_primary/70 leading-relaxed">
+                  An automated intelligence crawler mapping raw data sets into context-aware verticals and localized nodes.
+                </p>
               </div>
-              <span className="text-xs font-bold text-slate-700">1. Dashboard Catalog</span>
-            </motion.div>
+              <span className="font-gilroyBold text-xs text-text_primary inline-flex items-center gap-1 mt-2">
+                Read Case Study <span className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </Link>
 
-            {/* Phone Mockup 2: Checkout */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="flex flex-col items-center gap-4"
+            <Link 
+              href="/work" 
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-text_primary/10 p-5 bg-white/40 hover:bg-white/60 transition-colors"
             >
-              {/* Device Container */}
-              <div className="relative w-[280px] aspect-[9/18.5] bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-slate-950 overflow-hidden flex flex-col group hover:scale-[1.02] transition-transform duration-500">
-                {/* Notch */}
-                <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-24 h-4.5 bg-slate-950 rounded-full z-30 flex items-center justify-between px-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-900"></span>
-                  <span className="w-3.5 h-1 bg-slate-900 rounded-full"></span>
-                </div>
-
-                {/* Status Bar */}
-                <div className="absolute top-8 left-6 right-6 flex justify-between text-[9px] font-bold text-slate-400 z-20 select-none">
-                  <span>9:41</span>
-                  <div className="flex items-center gap-1.5">
-                    <span>5G</span>
-                    <span className="w-4 h-2 bg-slate-400 rounded-sm"></span>
-                  </div>
-                </div>
-
-                {/* Screen Content Area */}
-                <div className="relative w-full h-full bg-white rounded-[2rem] overflow-hidden flex flex-col pt-12 pb-4 px-4.5 select-none border border-slate-200">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
-                    <span className="text-[10px] font-extrabold text-slate-800">Checkout Bill</span>
-                    <span className="text-[8px] font-semibold text-blue-600">Edit items</span>
-                  </div>
-
-                  {/* Cart Items List */}
-                  <div className="flex flex-col gap-2 flex-grow overflow-hidden max-h-[160px]">
-                    {[
-                      { name: "Matcha Latte", qty: 2, price: "$9.00" },
-                      { name: "Butter Croissant", qty: 1, price: "$3.20" }
-                    ].map((item, i) => (
-                      <div key={i} className="flex justify-between items-center text-[10px] border-b border-slate-50 pb-2">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-slate-800">{item.name}</span>
-                          <span className="text-[8px] text-slate-400">Qty: {item.qty}</span>
-                        </div>
-                        <span className="font-extrabold text-slate-800">{item.price}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Computational Details */}
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col gap-1.5 mb-3.5 mt-auto">
-                    <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
-                      <span>Subtotal</span>
-                      <span>$12.20</span>
-                    </div>
-                    <div className="flex justify-between text-[9px] text-slate-500 font-semibold">
-                      <span>Tax GST (5%)</span>
-                      <span>$0.61</span>
-                    </div>
-                    <div className="flex justify-between text-[11px] text-slate-900 font-extrabold border-t border-slate-200/60 pt-1.5 mt-0.5">
-                      <span>Total Amount</span>
-                      <span>$12.81</span>
-                    </div>
-                  </div>
-
-                  {/* Pay Selector */}
-                  <div className="flex gap-2 mb-2.5">
-                    <div className="w-1/2 p-2 bg-slate-900 text-white rounded-lg text-center flex flex-col items-center justify-center font-bold">
-                      <Banknote size={12} className="mb-0.5" />
-                      <span className="text-[8px]">Pay Cash</span>
-                    </div>
-                    <div className="w-1/2 p-2 bg-blue-600 text-white rounded-lg text-center flex flex-col items-center justify-center font-bold">
-                      <CreditCard size={12} className="mb-0.5" />
-                      <span className="text-[8px]">Card Terminal</span>
-                    </div>
-                  </div>
-
-                  {/* Quick Calculator keypad */}
-                  <div className="grid grid-cols-3 gap-1 mb-1 border-t border-slate-150 pt-2 text-center text-[9px] font-bold text-slate-600">
-                    {["7", "8", "9", "4", "5", "6"].map((num) => (
-                      <span key={num} className="py-1 bg-slate-50 border border-slate-100 rounded">{num}</span>
-                    ))}
-                  </div>
-                  
-                  {/* Home Indicator */}
-                  <div className="w-20 h-1 bg-slate-200 rounded-full mx-auto mt-2"></div>
-                </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[9px] font-gilroyRegular text-text_primary/60 uppercase tracking-[0.15em]">Portfolio Index</span>
+                <h5 className="font-gilroyBold text-base text-text_primary">All Case Studies</h5>
+                <p className="text-xs text-text_primary/70 leading-relaxed">
+                  Browse the full gallery of user experience research prototypes, dashboard engines, and design tools.
+                </p>
               </div>
-              <span className="text-xs font-bold text-slate-700">2. Active Checkout Cart</span>
-            </motion.div>
-
-            {/* Phone Mockup 3: Success */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="flex flex-col items-center gap-4"
-            >
-              {/* Device Container */}
-              <div className="relative w-[280px] aspect-[9/18.5] bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-slate-950 overflow-hidden flex flex-col group hover:scale-[1.02] transition-transform duration-500">
-                {/* Notch */}
-                <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-24 h-4.5 bg-slate-950 rounded-full z-30 flex items-center justify-between px-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-900"></span>
-                  <span className="w-3.5 h-1 bg-slate-900 rounded-full"></span>
-                </div>
-
-                {/* Status Bar */}
-                <div className="absolute top-8 left-6 right-6 flex justify-between text-[9px] font-bold text-slate-400 z-20 select-none">
-                  <span>9:41</span>
-                  <div className="flex items-center gap-1.5">
-                    <span>5G</span>
-                    <span className="w-4 h-2 bg-slate-400 rounded-sm"></span>
-                  </div>
-                </div>
-
-                {/* Screen Content Area */}
-                <div className="relative w-full h-full bg-white rounded-[2rem] overflow-hidden flex flex-col pt-12 pb-4 px-4.5 select-none border border-slate-200">
-                  
-                  {/* Animated Success Circle Icon */}
-                  <div className="flex flex-col items-center justify-center my-auto">
-                    <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 shadow-sm shadow-emerald-50">
-                      <CheckCircle2 size={24} />
-                    </div>
-                    <span className="text-xs font-extrabold text-slate-900 leading-tight">Order Completed</span>
-                    <span className="text-[8px] text-slate-400 mt-1 uppercase font-bold font-mono">Invoice ID: #88390</span>
-                  </div>
-
-                  {/* Summary Box */}
-                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col gap-2 mb-3.5">
-                    <div className="flex justify-between items-center text-[9px] border-b border-slate-150 pb-1.5">
-                      <span className="text-slate-500 font-semibold">Payment Method</span>
-                      <span className="text-slate-800 font-bold">Digital Card</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[9px] border-b border-slate-150 pb-1.5">
-                      <span className="text-slate-500 font-semibold">Auth Code</span>
-                      <span className="text-slate-800 font-mono text-[8px]">AX-3392</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[9px]">
-                      <span className="text-slate-500 font-semibold">Terminal Sync</span>
-                      <span className="text-emerald-600 font-bold flex items-center gap-1"><span className="w-1 h-1 rounded-full bg-emerald-500"></span> Online</span>
-                    </div>
-                  </div>
-
-                  {/* Thermal Receipt Simulator */}
-                  <div className="border-t border-dashed border-slate-300 pt-3 flex flex-col gap-1 mb-4 select-none">
-                    <span className="text-[8px] font-bold text-center text-slate-400 uppercase tracking-widest block">Local receipt generated</span>
-                    <div className="w-full bg-slate-50 border border-slate-150 border-t-0 p-2 rounded-b text-center text-[7px] font-mono text-slate-500">
-                      === SSG STORE POS ===<br />
-                      2x MATCHA LATTE ($9.00)<br />
-                      1x CROISSANT ($3.20)<br />
-                      =====================<br />
-                      TOTAL PAID: $12.81
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div className="mt-auto bg-slate-900 hover:bg-slate-800 text-white py-2 rounded-xl text-center text-[9px] font-bold cursor-pointer transition-colors shadow-sm">
-                    New Transaction
-                  </div>
-                  
-                  {/* Home Indicator */}
-                  <div className="w-20 h-1 bg-slate-200 rounded-full mx-auto mt-2"></div>
-                </div>
-              </div>
-              <span className="text-xs font-bold text-slate-700">3. Thermal Receipt Success</span>
-            </motion.div>
+              <span className="font-gilroyBold text-xs text-text_primary inline-flex items-center gap-1 mt-2">
+                View Selected Work <span className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </Link>
 
           </div>
         </div>
       </section>
 
-      {/* ── PORTFOLIO PROJECT FOOTER & NAVIGATION ── */}
-      <section className="w-full bg-white/35 backdrop-blur-sm border-t border-[#2a4756]/10">
-        <div className="max-w-5xl mx-auto px-6 py-20 flex flex-col gap-16">
-          
-          {/* Greeting Column */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-8 border-b border-gray-200 pb-12">
-            <div className="flex flex-col gap-2 text-center sm:text-left">
-              <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Thanks for reading!</h3>
-              <p className="text-sm text-slate-600">Let&apos;s build something beautiful and functional together.</p>
-            </div>
-            
-            {/* Social Links */}
-            <div className="flex items-center gap-2 text-slate-550">
-              <a href="https://github.com/DivineDB" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-blue-600 p-2 bg-white rounded-full border border-slate-200 shadow-sm" aria-label="GitHub">
-                <FaGithub size={18} />
-              </a>
-              <a href="https://www.linkedin.com/in/divyansh-baghel/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-blue-600 p-2 bg-white rounded-full border border-slate-200 shadow-sm" aria-label="LinkedIn">
-                <FaLinkedin size={18} />
-              </a>
-              <a href="https://www.instagram.com/dbdoesstuff/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 active:scale-95 transition-transform hover:text-blue-600 p-2 bg-white rounded-full border border-slate-200 shadow-sm" aria-label="Instagram">
-                <FaInstagram size={18} />
-              </a>
-              <a href="mailto:divyanshbaghel456@gmail.com" className="hover:scale-110 active:scale-95 transition-transform hover:text-blue-600 p-2 bg-white rounded-full border border-slate-200 shadow-sm" aria-label="Email">
-                <FaEnvelope size={18} />
-              </a>
-            </div>
-          </div>
-
-          {/* Project Cross Links */}
-          <div className="flex flex-col gap-6">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 text-center sm:text-left">Check out other projects</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
-              {/* Scout project link */}
-              <Link 
-                href="/work/scout" 
-                className="group flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all hover:scale-[1.01] duration-300"
-              >
-                <div className="flex flex-col gap-2">
-                  <p className="text-[10px] font-bold tracking-wider text-blue-600 uppercase font-mono">AI-Native Pipeline</p>
-                  <h5 className="font-bold text-lg text-slate-900 leading-tight">Scout</h5>
-                  <p className="text-xs text-slate-650 leading-relaxed">An automated intelligence crawler mapping raw data sets into context-aware verticals and localized nodes.</p>
-                </div>
-                <span className="font-semibold text-xs text-blue-600 inline-flex items-center gap-1 mt-2">
-                  Read Case Study <span className="transition-transform group-hover:translate-x-1">→</span>
-                </span>
-              </Link>
-
-              {/* Main portfolio link */}
-              <Link 
-                href="/work" 
-                className="group flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all hover:scale-[1.01] duration-300"
-              >
-                <div className="flex flex-col gap-2">
-                  <p className="text-[10px] font-bold tracking-wider text-slate-450 uppercase font-mono">Portfolio Index</p>
-                  <h5 className="font-bold text-lg text-slate-900 leading-tight">All Case Studies</h5>
-                  <p className="text-xs text-slate-650 leading-relaxed">Browse the full gallery of user experience research prototypes, dashboard engines, and design tools.</p>
-                </div>
-                <span className="font-semibold text-xs text-blue-600 inline-flex items-center gap-1 mt-2">
-                  View Selected Work <span className="transition-transform group-hover:translate-x-1">→</span>
-                </span>
-              </Link>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Global site footer */}
+      {/* Global layout page footer */}
       <PageFooter />
     </main>
   );
