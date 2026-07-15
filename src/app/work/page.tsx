@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
@@ -19,7 +19,7 @@ const PROJECTS = [
     year: "2026",
     role: "Design & Engineering",
     description:
-      "A touchscreen-optimized register and analytics dashboard built for convenience store operations — checkout under 12 seconds, real-time inventory sync, zero log loss.",
+      "A touchscreen-optimized register and analytics dashboard built for convenience store operations. It features checkout under 12 seconds, real-time inventory sync, and zero log loss.",
     image: "/images/Group 5.png",
     imageAlt: "BreezePOS Order Register Workspace",
     imageBg: "#9AD8B6",
@@ -34,25 +34,27 @@ const PROJECTS = [
     highlight: "Scout",
     rest: " Engine",
     subtitle: "Autonomous Data Intelligence",
-    year: "2026 —",
+    year: "2026",
     role: "Systems Design",
     description:
       "An intelligence engine that crawls raw commercial datasets, runs categorization LLMs, and maps listing schemas into context-aware verticals.",
     image: "/images/scout_mockup.png",
     imageAlt: "Scout Engine Data Intelligence Console",
     imageBg: "#A7D4D7",
-    liveUrl: "https://github.com/DivineDB/Scout",
-    liveLabel: "GitHub",
+    liveUrl: "https://scout-pink-nine.vercel.app",
+    liveLabel: "Live Preview",
     wip: false,
   },
 ];
 
 export default function WorkPage() {
   const router = useRouter();
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -94,26 +96,25 @@ export default function WorkPage() {
         </div>
         
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0, duration: 0.5, ease: "easeOut" }}
-          className="pointer-events-auto cursor-pointer absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: scrolled ? 0 : 1, pointerEvents: scrolled ? "none" : "auto" }}
+          transition={{ duration: 0.3 }}
+          className="pointer-events-auto cursor-pointer absolute bottom-10 left-1/2 -translate-x-1/2 text-text_primary/30 hover:text-text_primary/60 transition-colors"
           onClick={scrollToFirstProject}
         >
-          <span className="font-gilroyBold text-xs tracking-[0.2em] uppercase">Scroll Down</span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="will-change-transform"
           >
-            <ArrowDown size={18} strokeWidth={1.5} />
+            <ArrowDown size={16} strokeWidth={1.5} />
           </motion.div>
         </motion.div>
       </section>
 
       {/* ── Project list ─────────────────────────────────────────── */}
-      <section className="px-6 md:px-12 py-12">
-        <div className="mx-auto max-w-[1000px] flex flex-col gap-24 md:gap-32">
+      <section className="px-6 md:px-12">
+        <div className="mx-auto max-w-[1000px] flex flex-col">
           {PROJECTS.map((project, i) => (
             <motion.article
               key={project.id}
@@ -122,21 +123,50 @@ export default function WorkPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px 0px -10% 0px" }}
               transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-              className="group/article flex flex-col w-full"
+              className="group/article flex flex-col w-full h-screen py-8 pb-20 justify-between"
             >
-              {/* Meta row above image */}
-              <div className="flex items-baseline justify-between mb-6 gap-4">
-                <span className="font-mono text-xs text-text_primary/35 tracking-widest">
-                  {project.index}
-                </span>
-                <span className="font-gilroyRegular text-xs text-text_primary/40 tracking-wide">
-                  {project.subtitle} · {project.year}
-                </span>
+              {/* Top block: all text + buttons */}
+              <div className="flex flex-col gap-2">
+                {/* Row 1: Title + subtitle·year */}
+                <div className="flex items-baseline justify-between gap-4 border-b border-text_primary/10 pb-3">
+                  <h2 className="font-gilroyBold text-2xl md:text-3xl text-text_primary tracking-tight flex items-center leading-none">
+                    <HighlightBox className="py-1 px-3 shrink-0 mr-2 text-inherit">{project.highlight}</HighlightBox>
+                    <span className="translate-y-[1px]">{project.rest}</span>
+                  </h2>
+                  <span className="font-gilroyRegular text-sm text-text_primary/60 tracking-wide shrink-0 hidden sm:block">
+                    {project.subtitle} · {project.year}
+                  </span>
+                </div>
+
+                {/* Row 2: Description + Buttons inline */}
+                <div className="flex items-center justify-between gap-6 pt-1">
+                  <p className="font-gilroyRegular text-sm text-text_primary/75 leading-snug max-w-lg">
+                    {project.description}
+                  </p>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <Link
+                      href={`/work/${project.id}`}
+                      className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-gilroyBold bg-text_primary text-bg shadow-sm transition-transform hover:scale-[1.02] active:scale-95"
+                    >
+                      <span>Case Study</span>
+                      <ArrowUpRight size={12} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-gilroyBold border border-text_primary/20 text-text_primary bg-white/20 backdrop-blur-sm transition-all hover:bg-text_primary hover:text-bg hover:border-text_primary active:scale-95"
+                    >
+                      <span>{project.liveLabel}</span>
+                      <ArrowUpRight size={12} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
+                  </div>
+                </div>
               </div>
 
-              {/* Image Container with curated background and precise bleed/sizing */}
+              {/* Image — fills remaining height */}
               <div
-                className={`relative w-full aspect-[943/533] rounded-[24px] cursor-pointer transition-transform duration-500 hover:scale-[1.01] ${
+                className={`relative w-full flex-1 min-h-0 rounded-[24px] cursor-pointer transition-transform duration-500 hover:scale-[1.01] mt-4 ${
                   project.id === "pos-panel" ? "overflow-visible" : "overflow-hidden"
                 }`}
                 style={{ backgroundColor: project.imageBg }}
@@ -144,7 +174,6 @@ export default function WorkPage() {
                 title={project.imageAlt ?? undefined}
               >
                 {project.id === "pos-panel" ? (
-                  /* BreezePOS Bleed Mockup (Group 5.png) */
                   <img
                     src={project.image!}
                     alt={project.imageAlt!}
@@ -152,7 +181,6 @@ export default function WorkPage() {
                     draggable={false}
                   />
                 ) : (
-                  /* Scout Centered Mockup (scout_mockup.png) */
                   <div className="absolute inset-0 flex items-center justify-center">
                     <img
                       src={project.image!}
@@ -160,52 +188,8 @@ export default function WorkPage() {
                       className="w-[82%] aspect-[686.669/386.25] object-contain pointer-events-none select-none"
                       draggable={false}
                     />
-                    {/* Coming Soon Overlay */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#A7D4D7]/60 backdrop-blur-[6px] rounded-[24px]">
-                      <div className="flex items-center gap-2.5 bg-white/40 border border-white/50 backdrop-blur-md px-5 py-2.5 rounded-full shadow-lg">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-text_primary/60 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-text_primary/80" />
-                        </span>
-                        <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/80">Coming Soon</span>
-                      </div>
-                    </div>
                   </div>
                 )}
-              </div>
-
-              {/* Details row below image */}
-              <div className="mt-12 md:mt-16 flex flex-col md:flex-row md:items-start md:justify-between gap-6 px-1">
-                {/* Title + description */}
-                <div className="flex flex-col gap-3 max-w-2xl">
-                  <h2 className="font-gilroyBold text-2xl md:text-3xl text-text_primary tracking-tight">
-                    <HighlightBox className="pr-1.5">{project.highlight}</HighlightBox>
-                    {project.rest}
-                  </h2>
-                  <p className="font-gilroyRegular text-sm text-text_primary/60 leading-relaxed">
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* Links */}
-                <div className="flex items-center gap-6 shrink-0 pt-1.5">
-                  <Link
-                    href={`/work/${project.id}`}
-                    className="group flex items-center gap-1.5 text-sm font-gilroyBold text-text_primary hover:text-text_primary/70 transition-colors"
-                  >
-                    Case Study
-                    <ArrowUpRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </Link>
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-1.5 text-sm font-gilroyRegular text-text_primary/50 hover:text-text_primary transition-colors"
-                  >
-                    {project.liveLabel}
-                    <ArrowUpRight size={14} className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-                </div>
               </div>
             </motion.article>
           ))}
@@ -259,22 +243,6 @@ export default function WorkPage() {
       </section>
 
       <PageFooter />
-
-      {/* Scroll to top */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-8 right-8 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-text_primary/15 bg-bg/90 backdrop-blur-md text-text_primary/60 hover:text-text_primary hover:border-text_primary/30 transition-all cursor-pointer"
-            aria-label="Scroll to top"
-          >
-            <ArrowUpRight size={16} className="-rotate-45" />
-          </motion.button>
-        )}
-      </AnimatePresence>
 
     </main>
   );

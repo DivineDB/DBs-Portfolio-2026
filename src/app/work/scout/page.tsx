@@ -1,733 +1,1795 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { useLenis } from "lenis/react";
+import { 
+  ArrowLeft, 
+  ExternalLink, 
+  Check, 
+  Sparkles,
+  Database,
+  Terminal,
+  Mail,
+  Info,
+  Layers,
+  Activity,
+  UserCheck,
+  CheckCircle2,
+  FileText,
+  Sliders,
+  DollarSign,
+  AlertTriangle,
+  ArrowRight,
+  ArrowUpRight,
+  X,
+  Hash
+} from "lucide-react";
 import PageFooter from "@/components/PageFooter";
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 
-// Custom GitHub icon component
-function GithubIcon({ size = 15, className }: { size?: number; className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-}
-
-// ─── Static metadata ──────────────────────────────────────────────────────────
-const META = {
-  role: "Design Engineer",
-  timeline: "Apr 2026 → Present",
-  stack: ["Next.js 16", "Supabase", "Groq LLMs", "TypeScript", "Framer Motion"],
-  github: "https://github.com/DivineDB/scout",
-  live: "https://scout-pink-nine.vercel.app",
-  language: "TypeScript",
-  stars: 1,
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } 
+  }
 };
 
-// ─── Interactive UI Placeholders ──────────────────────────────────────────────
-function ScreenPlaceholder({ label }: { label: string }) {
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const SECTIONS = [
+  { id: "hero", label: "Intro" },
+  { id: "overview", label: "Overview" },
+  { id: "story", label: "Empathy" },
+  { id: "observations", label: "Observations" },
+  { id: "painpoints", label: "Friction" },
+  { id: "synthesis", label: "Synthesis" },
+  { id: "scope", label: "Scope" },
+  { id: "personas", label: "Personas" },
+  { id: "strategy", label: "Strategy" },
+  { id: "5ws", label: "5 Ws" },
+  { id: "walkthrough", label: "Interfaces" },
+  { id: "architecture", label: "Systems" },
+  { id: "schema", label: "Database" },
+  { id: "api", label: "API Reference" },
+];
+
+interface MockupProps {
+  isZoomed?: boolean;
+}
+
+function Mockup1() {
   return (
-    <div
-      className="relative w-full overflow-hidden rounded-xl"
-      style={{
-        aspectRatio: "16/10",
-        background: "#0a0a0a",
-        border: "1px solid rgba(16,185,129,0.08)",
-        boxShadow: "0 12px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
-      }}
-    >
-      {/* Subtle grid pattern */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(16,185,129,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.07) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-      {/* Fake UI chrome */}
-      <div className="absolute inset-0 flex flex-col p-4 gap-3">
-        {/* Top bar */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full" style={{ background: "#10b981", opacity: 0.7 }} />
-            <div className="h-2 w-12 rounded" style={{ background: "rgba(16,185,129,0.15)" }} />
-          </div>
-          <div className="flex gap-2">
-            {[70, 50, 90].map((w, i) => (
-              <div key={i} className="h-1.5 rounded" style={{ width: w, background: "rgba(255,255,255,0.06)" }} />
-            ))}
-          </div>
+    <div className="w-full overflow-hidden rounded-xl border border-white/5 shadow-lg bg-[#0c0d0e] p-6 text-white text-left select-none">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <span className="text-xs text-white/50 ml-2 font-mono">scout.dev/dashboard</span>
         </div>
-        {/* Score cards row */}
-        <div className="flex gap-2 mt-1">
+        <div className="px-3 py-1 rounded bg-[#10b981]/15 text-[#10b981] text-[10px] font-gilroyBold tracking-widest uppercase">Obsidian Mint</div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left Lane: Casual Hunt */}
+        <div className="bg-[#121416] p-4 rounded-xl border border-white/5 flex flex-col gap-3">
+          <div className="flex justify-between items-center pb-2 border-b border-white/5">
+            <span className="text-xs font-gilroyBold text-white/60 uppercase">Casual Hunt Queue</span>
+            <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-white/40">3 Auto-Swept</span>
+          </div>
+
           {[
-            { score: "92", w: "flex-1" },
-            { score: "87", w: "flex-1" },
-            { score: "74", w: "flex-1" },
-          ].map(({ score, w }, i) => (
-            <div
-              key={i}
-              className={`${w} rounded-lg p-2.5 flex flex-col gap-1.5`}
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="h-1.5 w-16 rounded" style={{ background: "rgba(255,255,255,0.08)" }} />
-                <div
-                  className="text-[10px] font-gilroyBold px-1.5 py-0.5 rounded-full"
-                  style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}
-                >
-                  {score}
-                </div>
+            { role: "Senior Frontend Engineer", comp: "Stripe", score: 94 },
+            { role: "Product Developer", comp: "Vercel", score: 88 },
+            { role: "Fullstack Architect", comp: "Linear", score: 72 }
+          ].map((item, i) => (
+            <div key={i} className="bg-[#17191d] p-3 rounded-lg border border-white/[0.03] flex items-center justify-between">
+              <div>
+                <div className="text-xs font-gilroyBold">{item.role}</div>
+                <div className="text-[10px] text-white/40">{item.comp} · Remote</div>
               </div>
-              <div className="h-1 w-20 rounded" style={{ background: "rgba(255,255,255,0.05)" }} />
-              <div className="h-1 w-12 rounded" style={{ background: "rgba(255,255,255,0.04)" }} />
+              <div className="text-xs font-gilroyBold px-2 py-1 rounded bg-[#10b981]/10 text-[#10b981]">{item.score}%</div>
             </div>
           ))}
         </div>
-        {/* List rows */}
-        {[85, 70, 55, 65].map((opacity, i) => (
-          <div key={i} className="flex items-center gap-3 py-1.5 px-2 rounded-lg" style={{ background: `rgba(255,255,255,0.0${i % 2 === 0 ? 2 : 1})` }}>
-            <div className="w-6 h-6 rounded-md flex-shrink-0" style={{ background: "rgba(16,185,129,0.08)" }} />
-            <div className="flex-1 flex flex-col gap-1">
-              <div className="h-1.5 rounded" style={{ width: `${opacity}%`, background: "rgba(255,255,255,0.07)" }} />
-              <div className="h-1 w-2/5 rounded" style={{ background: "rgba(255,255,255,0.04)" }} />
+
+        {/* Right Lane: Serious Mode */}
+        <div className="bg-[#121416] p-4 rounded-xl border border-white/5 flex flex-col gap-3">
+          <div className="flex justify-between items-center pb-2 border-b border-white/5">
+            <span className="text-xs font-gilroyBold text-[#10b981] uppercase">Serious Mode Applications</span>
+            <span className="text-[10px] bg-[#10b981]/10 px-2 py-0.5 rounded text-[#10b981]">1 Active</span>
+          </div>
+
+          <div className="bg-[#17191d] p-3 rounded-lg border border-[#10b981]/20 flex items-center justify-between">
+            <div>
+              <div className="text-xs font-gilroyBold text-white">Design Engineer</div>
+              <div className="text-[10px] text-white/40">SupaBase · SF / Hybrid</div>
             </div>
-            <div className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", color: "rgba(16,185,129,0.6)" }}>
-              {80 - i * 5}
+            <div className="flex gap-2">
+              <span className="text-[8px] bg-[#10b981]/15 text-[#10b981] px-2 py-1 rounded font-gilroyBold uppercase">Distilled</span>
+              <span className="text-[8px] bg-blue-500/15 text-blue-400 px-2 py-1 rounded font-gilroyBold uppercase">Applied</span>
             </div>
           </div>
-        ))}
-      </div>
-      {/* Label overlay */}
-      <div className="absolute bottom-3 right-3">
-        <span
-          className="text-[9px] font-gilroyBold uppercase tracking-widest px-2 py-1 rounded"
-          style={{ background: "rgba(16,185,129,0.08)", color: "rgba(16,185,129,0.4)" }}
-        >
-          {label}
-        </span>
+
+          <div className="flex-1 border border-dashed border-white/10 rounded-lg flex items-center justify-center p-6 text-white/30 text-[10px] font-mono">
+            Drag here to promote to Serious Mode
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-export default function ScoutCaseStudy() {
-  const [activeShowcaseTab, setActiveShowcaseTab] = useState<"surface" | "accent" | "typography" | "transitions">("surface");
+function Mockup2({ isZoomed = false }: MockupProps) {
+  return (
+    <div className="w-full overflow-hidden rounded-xl border border-white/5 shadow-lg bg-[#0c0d0e] p-6 text-white text-left select-none relative">
+      {/* Floating Notification Pill */}
+      <div className={`absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-[#10b981] text-[#0c0d0e] px-4 py-2 rounded-full shadow-lg border border-white/20 z-10 ${isZoomed ? "" : "animate-bounce"}`}>
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0c0d0e]" />
+        </span>
+        <span className="font-gilroyBold text-[10px] uppercase tracking-wider">4 sweeps pending merge — click to stage</span>
+      </div>
+
+      <div className={`mt-8 transition-all duration-300 ${isZoomed ? "opacity-100 filter-none" : "opacity-40 filter blur-[1px]"}`}>
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-500" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500" />
+            <div className="w-3 h-3 rounded-full bg-green-500" />
+            <span className="text-xs text-white/50 ml-2 font-mono">scout.dev/sweeps</span>
+          </div>
+          {isZoomed && (
+            <span className="text-[9px] text-[#10b981] font-mono">Query: &quot;Next.js&quot; + &quot;San Francisco&quot; | Salary: &gt; $130k</span>
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            { title: "Staff Dev", company: "Greenhouse", stats: "Next.js · 94% Match" },
+            { title: "AI Designer", company: "Greenhouse", stats: "Zustand · 88% Match" }
+          ].map((job, i) => (
+            <div key={i} className="bg-[#121416] p-4 rounded-xl border border-white/5 flex flex-col gap-2">
+              <div className="text-xs font-gilroyBold">{job.title}</div>
+              <div className="text-[10px] text-white/40">{job.company}</div>
+              <div className="text-[9px] text-[#10b981]">{job.stats}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Mockup3() {
+  return (
+    <div className="w-full overflow-hidden rounded-xl border border-white/5 shadow-lg bg-[#0c0d0e] p-6 text-white text-left select-none">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2 bg-[#121416] p-2.5 rounded-lg border border-white/5">
+          <span className="text-[10px] text-white/40 font-mono">Target URL:</span>
+          <input 
+            type="text" 
+            value="https://lever.co/supabase/design-engineer-1092" 
+            readOnly 
+            className="bg-transparent text-xs font-mono text-[#10b981] outline-none flex-1"
+          />
+          <button className="text-[10px] font-gilroyBold bg-[#10b981] text-[#0c0d0e] px-3 py-1 rounded cursor-pointer">Scout URL</button>
+        </div>
+
+        <div className="bg-[#121416] p-4 rounded-xl border border-[#10b981]/15 flex items-center justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-gilroyBold">Design Engineer (Platform)</span>
+              <span className="text-[8px] bg-[#10b981]/10 text-[#10b981] px-1.5 py-0.5 rounded">Scraped</span>
+            </div>
+            <p className="text-[10px] text-white/50 mt-1 leading-relaxed">
+              Groq analysis successfully run via Llama 3.3. Visa sponsoring matches user requirements.
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-2xl font-gilroyBold text-[#10b981]">92%</div>
+            <div className="text-[8px] uppercase tracking-widest text-white/40 font-gilroyBold">Suitability</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Mockup4() {
+  return (
+    <div className="w-full overflow-hidden rounded-xl border border-white/5 shadow-lg bg-[#0c0d0e] p-6 text-white text-left select-none">
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
+        <div className="sm:col-span-7 flex flex-col gap-3 font-mono text-[10px] text-white/70">
+          <div className="pb-2 border-b border-white/10 text-white font-gilroyBold text-xs">Dynamic Bullet point re-order</div>
+          <div className="bg-[#121416] p-2.5 rounded border border-yellow-500/20 text-yellow-200">
+            Target Stack: Next.js Server Actions, Zustand
+          </div>
+          <div className="flex items-start gap-2 text-white/50 leading-relaxed">
+            <span className="text-[#10b981]">↗</span>
+            <span>Migrated context workflows to Zustand stores to handle offline database sync states.</span>
+          </div>
+          <div className="flex items-start gap-2 leading-relaxed">
+            <span className="text-[#10b981]">✔</span>
+            <span>Configured Next.js server actions to trigger real-time notification alerts. (Morphed to top)</span>
+          </div>
+        </div>
+        <div className="sm:col-span-5 flex flex-col items-center gap-3">
+          <div className="w-24 aspect-[1/1.4] bg-white border border-white/10 shadow-md rounded p-2 flex flex-col gap-1 select-none">
+            <div className="h-1.5 w-1/2 bg-black/60 rounded" />
+            <div className="h-1 w-full bg-black/10 rounded" />
+            <div className="h-1 w-5/6 bg-black/10 rounded" />
+            <div className="h-1 w-3/4 bg-black/35 rounded" />
+            <div className="h-1 w-full bg-black/10 rounded" />
+          </div>
+          <button className="text-[10px] font-gilroyBold bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30 px-3 py-1 rounded cursor-pointer">Generate Tailored PDF</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Mockup5() {
+  return (
+    <div className="w-full overflow-hidden rounded-xl border border-white/5 shadow-lg bg-[#0c0d0e] p-6 text-white text-left select-none">
+      <div className="flex flex-col gap-3 font-mono text-[10px]">
+        <div className="flex justify-between items-center pb-2 border-b border-white/10">
+          <span className="font-gilroyBold text-xs text-red-400">Shield Warning: 68% Match</span>
+          <span className="text-[8px] bg-red-500/10 text-red-400 px-2 py-0.5 rounded uppercase font-gilroyBold">Gaps Detected</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-[#121416] p-3 rounded border border-red-500/10">
+            <div className="font-gilroyBold text-[#10b981] mb-1">Identified Skill Gaps</div>
+            <ul className="list-disc list-inside text-white/60 space-y-1">
+              <li>GraphQL Subscriptions</li>
+              <li>Docker containers orchestration</li>
+            </ul>
+          </div>
+          <div className="bg-[#121416] p-3 rounded border border-yellow-500/10">
+            <div className="font-gilroyBold text-yellow-400 mb-1">Objection-Handling Strategy</div>
+            <p className="text-white/60 leading-relaxed">
+              Highlight Zustand/Supabase Realtime experience and outline basic Docker orchestration knowledge.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TerminalSimulator() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  }, [logs]);
+
+  const logQueue = [
+    "[system] Initializing Ghost Sweep daemon worker...",
+    "[crawler] Scraping job listings across Greenhouse, Lever, and RemoteOK...",
+    "[crawler] Found 3 new job postings matching user parameters.",
+    "[Groq 8B] Classifying Job 1: Design Engineer @ Supabase (Salary: $140k, Visa: Yes) -> PASS (92%)",
+    "[Groq 8B] Classifying Job 2: backend developer @ LegacyCorp (Fails remote criteria) -> FAIL (45%)",
+    "[Groq 8B] Classifying Job 3: React Lead @ Stealth (Matches frontend stack) -> PASS (78%)",
+    "[Groq 70B] Extracting requirements & generating objection shield vectors for Job 1...",
+    "[Groq 70B] Crafting cold templates for Email and LinkedIn outreaches...",
+    "[Supabase] Syncing... 2 high-score listings committed to Postgres staging queue.",
+    "[Resend] Unicorn Alert: Dispatching high-priority HTML summary to candidate inbox.",
+    "[system] Sweep cycle completed. 2 jobs cached in Realtime queue."
+  ];
+
+  const triggerSimulation = () => {
+    if (isSimulating) return;
+    setIsSimulating(true);
+    setLogs([]);
+    let currentIdx = 0;
+
+    const interval = setInterval(() => {
+      if (currentIdx < logQueue.length) {
+        const nextLog = logQueue[currentIdx];
+        if (nextLog) {
+          setLogs(prev => [...prev, nextLog]);
+        }
+        currentIdx++;
+      } else {
+        clearInterval(interval);
+        setIsSimulating(false);
+      }
+    }, 900);
+  };
 
   return (
-    <main
-      className="min-h-screen w-full font-gilroyRegular selection:bg-accent_highlight selection:text-text_primary"
-      style={{ background: "#f8edd1" }}
-    >
-      {/* ── Sticky back nav ── */}
-      <div
-        className="sticky top-0 z-50 w-full px-6 py-4"
-        style={{
-          background: "rgba(248,237,209,0.85)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(42,71,86,0.08)",
-        }}
+    <div className="w-full bg-[#0d0e11] border border-white/10 rounded-2xl overflow-hidden shadow-2xl font-mono text-[11px] md:text-xs text-white/90">
+      <div className="bg-[#14161b] px-4 py-3 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]/80" />
+          <span className="text-white/50 text-[10px] ml-2 select-none">ghost_sweep_daemon.sh</span>
+        </div>
+        <span className="text-[10px] text-[#10b981] font-bold select-none">STATUS: ACTIVE</span>
+      </div>
+      <div 
+        ref={containerRef}
+        className="p-4 h-60 overflow-y-auto no-scrollbar flex flex-col gap-2 bg-[#0a0b0d]"
       >
-        <div className="mx-auto max-w-[800px]">
+        {logs.length === 0 ? (
+          <div className="text-white/40 italic flex flex-col items-center justify-center h-full select-none">
+            Click &apos;Trigger Ghost Sweep&apos; below to simulate the AI parser daemon...
+          </div>
+        ) : (
+          logs.map((log, index) => {
+            if (!log) return null;
+            let color = "text-white/70";
+            if (log.startsWith("[system]")) color = "text-yellow-400/90";
+            else if (log.includes("PASS")) color = "text-[#10b981]";
+            else if (log.includes("FAIL")) color = "text-red-400/90";
+            else if (log.startsWith("[Resend]")) color = "text-purple-400";
+            
+            return (
+              <div key={index} className={`leading-relaxed ${color}`}>
+                <span className="text-white/30 mr-1.5 select-none">&gt;</span>
+                {log}
+              </div>
+            );
+          })
+        )}
+      </div>
+      <div className="bg-[#14161b] px-4 py-3 border-t border-white/5 flex items-center justify-between">
+        <button
+          onClick={triggerSimulation}
+          disabled={isSimulating}
+          className={`px-4 py-2 rounded-lg text-[10px] font-gilroyBold tracking-wider uppercase transition-all ${
+            isSimulating
+              ? "bg-white/10 text-white/30 cursor-not-allowed"
+              : "bg-[#10b981] text-[#0a0b0d] hover:bg-[#10b981]/80 cursor-pointer shadow-md active:scale-95"
+          }`}
+        >
+          {isSimulating ? "Crawling ATS feeds..." : "Trigger Ghost Sweep"}
+        </button>
+        <span className="text-[9px] text-white/30 select-none">Next.js 16 Cron Daemon</span>
+      </div>
+    </div>
+  );
+}
+
+export default function ScoutCaseStudy() {
+  const { scrollYProgress } = useScroll();
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isHovered, setIsHovered] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isMobileTocOpen, setIsMobileTocOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [activeMockupId, setActiveMockupId] = useState<string | null>(null);
+  const lenis = useLenis();
+  const isManualScrolling = useRef(false);
+
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const scrollToTop = () => {
+    if (lenis) {
+      lenis.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Prevent background scrolling when lightbox is active
+  useEffect(() => {
+    if (activeImage || activeMockupId) {
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+    } else {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    }
+    return () => {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    };
+  }, [activeImage, activeMockupId, lenis]);
+
+  // Ensure the page always starts at the top when navigated to
+  const hasResetScroll = useRef(false);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (lenis && !hasResetScroll.current) {
+      hasResetScroll.current = true;
+      lenis.scrollTo(0, { immediate: true });
+    }
+  }, [lenis]);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      if (isManualScrolling.current) return;
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-75px 0px -40% 0px",
+      threshold: 0.05,
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    SECTIONS.forEach((section) => {
+      const el = document.getElementById(section.id);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleScrollTo = (id: string) => {
+    setActiveSection(id);
+    isManualScrolling.current = true;
+
+    const el = document.getElementById(id);
+    if (el) {
+      if (lenis) {
+        lenis.scrollTo(el, {
+          offset: -80,
+          duration: 1.2,
+          onComplete: () => {
+            setTimeout(() => {
+              isManualScrolling.current = false;
+            }, 50);
+          }
+        });
+      } else {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+
+        setTimeout(() => {
+          isManualScrolling.current = false;
+        }, 1000);
+      }
+    } else {
+      isManualScrolling.current = false;
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-[#0a0b0d] text-[#e2e8f0] font-gilroyRegular antialiased pb-16">
+      
+      {/* ── STYLISH APPLE-AESTHETIC SCROLLBAR ── */}
+      <div 
+        className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden md:block cursor-pointer select-none"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <motion.div
+          animate={{
+            width: isHovered ? 146 : 8,
+            height: isHovered ? 380 : 160,
+            backgroundColor: isHovered ? "rgba(13, 14, 18, 0.95)" : "rgba(13, 14, 18, 0)",
+            backdropFilter: isHovered ? "blur(20px)" : "blur(0px)",
+            borderColor: isHovered ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0)",
+            boxShadow: isHovered 
+              ? "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)" 
+              : "0 0px 0px rgba(0,0,0,0)"
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 220,
+            damping: 28,
+            mass: 0.6
+          }}
+          className="rounded-2xl border border-transparent flex flex-col justify-center items-center relative overflow-hidden"
+        >
+          {/* Inactive Mode: Minimal Progress Bar */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 0 : 1,
+              pointerEvents: isHovered ? "none" : "auto",
+            }}
+            transition={{ 
+              duration: isHovered ? 0.15 : 0.18,
+              delay: isHovered ? 0 : 0.12,
+              ease: "easeOut"
+            }}
+            className="absolute inset-0 flex flex-col justify-center items-center py-4"
+          >
+            <motion.div 
+              animate={activeSection === "overview" ? {
+                scaleX: [1, 4.5, 1],
+                opacity: [0.25, 1, 0.25]
+              } : {}}
+              transition={{
+                duration: 0.9,
+                ease: [0.4, 0, 0.2, 1],
+                repeat: 1,
+                repeatDelay: 0.15
+              }}
+              className="w-[3px] h-[120px] bg-white/15 rounded-full relative overflow-hidden origin-center"
+            >
+              <motion.div
+                style={{ scaleY: scrollYProgress, originY: 0 }}
+                className="absolute top-0 left-0 w-full h-full bg-[#10b981] rounded-full"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Active Hover Mode: Table of Contents */}
+          <motion.div
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              pointerEvents: isHovered ? "auto" : "none",
+            }}
+            transition={{ 
+              duration: isHovered ? 0.2 : 0.12,
+              ease: "easeOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[146px] h-[380px] flex flex-col justify-between py-6 px-4 shrink-0"
+          >
+            {/* Background vertical connector line behind dots */}
+            <div className="absolute right-[22px] top-7 bottom-7 w-[1px] bg-white/5 -z-10" />
+
+            {SECTIONS.map((section, index) => (
+              <div
+                key={section.id}
+                onClick={() => handleScrollTo(section.id)}
+                className="group flex items-center justify-end gap-2.5 py-0.5 cursor-pointer w-full text-right"
+              >
+                <motion.span
+                  animate={{
+                    opacity: isHovered ? 1 : 0,
+                    x: isHovered ? 0 : 8,
+                  }}
+                  transition={{
+                    opacity: { duration: 0.25, delay: isHovered ? index * 0.015 : 0, ease: "easeOut" },
+                    x: { type: "spring", stiffness: 200, damping: 25, delay: isHovered ? index * 0.015 : 0 }
+                  }}
+                  className={`text-[9px] font-gilroyBold uppercase tracking-wider transition-colors duration-200 ${
+                    activeSection === section.id
+                      ? "text-white font-bold"
+                      : "text-white/40 group-hover:text-white/75"
+                  }`}
+                >
+                  {section.label}
+                </motion.span>
+                
+                <div className="relative flex items-center justify-center w-3 h-3 flex-shrink-0">
+                  {/* Outer ring for active state */}
+                  {activeSection === section.id && (
+                    <motion.div
+                      layoutId="activeDotRingScout"
+                      className="absolute w-3.5 h-3.5 rounded-full border border-[#10b981]/50"
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    />
+                  )}
+                  {/* Central Dot */}
+                  <div
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                      activeSection === section.id
+                        ? "bg-[#10b981] scale-110"
+                        : "bg-white/25 group-hover:bg-[#10b981]/70"
+                    }`}
+                  />
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+
+      
+      {/* ── NAVIGATION HEADER ── */}
+      <nav className="sticky top-0 z-50 w-full bg-[#0a0b0d]/80 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             href="/work"
-            className="group inline-flex items-center gap-2 text-sm font-gilroyBold transition-colors"
-            style={{ color: "rgba(42,71,86,0.5)" }}
+            className="group inline-flex items-center gap-2 text-sm font-gilroyBold text-white transition-opacity hover:opacity-75"
           >
             <ArrowLeft
-              size={15}
+              size={16}
               className="transition-transform group-hover:-translate-x-1"
             />
             Selected Work
           </Link>
+          
+          {/* Top navigation contact icons */}
+          <div className="flex items-center gap-3">
+            <a 
+              href="mailto:divyanshbaghel456@gmail.com" 
+              className="p-2 rounded-full hover:bg-white/5 text-white/80 hover:text-white transition-colors"
+              aria-label="Email"
+              title="Email Divyansh Baghel"
+            >
+              <Mail size={18} strokeWidth={2} />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/divyansh-baghel/" 
+              target="_blank" 
+              className="p-2 rounded-full hover:bg-white/5 text-white/80 hover:text-white transition-colors"
+              aria-label="LinkedIn"
+              title="LinkedIn Profile"
+            >
+              <FaLinkedin size={18} />
+            </a>
+          </div>
         </div>
-      </div>
+      </nav>
 
-      {/* ── Article content ── */}
-      <div className="mx-auto max-w-[800px] px-6 py-12 flex flex-col gap-10">
+      {/* ── HERO HEADER SECTION ── */}
+      <section id="hero" className="w-full min-h-[calc(100vh-76px)] relative overflow-hidden flex flex-col justify-center items-start py-20">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[300px] rounded-full bg-[#10b981]/10 blur-[150px] pointer-events-none -z-10" />
 
-        {/* Project Header Identity */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-3"
-        >
-          <p
-            className="text-xs font-gilroyBold uppercase tracking-[0.2em]"
-            style={{ color: "rgba(42,71,86,0.4)" }}
+        <div className="max-w-5xl w-full mx-auto px-6">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="flex flex-col gap-6 md:gap-8"
           >
-            AI-Native Pipeline · 2026
-          </p>
-          <h1
-            className="font-gilroyBold text-6xl md:text-7xl tracking-tight leading-none"
-            style={{ color: "#2a4756" }}
-          >
-            Scout
-          </h1>
-          <p
-            className="text-lg font-satoshi leading-relaxed mt-2"
-            style={{ color: "rgba(42,71,86,0.65)" }}
-          >
-            A zero-noise job intelligence platform. Autonomous. AI-powered. Built to eliminate the cognitive tax of job hunting.
-          </p>
-        </motion.div>
-
-        {/* Project Meta Metrics Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y"
-          style={{ borderColor: "rgba(42,71,86,0.12)" }}
-        >
-          {[
-            { label: "Role", value: META.role },
-            { label: "Timeline", value: META.timeline },
-            { label: "Language", value: META.language },
-            { label: "Stars", value: `★ ${META.stars}` },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex flex-col gap-0.5">
-              <span
-                className="text-[10px] font-gilroyBold uppercase tracking-widest"
-                style={{ color: "rgba(42,71,86,0.35)" }}
-              >
-                {label}
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full text-[10px] font-gilroyBold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/25 shadow-sm">
+                AI System Design
               </span>
-              <span
-                className="text-sm font-gilroyBold"
-                style={{ color: "rgba(42,71,86,0.75)" }}
-              >
-                {value}
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-white/60">
+                Autonomous Job Intelligence
               </span>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Tags Stack and Action Links */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-        >
-          <div className="flex flex-wrap gap-2 max-w-[500px]">
-            {META.stack.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 rounded-full text-xs font-gilroyBold"
-                style={{
-                  background: "rgba(42,71,86,0.05)",
-                  border: "1px solid rgba(42,71,86,0.1)",
-                  color: "rgba(42,71,86,0.6)",
-                }}
-              >
-                {tag}
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-white/60 flex items-center gap-1">
+                <span>⏱️</span> 6 Min Read
               </span>
-            ))}
-          </div>
+            </motion.div>
 
-          <div className="flex gap-3">
-            <a
-              href={META.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-              style={{
-                background: "rgba(5,5,5,0.88)",
-                border: "1px solid rgba(16,185,129,0.2)",
-                color: "#e8f5e9",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              }}
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-5xl md:text-8xl font-gilroyBold tracking-tight leading-[0.95] text-white"
             >
-              <GithubIcon size={14} className="transition-transform group-hover:rotate-6" />
-              GitHub ↗
-            </a>
-            <a
-              href={META.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-gilroyBold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-              style={{
-                background: "rgba(16,185,129,0.12)",
-                border: "1px solid rgba(16,185,129,0.3)",
-                color: "#2a4756",
-              }}
+              Scout Engine
+            </motion.h1>
+
+            <motion.p 
+              variants={fadeInUp}
+              className="text-lg md:text-2xl font-gilroyRegular leading-relaxed text-white/70 max-w-3xl"
             >
-              <ExternalLink size={13} />
-              Live Demo
-            </a>
-          </div>
-        </motion.div>
+              An autonomous recruiting agent that crawls ATS platforms, runs dual-stage LLM evaluation pipelines on Groq Cloud, and morphs resumes dynamically to eliminate job application friction.
+            </motion.p>
 
-        {/* Narrative Flow */}
-        <div className="flex flex-col gap-12 mt-8 font-satoshi text-base leading-relaxed text-slate-800">
+            {/* Action buttons */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mt-2">
+              <a 
+                href="https://github.com/DivineDB/Scout" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-gilroyBold bg-white text-black transition-transform hover:scale-[1.02] active:scale-95 shadow-md"
+              >
+                <FaGithub size={16} />
+                <span>Explore Scout Repository</span>
+                <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
 
-          {/* TLDR / Brief */}
-          <section className="flex flex-col gap-2 border-l-2 pl-4" style={{ borderColor: "rgba(162,249,145,0.5)" }}>
-            <span className="text-[10px] font-gilroyBold uppercase tracking-widest text-[#2a4756]/50">Summary</span>
-            <p className="text-lg text-[#2a4756] font-gilroyBold leading-snug">
-              Scout is an intelligent job search interface custom-built to distill chaotic, raw employment listings into clean, zero-noise action paths.
-            </p>
-          </section>
+              <a 
+                href="https://scout-pink-nine.vercel.app" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-gilroyBold bg-[#10b981] text-[#0a0b0d] transition-transform hover:scale-[1.02] active:scale-95 shadow-md"
+              >
+                <span>Launch Live Preview</span>
+                <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </motion.div>
 
-          {/* Section 1: UX Challenge */}
-          <section className="flex flex-col gap-4">
-            <h2 className="text-xl font-gilroyBold text-[#2a4756]">UX Challenge: Cognitive Fatigue</h2>
-            <p>
-              Standard job boards overload job hunters with repetitive postings, bloated layouts, and buried metadata. Sifting through hundreds of listings causes visual fatigue. The challenge was structuring dense text so that relevance scores, tech alignments, and application paths are scanned in under 250ms.
-            </p>
-          </section>
-
-          {/* Section 2: Obsidian Mint Surface Architecture */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
-            <div className="flex flex-col gap-4">
-              <h2 className="text-xl font-gilroyBold text-[#2a4756]">01. Conceptual Surface Architecture</h2>
-              <p>
-                Scout is built around the <strong>Obsidian Mint</strong> design system. Rather than using harsh borders and high-opacity dividing lines, Scout separates modules using a gradual HSL-based surface ramp stacked in a strict conceptual sequence:
-              </p>
-              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-                <li>
-                  <strong className="text-slate-900">Base Frame & Glassy Overlay:</strong> An Obsidian base frame provides a dark canvas to reduce eye strain, while a glassy overlay acts as a container for secondary search filter modules.
-                </li>
-                <li>
-                  <strong className="text-slate-900">Muted Panels & Overlay Cards:</strong> Slightly lighter elevated containers holding individual job listings to visually separate cards.
-                </li>
-                <li>
-                  <strong className="text-slate-900">Emerald Signature Accent:</strong> High relevance matches, active markers, and primary action CTAs utilize an Emerald Mint highlight, catching focus within milliseconds.
-                </li>
-              </ul>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
-                Workflow Visual: Isometric Elevation Stack
-              </span>
-              {/* Stacked isometric layers */}
-              <div className="relative h-44 w-full bg-black/95 rounded-xl overflow-hidden border border-white/10 flex items-center justify-center">
-                <div className="absolute inset-0 opacity-10" style={{
-                  backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-                  backgroundSize: "16px 16px"
-                }} />
-                
-                <div className="relative w-full max-w-[200px] h-[120px] flex flex-col items-center justify-center" style={{ perspective: "400px" }}>
-                  {/* Layer 3 */}
-                  <div 
-                    className="absolute w-[140px] h-[35px] rounded border border-white/10 flex items-center px-2 shadow-2xl"
-                    style={{
-                      background: "#27272a",
-                      transform: "rotateX(55deg) rotateZ(-30deg) translateZ(30px)",
-                      boxShadow: "0 10px 20px rgba(0,0,0,0.5)"
-                    }}
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
-                    <div className="h-1 w-12 bg-white/30 rounded" />
-                  </div>
-                  {/* Layer 2 */}
-                  <div 
-                    className="absolute w-[150px] h-[35px] rounded border border-white/5 flex items-center px-2"
-                    style={{
-                      background: "#18181b",
-                      transform: "rotateX(55deg) rotateZ(-30deg) translateZ(10px)",
-                    }}
-                  >
-                    <div className="h-1 w-16 bg-white/20 rounded" />
-                  </div>
-                  {/* Layer 1 */}
-                  <div 
-                    className="absolute w-[160px] h-[35px] rounded border border-white/5 flex items-center px-2"
-                    style={{
-                      background: "#09090b",
-                      transform: "rotateX(55deg) rotateZ(-30deg) translateZ(-10px)",
-                    }}
-                  >
-                    <div className="h-1 w-20 bg-white/10 rounded" />
-                  </div>
+            {/* Case Study Metadata Grid */}
+            <motion.div 
+              variants={fadeInUp} 
+              className="flex flex-wrap items-center gap-x-12 gap-y-4 mt-8 text-xs md:text-sm border-y border-white/10 py-4 w-full max-w-4xl"
+            >
+              {[
+                { label: "Role", value: "Design & Development" },
+                { label: "Timeline", value: "12 Weeks" },
+                { label: "Industry", value: "HR Tech (Developer Tool)" }
+              ].map((metric) => (
+                <div key={metric.label} className="flex items-center gap-2">
+                  <span className="text-white text-xs font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
+                  <span className="font-gilroyRegular text-sm text-white/60">{metric.value}</span>
                 </div>
-              </div>
-            </div>
-          </section>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
 
-          {/* Section 3: Two-Stage AI Filter */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
-            <div className="md:order-2 flex flex-col gap-4">
-              <h2 className="text-xl font-gilroyBold text-[#2a4756]">02. Two-Stage Structured AI Filter</h2>
-              <p>
-                Extracting salary, skills, and relevance matches using heavy 70B parameter LLMs directly on raw, noisy scraped web targets is slow and financially unsustainable. Scout utilizes a two-tier extraction pipeline:
-              </p>
-              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-                <li>
-                  <strong className="text-slate-900">Lightweight Classifier:</strong> A fast classifier (llama-3.1-8b) runs instant pass/fail evaluations on incoming postings.
-                </li>
-                <li>
-                  <strong className="text-slate-900">Deep Distiller:</strong> Only matches that pass are dispatched to a heavy LLM (llama-3.3-70b) to generate clean JSON schemas and resume-tailoring drafts, reducing API overhead costs by 75%.
-                </li>
-              </ul>
-            </div>
-            <div className="md:order-1 flex flex-col gap-2">
-              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
-                Workflow Diagram: Pipeline Architecture
-              </span>
-              {/* Pipeline flow */}
-              <div
-                className="rounded-2xl p-5 flex flex-col gap-4"
-                style={{
-                  background: "rgba(5,5,5,0.92)",
-                  border: "1px solid rgba(16,185,129,0.1)",
-                  boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
-                }}
-              >
-                <p className="text-[9px] font-gilroyBold uppercase tracking-[0.18em] text-[#10b981]/60">
-                  Pipeline Architecture
-                </p>
-                {[
-                  {
-                    stage: "01",
-                    name: "Ghost Sweep Engine",
-                    desc: "CRON → Google Jobs · RemoteOK · ATS",
-                    color: "rgba(16,185,129,0.9)",
-                  },
-                  {
-                    stage: "02",
-                    name: "Rapid Classifier",
-                    desc: "llama-3.1-8b · filter bad matches",
-                    color: "rgba(16,185,129,0.6)",
-                  },
-                  {
-                    stage: "03",
-                    name: "Deep Distiller",
-                    desc: "llama-3.3-70b · JSON hooks + resume morph",
-                    color: "rgba(16,185,129,0.4)",
-                  },
-                  {
-                    stage: "04",
-                    name: "Supabase Realtime",
-                    desc: "Live staging → Optimistic UI push",
-                    color: "rgba(16,185,129,0.25)",
-                  },
-                ].map((step, i) => (
-                  <div key={step.stage} className="flex items-start gap-3">
-                    <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
-                      <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-gilroyBold"
-                        style={{
-                          background: `${step.color}15`,
-                          border: `1px solid ${step.color}35`,
-                          color: step.color,
-                        }}
-                      >
-                        {step.stage}
-                      </div>
-                      {i < 3 && (
-                        <div
-                          className="w-px h-6"
-                          style={{
-                            background: `linear-gradient(to bottom, ${step.color}25, transparent)`,
-                          }}
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-gilroyBold" style={{ color: step.color }}>{step.name}</span>
-                      <span className="text-[10px] text-white/40">{step.desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Section 4: Ghost Sweep Engine */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
-            <div className="flex flex-col gap-4">
-              <h2 className="text-xl font-gilroyBold text-[#2a4756]">03. The Ghost Sweep Engine</h2>
-              <p>
-                To aggregate jobs autonomously, a background worker runs scraping scripts across multiple job source endpoints.
-              </p>
-              <ul className="list-disc list-inside text-sm text-slate-700 flex flex-col gap-2">
-                <li>
-                  <strong className="text-slate-900">Cryptographic Deduplication:</strong> Scraped description text passes through local hash comparison filters to drop duplicate listings before dispatching LLM queries.
-                </li>
-                <li>
-                  <strong className="text-slate-900">Staging & Realtime Broadcast:</strong> Live processing states sync over Supabase Realtime pipelines, rendering optimistic draft states and preventing layout jumps.
-                </li>
-              </ul>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[9px] font-gilroyBold text-center uppercase tracking-widest text-slate-400">
-                Workflow Visual: Scraped Score Feeds
-              </span>
-              <ScreenPlaceholder label="Scout Score Metrics" />
-            </div>
-          </section>
-
-          {/* Section 5: Specifications Reference */}
-          <section className="border-t pt-10 flex flex-col gap-6" style={{ borderColor: "rgba(42,71,86,0.1)" }}>
-            <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-gilroyBold text-[#2a4756]">System Specifications Reference</h2>
-              <p className="text-sm text-slate-600">
-                Direct reference specifications detailing theme layout hierarchies, focus ring rules, and transition speeds.
+        {/* Scroll down indicator */}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: [0, 1, 0], y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer text-white/40 select-none z-10"
+          onClick={() => {
+            const el = document.getElementById("overview");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          <span className="font-gilroyRegular text-[10px] uppercase tracking-[0.2em]">Scroll to start</span>
+          <span className="text-xs">▼</span>
+        </motion.div>
+      </section>
+      
+      {/* ── CASE STUDY DATA ── */}
+      <section className="w-full max-w-5xl mx-auto px-6 py-4">
+        
+        {/* ── 01. EXECUTIVE BRIEF ── */}
+        <motion.div 
+          id="overview"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">01. Executive Summary</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Project Overview</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-6">
+              <p className="font-gilroyRegular text-base md:text-lg leading-relaxed text-white/70">
+                Modern job boards force candidates to parse through bloated formatting and irrelevant listings just to find basic details like salary caps, tech requirements, or visa sponsorship. Scout is a self-hosted command center designed to automate this entire research and preparation phase. By combining scheduler-driven scrapers, a dual-stage Groq LLM filter, and a dynamic PDF resume generator, Scout transforms the application process from manual grinding into surgical precision.
               </p>
             </div>
             
-            {/* Interactive design showcase component */}
-            <motion.div
-              key="design-tokens"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl p-6 flex flex-col gap-6"
-              style={{
-                background: "rgba(10,18,22,0.95)",
-                border: "1px solid rgba(16,185,129,0.15)",
-                boxShadow: "0 20px 50px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <p
-                  className="text-[10px] font-gilroyBold uppercase tracking-[0.2em]"
-                  style={{ color: "#10b981" }}
-                >
-                  Design Element System Showcase
+            {/* Embedded interactive terminal simulation */}
+            <div className="lg:col-span-6">
+              <TerminalSimulator />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 02. THE HUMAN STORY ── */}
+        <motion.div 
+          id="story"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">02. Empathy &amp; Context</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">The Job Hunting Grind</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg leading-relaxed text-white/70 space-y-6 max-w-3xl">
+            <p>
+              Job hunting is notoriously exhausting. Engineers spend hours navigating multiple job boards (Google Jobs, LinkedIn, RemoteOK), filtering out roles that don&apos;t fit their salary bands or visa requirements, and tracking everything in massive, manually maintained spreadsheets. 
+            </p>
+            <p>
+              Worse yet, to satisfy Applicant Tracking Systems (ATS), candidates must meticulously alter their resume bullet points for every single application. High-intent outreach also requires writing custom cold emails and LinkedIn messages to hiring managers.
+            </p>
+            <p>
+              I set out to build an autonomous agent that could handle the heavy lifting of research and preparation. It sweeps job boards, classifies matches against user preferences, extracts skill gaps, and prepares outreach hooks and customized PDF resumes on demand.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 03. FIELD DISCOVERY ── */}
+        <motion.div 
+          id="observations"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">03. Field Observations</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Observations</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="space-y-12 max-w-3xl">
+            <div className="relative pl-6 border-l-2 border-[#10b981]/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-white mb-2">Manual parsing is a major time sink</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-white/60 leading-relaxed">
+                Candidates spend upwards of 75% of their search time parsing wall-of-text descriptions simply checking for blockers like missing visa sponsorship, remote location mismatch, or low salary ranges.
+              </p>
+            </div>
+            <div className="relative pl-6 border-l-2 border-[#10b981]/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-white mb-2">Resume tailoring is tedious and slow</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-white/60 leading-relaxed">
+                Tailoring bullet points to match the target stack is vital for ATS passing, but doing it manually per role is highly repetitive and slows down application rates to just 2–3 submittals per day.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 04. PAIN POINTS ── */}
+        <motion.div 
+          id="painpoints"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">04. Friction &amp; Blockers</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Friction &amp; Blockers</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl">
+            <div className="p-6 md:p-8 bg-red-500/[0.02] border border-red-500/10 rounded-2xl flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="font-gilroyBold text-xl text-white mb-3 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                  Cognitive Fatigue
+                </h4>
+                <p className="font-gilroyRegular text-base text-white/60 leading-relaxed">
+                  Visual clutter and repetitiveness across popular job boards dilute high-quality leads, leading to application burnout and reduced output quality.
                 </p>
-                <span className="text-[9px] font-gilroyBold uppercase tracking-widest px-2 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>
-                  Obsidian Mint
-                </span>
+              </div>
+            </div>
+            <div className="p-6 md:p-8 bg-red-500/[0.02] border border-red-500/10 rounded-2xl flex flex-col justify-between shadow-sm">
+              <div>
+                <h4 className="font-gilroyBold text-xl text-white mb-3 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                  Lack of Preparation Context
+                </h4>
+                <p className="font-gilroyRegular text-base text-white/60 leading-relaxed">
+                  Candidates apply blindly without knowing where their skills gap lies relative to the job requirements, creating interview friction and high rejection rates.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 05. INFERENCE ── */}
+        <motion.div 
+          id="synthesis"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">05. Research Synthesis</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Research Synthesis</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="space-y-12 max-w-3xl">
+            <div className="relative pl-6 border-l-2 border-[#10b981]/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-white mb-2">Automate the filtration pipeline</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-white/60 leading-relaxed">
+                By running scheduled classifiers on raw text datasets in the background, we can drop the visual tax of search entirely. Only matched entries pass to the candidate.
+              </p>
+            </div>
+            <div className="relative pl-6 border-l-2 border-[#10b981]/30">
+              <h4 className="font-gilroyBold text-xl md:text-2xl text-white mb-2">Optimistic, non-blocking UI queueing</h4>
+              <p className="font-gilroyRegular text-base md:text-lg text-white/60 leading-relaxed">
+                Background scraping shouldn&apos;t cause layout shifting. Real-time updates must queue incoming results in a notification drawer, letting the user merge them on command.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 06. PRODUCT BOUNDARIES ── */}
+        <motion.div 
+          id="scope"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">06. Project Scope</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Scope of Work</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg leading-relaxed text-white/70 space-y-6 max-w-3xl">
+            <p>
+              Scout aims to create a highly focused, self-hosted job hunting dashboard. It abstracts all parsing, scraping, scoring, and customization logistics away from the candidate.
+            </p>
+            <p>
+              Rather than being a social network or generic spreadsheet tracker, Scout operates as a background recruitment agent. It monitors ATS feeds, classifies suitability on Groq Cloud, dynamically tweaks PDF layout engines, and provides tailored outreach.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 07. USER SEGMENTATION ── */}
+        <motion.div 
+          id="personas"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">07. Target Personas</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Research &amp; User Personas</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="font-gilroyRegular text-base md:text-lg text-white/70 space-y-6 max-w-3xl mb-12">
+            <p>
+              To structure the user experience, I mapped out the primary user segments and their critical needs:
+            </p>
+          </div>
+
+          {/* Personas vertical stack (1x1 grid) */}
+          <div className="flex flex-col gap-24 mt-16 max-w-4xl">
+            
+            {/* Persona 1: Aarav Mehta */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start pb-16 border-b border-white/5">
+              <div className="sm:col-span-4 flex flex-col items-center text-center">
+                <div className="w-full aspect-[3/4] max-w-[200px] rounded-2xl overflow-hidden mb-4 shadow-md border border-white/10 bg-[#121417] select-none">
+                  <div className="w-full h-full bg-[#10b981]/10 flex items-center justify-center text-4xl">👨‍💻</div>
+                </div>
+                <h4 className="font-gilroyBold text-lg text-white leading-tight">Aarav Mehta</h4>
+                <p className="font-gilroyRegular text-xs text-white/60 mt-1">Senior Front-End Dev</p>
+                <p className="font-gilroyRegular text-xs text-white/40 mt-0.5">Focus: Hybrid Next.js / React</p>
               </div>
 
-              {/* Grid visualizers */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Visual 1 */}
-                <div className="flex flex-col gap-3">
-                  <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    Elevation Architecture
-                  </span>
-                  <div className="relative h-44 w-full bg-black/40 rounded-xl overflow-hidden border border-white/5 flex items-center justify-center">
-                    <div className="absolute inset-0 opacity-10" style={{
-                      backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-                      backgroundSize: "16px 16px"
-                    }} />
-                    
-                    <div className="relative w-full max-w-[200px] h-[120px] flex flex-col items-center justify-center" style={{ perspective: "400px" }}>
-                      <motion.div 
-                        className="absolute w-[140px] h-[35px] rounded border flex items-center px-2 shadow-2xl transition-all duration-300"
-                        animate={{
-                          translateZ: activeShowcaseTab === "surface" ? 40 : 30,
-                          borderColor: activeShowcaseTab === "surface" ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.1)",
-                          scale: activeShowcaseTab === "surface" ? 1.05 : 1,
-                        }}
-                        style={{
-                          background: "#27272a",
-                          transform: "rotateX(55deg) rotateZ(-30deg)",
-                          boxShadow: activeShowcaseTab === "surface" ? "0 12px 28px rgba(16,185,129,0.25)" : "0 10px 20px rgba(0,0,0,0.5)"
-                        }}
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
-                        <div className="h-1 w-12 bg-white/30 rounded" />
-                      </motion.div>
+              <div className="sm:col-span-8 flex flex-col gap-6">
+                <p className="font-gilroyRegular text-base text-white/70 italic leading-relaxed pl-4 border-l-2 border-white/20">
+                  &ldquo;I want a central dashboard that instantly filters out companies that don&apos;t sponsor visas or meet my salary requirements so I can focus only on relevant senior roles.&rdquo;
+                </p>
+                
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-white/40 mb-1">Goals</h5>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Filter out non-visa sponsoring boards immediately and generate personalized cold emails for hiring managers.
+                  </p>
+                </div>
 
-                      <motion.div 
-                        className="absolute w-[150px] h-[35px] rounded border flex items-center px-2 transition-all duration-300"
-                        animate={{
-                          translateZ: activeShowcaseTab === "surface" ? 15 : 10,
-                          borderColor: activeShowcaseTab === "surface" ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.05)",
-                          scale: activeShowcaseTab === "surface" ? 1.02 : 1,
-                        }}
-                        style={{
-                          background: "#18181b",
-                          transform: "rotateX(55deg) rotateZ(-30deg)",
-                        }}
-                      >
-                        <div className="h-1 w-16 bg-white/20 rounded" />
-                      </motion.div>
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-white/40 mb-1">Frustrations</h5>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Spending hours parsing job descriptions to check basic salary parameters. Writing custom pitch letters repeatedly.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                      <motion.div 
-                        className="absolute w-[160px] h-[35px] rounded border flex items-center px-2 transition-all duration-300"
-                        animate={{
-                          translateZ: activeShowcaseTab === "surface" ? -5 : -10,
-                          borderColor: activeShowcaseTab === "surface" ? "rgba(16,185,129,0.2)" : "rgba(255,255,255,0.05)",
-                        }}
-                        style={{
-                          background: "#09090b",
-                          transform: "rotateX(55deg) rotateZ(-30deg)",
-                        }}
-                      >
-                        <div className="h-1 w-20 bg-white/10 rounded" />
-                      </motion.div>
-                    </div>
-                    
-                    <div className="absolute bottom-2 left-2 flex flex-col gap-0.5 text-[8px] transition-colors duration-200">
-                      <span style={{ color: activeShowcaseTab === "surface" ? "#10b981" : "rgba(255,255,255,0.4)", fontWeight: activeShowcaseTab === "surface" ? "bold" : "normal" }}>▲ Overlay Card (Active Info)</span>
-                      <span style={{ color: activeShowcaseTab === "surface" ? "rgba(16,185,129,0.8)" : "rgba(255,255,255,0.4)" }}>■ Muted Panel (Secondary Container)</span>
-                      <span style={{ color: activeShowcaseTab === "surface" ? "rgba(16,185,129,0.6)" : "rgba(255,255,255,0.4)" }}>▼ Base Canvas (Obsidian Frame)</span>
-                    </div>
+            {/* Persona 2: Sarah Jenkins */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start">
+              <div className="sm:col-span-4 flex flex-col items-center text-center">
+                <div className="w-full aspect-[3/4] max-w-[200px] rounded-2xl overflow-hidden mb-4 shadow-md border border-white/10 bg-[#121417] select-none">
+                  <div className="w-full h-full bg-[#10b981]/20 flex items-center justify-center text-4xl">👩‍💻</div>
+                </div>
+                <h4 className="font-gilroyBold text-lg text-white leading-tight">Sarah Jenkins</h4>
+                <p className="font-gilroyRegular text-xs text-white/60 mt-1">Junior Full-Stack Developer</p>
+                <p className="font-gilroyRegular text-xs text-white/40 mt-0.5">Focus: Entry-Level Postings</p>
+              </div>
+
+              <div className="sm:col-span-8 flex flex-col gap-6">
+                <p className="font-gilroyRegular text-base text-white/70 italic leading-relaxed pl-4 border-l-2 border-white/20">
+                  &ldquo;I need to know exactly which requirements I miss for a job description, and get advice on how to address those missing pieces during interviews.&rdquo;
+                </p>
+                
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-white/40 mb-1">Goals</h5>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Find entry-level roles, track skill gaps, and get objection-handling cards prepared for upcoming calls.
+                  </p>
+                </div>
+
+                <div>
+                  <h5 className="font-gilroyBold text-xs uppercase tracking-wider text-white/40 mb-1">Frustrations</h5>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Applying to positions and getting filtered out by ATS algorithms because the resume bullet points weren&apos;t customized.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 08. DESIGN SPECIFICATION ── */}
+        <motion.div 
+          id="strategy"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">08. Design Strategy</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Core Objectives &amp; Strategy</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <p className="font-gilroyRegular text-base md:text-lg text-white/70 mb-8 max-w-3xl">
+            To make the job application process seamless, Scout is designed around four key product objectives:
+          </p>
+
+          {/* Design planning grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-gilroyRegular">
+            
+            <div className="flex flex-col gap-2 p-6 bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl shadow-sm hover:bg-white/[0.05] transition-all duration-300">
+              <span className="text-base font-gilroyBold text-white">1. Dual-Pipeline Staging Dashboard</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Separates incoming scraped jobs into a low-intent &ldquo;Casual Hunt&rdquo; queue for review, and a high-intent &ldquo;Serious Mode&rdquo; pipeline for active applications.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl shadow-sm hover:bg-white/[0.05] transition-all duration-300">
+              <span className="text-base font-gilroyBold text-white">2. Realtime Staging Queue Pill</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Filters incoming background scrapes through a floating indicator, buffering additions via Supabase Realtime to prevent jarring layout jumps.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl shadow-sm hover:bg-white/[0.05] transition-all duration-300">
+              <span className="text-base font-gilroyBold text-white">3. Sniper Resume Morpher</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Tailors a custom PDF resume dynamically using `@react-pdf/renderer` by re-ordering project experience bullet points based on the target job stack.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 p-6 bg-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl shadow-sm hover:bg-white/[0.05] transition-all duration-300">
+              <span className="text-base font-gilroyBold text-white">4. Obsidian Mint Surface Ramp</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Built on a premium monochromatic dark container system with gradual surface levels, using an Emerald Mint signature accent strictly for match scores.
+              </p>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 09. THE 5 Ws ALIGNMENT ── */}
+        <motion.div 
+          id="5ws"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">09. Strategic Alignment</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">The 5 Ws Alignment</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-x-12">
+            
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">What?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                An autonomous, self-hosted job intelligence dashboard that crawls job boards, runs dual-stage LLM classifiers, and prepares custom outreach templates and resumes.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">Why?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                To bypass the hours spent parsing irrelevant descriptions, checking sponsorships, writing outreach scripts, and tailoring resumes by hand.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">When?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Runs automatically on a daily scheduler (CRON trigger) in the background, or dynamically on demand when pasting a manual listing URL.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">Who?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Software developers and system designers who want to streamline their job application process and avoid burnout.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">Where?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Self-hosted by the user, running client-side on Next.js 16 and syncing data over Supabase.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 text-left">
+              <span className="font-gilroyBold text-xl text-white">How?</span>
+              <p className="text-sm text-white/60 leading-relaxed">
+                Leveraging Next.js app routes, Firecrawl scraping APIs, Groq Cloud inference triggers (Llama 8B and 70B models), and `@react-pdf/renderer` layouts.
+              </p>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 10. INTERFACE SYSTEM ── */}
+        <motion.div 
+          id="walkthrough"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">10. System Interfaces</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Walkthrough: The Interface Command</h2>
+          
+          <div className="flex flex-col gap-24 mt-12">
+            
+            {/* Screen 1: Dual-Pipeline Dashboard */}
+            <div id="screen-1" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 1</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Dual-Pipeline Dashboard</h4>
+              </div>
+              
+              {/* Interactive Mockup 1 */}
+              <div 
+                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
+                onClick={() => setActiveMockupId("dashboard-mockup")}
+              >
+                <Mockup1 />
+              </div>
+
+              {/* Explanations Grid below image */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Layers size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Dual-Lane Organization</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Separates casual automated sweeps from high-intent roles that you actively choose to pitch, reducing cognitive load and visual noise.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Sliders size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Groq Suitability Scoring</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Calculates a 0–100 matching score for every card, parsing job parameters immediately and displaying them on dynamic, colored badges.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 2: Realtime Staging Queue */}
+            <div id="screen-2" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 2</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Realtime Staging Queue</h4>
+              </div>
+              
+              {/* Interactive Mockup 2 */}
+              <div 
+                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
+                onClick={() => setActiveMockupId("queue-mockup")}
+              >
+                <Mockup2 isZoomed={false} />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Info size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Buffer-Staging Pill</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Buffers background sweeps through Supabase Realtime alerts, notifying the candidate without displacing their focus or shifting lists unexpectedly.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <AlertTriangle size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Scheduled Sweeper Logs</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Integrates sweep counters and run histories, keeping developers informed on system performance and listing match yields.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 3: On-Demand URL Scouting */}
+            <div id="screen-3" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 3</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">On-Demand URL Scouting</h4>
+              </div>
+              
+              {/* Interactive Mockup 3 */}
+              <div 
+                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
+                onClick={() => setActiveMockupId("url-mockup")}
+              >
+                <Mockup3 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Database size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Instant Firecrawl Parser</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Paste any job URL directly. Firecrawl crawls the document schema, structures the raw HTML blocks, and inputs structured strings to Groq immediately.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Automated Qualification Review</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Runs instant evaluation checks verifying visa, base salary limits, and preferred location parameters before indexing cards.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 4: Sniper Resume Morpher */}
+            <div id="screen-4" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 4</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Sniper Resume Morpher</h4>
+              </div>
+              
+              {/* Interactive Mockup 4 */}
+              <div 
+                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
+                onClick={() => setActiveMockupId("resume-mockup")}
+              >
+                <Mockup4 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Sliders size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Dynamic Bullet-Point Alignment</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Uses `@react-pdf/renderer` layout engines to dynamically prioritize bullet points highlighting the exact technology requirements of the target description.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <DollarSign size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">ATS-Optimized Formatting</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Outputs compact, single-column, cleanly structured PDFs on demand to guarantee passing search parsers and automated recruiters.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 5: Shield Objections & Gap Analyzer */}
+            <div id="screen-5" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 5</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Shield Objections &amp; Gap Analyzer</h4>
+              </div>
+              
+              {/* Interactive Mockup 5 */}
+              <div 
+                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
+                onClick={() => setActiveMockupId("shield-mockup")}
+              >
+                <Mockup5 />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Activity size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Objection-Handling Preparation</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Provides suggestions on addressing skill mismatches and frames adjacent capabilities to ensure confident interview discussions.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Channel-Specific Outreach</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Prepares high-context cold-pitch copies keyed to Email, LinkedIn, or Twitter formatting to skip initial HR queues.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* ── 11. SYSTEM ARCHITECTURE ── */}
+        <motion.div 
+          id="architecture"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs text-white/70 font-bold block tracking-[0.18em] mb-1.5 uppercase">11. Technical Infrastructure</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Engineering for Blistering Speed</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch font-gilroyRegular">
+            
+            {/* Left: Zustand & Groq Classification */}
+            <div className="md:col-span-6 flex flex-col justify-between h-full">
+              <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] flex flex-col h-full gap-4 font-gilroyRegular shadow-sm">
+                <h3 className="text-base font-gilroyBold text-white flex items-center gap-2">
+                  <Terminal size={16} className="text-white" />
+                  Dual-Stage Groq Cloud Pipeline
+                </h3>
+                
+                <p className="text-xs md:text-sm text-white/70 leading-relaxed">
+                  Executing heavy 70B parameter LLM distillation directly on scraped job postings is cost-prohibitive. Scout implements a two-stage classification strategy. 
+                </p>
+                <p className="text-xs md:text-sm text-white/70 leading-relaxed">
+                  A lightweight model (Llama-3.1-8B-instant) filters out mismatches in milliseconds. Only passing roles are sent to the larger model (Llama-3.3-70B-versatile) for full context mapping and outreach generation.
+                </p>
+
+                <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4 mt-2">
+                  <div className="flex items-center gap-2 text-white/70">
+                    <Terminal size={14} className="text-white" />
+                    <span className="text-[10px] font-gilroyBold">scoutRouter.ts</span>
+                  </div>
+                  <span className="text-[8px] uppercase tracking-widest bg-white/5 border border-white/10 text-white px-2 py-0.5 rounded font-gilroyBold">AI Endpoint</span>
+                </div>
+
+                <div className="font-mono text-[10px] leading-relaxed overflow-x-auto premium-scrollbar text-white/80 flex-grow select-text animate-none bg-black/40 p-3 rounded-lg border border-white/5">
+                  <span className="text-pink-400">const</span> classifyJob = <span className="text-pink-400">async</span> (text) =&gt; &#123;
+                  <br />
+                  &nbsp;&nbsp;<span className="text-pink-400">const</span> isMatch = <span className="text-pink-400">await</span> groq.run(<span className="text-yellow-200/95">&quot;llama3-8b&quot;</span>, filterRules, text);
+                  <br />
+                  &nbsp;&nbsp;<span className="text-pink-400">if</span> (!isMatch) <span className="text-pink-400">return</span> <span className="text-blue-400">null</span>;
+                  <br />
+                  &nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-pink-400">await</span> groq.run(<span className="text-yellow-200/95">&quot;llama3-70b&quot;</span>, distillTemplate, text);
+                  <br />
+                  &#125;;
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Scraping Systems */}
+            <div className="md:col-span-6 flex flex-col justify-between h-full">
+              <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] flex flex-col h-full gap-4 font-gilroyRegular shadow-sm">
+                <h3 className="text-base font-gilroyBold text-white flex items-center gap-2">
+                  <Activity size={16} className="text-white" />
+                  Scheduled Ghost Sweeps
+                </h3>
+                
+                <p className="text-xs md:text-sm text-white/70 leading-relaxed">
+                  To keep the application queues filled, background workers operate on Cron schedules. The worker utilizes Serper.dev and Firecrawl to scan directories and ATS boards based on user profile preferences.
+                </p>
+                <p className="text-xs md:text-sm text-white/70 leading-relaxed">
+                  Cryptographic deduplication runs locally on database ingestion. The system logs sweep diagnostics inside `ghost_sweeps` tables to prevent duplicate API cycles and limit rates.
+                </p>
+
+                <div className="border-t border-white/10 pt-4 mt-2">
+                  <div className="flex items-center justify-between mb-2 text-[10px] font-gilroyBold text-white/60">
+                    <span>Cron Sweeper Script</span>
+                    <span className="text-white font-gilroyBold">cron_sweep.ts</span>
+                  </div>
+                  <div className="p-3 rounded-lg font-mono text-[9px] leading-relaxed bg-black/40 border border-white/5 text-white/80 overflow-x-auto premium-scrollbar select-text">
+                    <span className="text-pink-400">export async function</span> GET(req) &#123;
+                    <br />
+                    &nbsp;&nbsp;verifyCronSecret(req);
+                    <br />
+                    &nbsp;&nbsp;<span className="text-pink-400">const</span> rawJobs = <span className="text-pink-400">await</span> triggerSweeper(userProfile);
+                    <br />
+                    &nbsp;&nbsp;<span className="text-pink-400">return</span> syncWithSupabase(rawJobs);
+                    <br />
+                    &#125;
                   </div>
                 </div>
-
-                {/* Visual 2 */}
-                <div className="flex flex-col gap-3">
-                  <span className="text-[10px] font-gilroyBold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    Semantic Components
-                  </span>
-                  <motion.div 
-                    className="flex flex-col gap-2 p-3 bg-black/40 rounded-xl border h-44 justify-center transition-all duration-300"
-                    animate={{
-                      borderColor: (activeShowcaseTab === "accent" || activeShowcaseTab === "typography") ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.05)"
-                    }}
-                  >
-                    <motion.div 
-                      className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border transition-all duration-300"
-                      animate={{
-                        borderColor: activeShowcaseTab === "accent" ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.05)",
-                        scale: activeShowcaseTab === "accent" ? 1.03 : 1
-                      }}
-                    >
-                      <span className="text-[10px] transition-colors" style={{ color: activeShowcaseTab === "typography" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: activeShowcaseTab === "typography" ? "bold" : "normal" }}>Relevance Match</span>
-                      <motion.div 
-                        className="px-2 py-0.5 rounded-full text-[9px] font-gilroyBold" 
-                        style={{ background: "rgba(16,185,129,0.15)", color: "#10b981" }}
-                        animate={activeShowcaseTab === "accent" ? { scale: [1, 1.08, 1] } : {}}
-                        transition={activeShowcaseTab === "accent" ? { repeat: Infinity, duration: 1.5 } : {}}
-                      >
-                        98% Match
-                      </motion.div>
-                    </motion.div>
-                    
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                      <span className="text-[10px] transition-colors" style={{ color: activeShowcaseTab === "typography" ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.5)", textTransform: activeShowcaseTab === "typography" ? "uppercase" : "none", letterSpacing: activeShowcaseTab === "typography" ? "0.05em" : "normal" }}>Work Arrangement</span>
-                      <div className="px-2 py-0.5 rounded-full text-[9px] font-gilroyBold border border-white/10 text-white/80 font-mono">
-                        Hybrid · SF
-                      </div>
-                    </div>
-
-                    <motion.div 
-                      className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border transition-all duration-300 cursor-pointer" 
-                      animate={{
-                        borderColor: (activeShowcaseTab === "transitions" || activeShowcaseTab === "accent") ? "#10b981" : "rgba(255,255,255,0.05)",
-                        boxShadow: (activeShowcaseTab === "transitions" || activeShowcaseTab === "accent") ? "0 0 10px rgba(16,185,129,0.3)" : "none",
-                        x: activeShowcaseTab === "transitions" ? [0, -4, 4, -4, 0] : 0
-                      }}
-                      transition={activeShowcaseTab === "transitions" ? { repeat: Infinity, repeatDelay: 1.5, duration: 0.5 } : {}}
-                    >
-                      <span className="text-[10px] text-white/95">Interactive State</span>
-                      <span className="text-[8px] text-[#10b981] font-gilroyBold uppercase tracking-widest">Active Glow</span>
-                    </motion.div>
-                  </motion.div>
-                </div>
               </div>
+            </div>
 
-              {/* Selector */}
-              <div className="flex flex-col gap-4 border-t border-white/10 pt-5 mt-2">
-                <div className="flex flex-wrap gap-1.5">
-                  {[
-                    { id: "surface", label: "Surface Architecture" },
-                    { id: "accent", label: "Signature Accent" },
-                    { id: "typography", label: "Typography Hierarchy" },
-                    { id: "transitions", label: "Transition Mechanics" }
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveShowcaseTab(tab.id as "surface" | "accent" | "typography" | "transitions")}
-                      className="px-3.5 py-1.5 rounded-lg text-xs font-gilroyBold cursor-pointer transition-all duration-200"
-                      style={{
-                        background: activeShowcaseTab === tab.id ? "rgba(16, 185, 129, 0.15)" : "rgba(255, 255, 255, 0.02)",
-                        color: activeShowcaseTab === tab.id ? "#10b981" : "rgba(255, 255, 255, 0.5)",
-                        border: activeShowcaseTab === tab.id ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid rgba(255, 255, 255, 0.05)"
-                      }}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+          </div>
+        </motion.div>
 
-                <div className="bg-black/25 rounded-xl p-4 border border-white/5">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeShowcaseTab}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex flex-col gap-3"
-                    >
-                      {activeShowcaseTab === "surface" && (
-                        <>
-                          <h4 className="text-sm font-gilroyBold text-white">Conceptual Surface Architecture</h4>
-                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
-                            Scout operates on the <strong className="text-[#10b981]">Obsidian Mint</strong> design system. Rather than relying on heavy boundaries, it separates modules using a gradual HSL-based surface ramp stacked in a strict conceptual sequence:
-                          </p>
-                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
-                            <li><strong className="text-white/85">Base Frame:</strong> A deep Obsidian tone that provides a dark, non-reflective canvas to reduce eye strain and ground the page.</li>
-                            <li><strong className="text-white/85">Glassy Overlay:</strong> A translucent layer serving as a container for secondary search tools and filters to create visual depth.</li>
-                            <li><strong className="text-white/85">Muted Panels & Overlay Cards:</strong> Elevated container surfaces hosting individual listings to make cards feel raised.</li>
-                            <li><strong className="text-white/85">Micro-Borders:</strong> Hairline dividers isolating active/hover states without introducing layout clutter.</li>
-                          </ul>
-                        </>
-                      )}
-                      {activeShowcaseTab === "accent" && (
-                        <>
-                          <h4 className="text-sm font-gilroyBold text-white">High-Impact Signature Accent</h4>
-                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
-                            By keeping the canvas monochromatic and reserving color strictly for key checkpoints, searchers can scan listings with rapid throughput:
-                          </p>
-                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
-                            <li><strong className="text-white/85">Emerald Mint:</strong> Highlight accent reserved exclusively for high-relevance matches, active status anchors, and primary action CTAs.</li>
-                            <li><strong className="text-white/85">Guiding Focus:</strong> Keeps visual weight centered on matches, allowing searchers to evaluate alignments in a fraction of a second.</li>
-                          </ul>
-                        </>
-                      )}
-                      {activeShowcaseTab === "typography" && (
-                        <>
-                          <h4 className="text-sm font-gilroyBold text-white">Typographic Hierarchy</h4>
-                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
-                            Balances information-rich job data with premium, elegant editorial spacing:
-                          </p>
-                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
-                            <li><strong className="text-white/85">Primary Headers:</strong> Bold, geometric sans-serif typefaces set in large sizes to establish immediate context.</li>
-                            <li><strong className="text-white/85">Semantic Labels:</strong> Small, wide-spaced, uppercase characters for metadata categories (e.g. ROLE, TIMELINE) to separate them from content.</li>
-                            <li><strong className="text-white/85">Body Copy:</strong> High-legibility sans-serif fonts with generous line heights to make job summaries readable at a glance.</li>
-                          </ul>
-                        </>
-                      )}
-                      {activeShowcaseTab === "transitions" && (
-                        <>
-                          <h4 className="text-sm font-gilroyBold text-white">Transition Mechanics</h4>
-                          <p className="text-xs font-satoshi text-white/70 leading-relaxed">
-                            Interactions utilize physics-inspired animations to make navigation feel tactile and natural:
-                          </p>
-                          <ul className="text-xs font-satoshi text-white/60 flex flex-col gap-1.5 list-disc list-inside">
-                            <li><strong className="text-white/85">Perspective Crossfade:</strong> Transitions between tab perspectives use a soft fade-and-slide motion to prevent jarring jumps.</li>
-                            <li><strong className="text-white/85">Spring-Action Anchors:</strong> Action items use low-mass spring equations, making hover and active states feel bouncy and organic.</li>
-                          </ul>
-                        </>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+        {/* ── 12. DATABASE SCHEMA ── */}
+        <motion.div 
+          id="schema"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs text-white/70 font-bold block tracking-[0.18em] mb-1.5 uppercase">12. Database Schema</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">Relational Architecture</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-gilroyRegular max-w-4xl">
+            {/* Table 1: jobs */}
+            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] shadow-sm flex flex-col gap-3">
+              <h4 className="text-sm font-gilroyBold text-white flex items-center gap-2">
+                <Database size={15} />
+                Table: `jobs`
+              </h4>
+              <div className="overflow-x-auto text-[11px] font-mono leading-relaxed text-white/80">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-white/10 text-[9px] uppercase tracking-wider text-white/40">
+                      <th className="pb-1">Column</th>
+                      <th className="pb-1">Type</th>
+                      <th className="pb-1">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-white/5"><td className="py-1 text-[#10b981]">id</td><td className="py-1">uuid</td><td className="py-1">PK, auto-generated</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">status</td><td className="py-1">text</td><td className="py-1">casual or serious</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">match_score</td><td className="py-1">int</td><td className="py-1">0-100 score rating</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">match_explanation</td><td className="py-1">text</td><td className="py-1">one-sentence AI rationale</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">outreach_hooks</td><td className="py-1">jsonb</td><td className="py-1">cached copy by channel</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">objection_strategies</td><td className="py-1">text[]</td><td className="py-1">cached objection handling</td></tr>
+                  </tbody>
+                </table>
               </div>
-            </motion.div>
-          </section>
+            </div>
+
+            {/* Table 2: user_profile */}
+            <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] shadow-sm flex flex-col gap-3">
+              <h4 className="text-sm font-gilroyBold text-white flex items-center gap-2">
+                <Database size={15} />
+                Table: `user_profile`
+              </h4>
+              <div className="overflow-x-auto text-[11px] font-mono leading-relaxed text-white/80">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-white/10 text-[9px] uppercase tracking-wider text-white/40">
+                      <th className="pb-1">Column</th>
+                      <th className="pb-1">Type</th>
+                      <th className="pb-1">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-white/5"><td className="py-1 text-[#10b981]">id</td><td className="py-1">uuid</td><td className="py-1">PK, auto-generated</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">salary_min</td><td className="py-1">int</td><td className="py-1">minimum salary threshold</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">skills</td><td className="py-1">jsonb</td><td className="py-1">list of technologies &amp; level</td></tr>
+                    <tr className="border-b border-white/5"><td className="py-1">preferred_roles</td><td className="py-1">text[]</td><td className="py-1">preferred roles mappings</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 13. API REFERENCE ── */}
+        <motion.div 
+          id="api"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="min-h-screen flex flex-col justify-center py-20"
+        >
+          <span className="font-gilroyBold text-xs text-white/70 font-bold block tracking-[0.18em] mb-1.5 uppercase">13. API Endpoints</span>
+          <h2 className="font-gilroyBold text-3xl md:text-5xl text-white tracking-tight mb-4">API Reference</h2>
+          <div className="w-full h-px bg-white/10 mb-8" />
+          
+          <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02] shadow-sm font-gilroyRegular text-xs max-w-4xl">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-white/[0.03] border-b border-white/10 text-[9px] uppercase tracking-wider text-white/50 font-gilroyBold">
+                  <th className="p-4">Endpoint</th>
+                  <th className="p-4">Method</th>
+                  <th className="p-4">Engine</th>
+                  <th className="p-4">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 font-mono text-[10px] text-white/80">
+                {[
+                  { route: "/api/scout", method: "POST", engine: "Groq + Firecrawl", desc: "Scrape URL → AI distill → save job" },
+                  { route: "/api/scout/distill", method: "POST", engine: "Groq + Firecrawl", desc: "Re-evaluate existing job by ID" },
+                  { route: "/api/job/analyze-gaps", method: "POST", engine: "Groq Llama 8B", desc: "Perform skill gap assessment" },
+                  { route: "/api/job/generate-hook", method: "POST", engine: "Groq Llama 8B", desc: "Create channel-specific pitch outreach copy" },
+                  { route: "/api/cron/sweep", method: "GET/POST", engine: "Groq + Serper + Resend", desc: "Trigger scheduled crawler checks" }
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-white/[0.01] transition-colors">
+                    <td className="p-4 text-[#10b981]">{row.route}</td>
+                    <td className="p-4"><span className="px-2 py-0.5 rounded bg-white/5 text-white text-[8px] font-gilroyBold">{row.method}</span></td>
+                    <td className="p-4 text-white/60">{row.engine}</td>
+                    <td className="p-4 font-gilroyRegular text-[11px] text-white/70">{row.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+      </section>
+
+      {/* ── PORTFOLIO FOOTER ── */}
+      <section className="w-full py-16 border-t border-white/10">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col gap-12">
+          
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-b border-white/5 pb-8">
+            <div className="flex flex-col gap-1 text-center sm:text-left">
+              <h3 className="text-xl font-gilroyBold text-white">Thanks for reading!</h3>
+              <p className="text-xs text-white/60">Let&apos;s collaborate to design and engineer premium interface systems.</p>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <a 
+                href="https://github.com/DivineDB" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2.5 rounded-full border border-white/15 bg-white/5 text-white hover:bg-[#10b981] hover:text-[#0a0b0d] transition-all"
+                aria-label="GitHub"
+              >
+                <FaGithub size={16} />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/divyansh-baghel/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2.5 rounded-full border border-white/15 bg-white/5 text-white hover:bg-[#10b981] hover:text-[#0a0b0d] transition-all"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin size={16} />
+              </a>
+            </div>
+          </div>
+
+          {/* Links grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            
+            <Link 
+              href="/work/pos-panel" 
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-white/10 p-5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+            >
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[9px] font-gilroyRegular text-white/60 uppercase tracking-[0.15em]">UX Case Study</span>
+                <h5 className="font-gilroyBold text-base text-white">BreezePOS</h5>
+                <p className="text-xs text-white/70 leading-relaxed">
+                  A touchscreen-optimized countertop register and real-time inventory engine designed for convenience store operators.
+                </p>
+              </div>
+              <span className="font-gilroyBold text-xs text-white inline-flex items-center gap-1 mt-2">
+                Read Case Study <span className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </Link>
+
+            <Link 
+              href="/work" 
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-white/10 p-5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+            >
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[9px] font-gilroyRegular text-white/60 uppercase tracking-[0.15em]">Portfolio Index</span>
+                <h5 className="font-gilroyBold text-base text-white">All Case Studies</h5>
+                <p className="text-xs text-white/70 leading-relaxed">
+                  Browse the full gallery gallery of user experience research prototypes, dashboard engines, and design tools.
+                </p>
+              </div>
+              <span className="font-gilroyBold text-xs text-white inline-flex items-center gap-1 mt-2">
+                View Selected Work <span className="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </Link>
+
+          </div>
         </div>
+      </section>
+
+      {/* Global layout page footer */}
+      <PageFooter />
+
+      {/* Scroll to top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#121417]/90 backdrop-blur-md text-white/60 hover:text-white hover:border-white/30 transition-all cursor-pointer shadow-lg"
+            aria-label="Scroll to top"
+          >
+            <ArrowUpRight size={16} className="-rotate-45" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Floating mobile ToC button */}
+      <div className="block md:hidden">
+        <button
+          onClick={() => setIsMobileTocOpen(true)}
+          className="fixed bottom-24 right-8 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#121417]/90 backdrop-blur-md text-white/60 hover:text-white hover:border-white/30 transition-all cursor-pointer shadow-md"
+          aria-label="Table of contents"
+        >
+          <Hash size={16} />
+        </button>
       </div>
 
-      {/* ── Footer spacer + Footer ── */}
-      <div className="mt-32" />
-      <PageFooter />
+      {/* Mobile ToC Drawer */}
+      <AnimatePresence>
+        {isMobileTocOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileTocOpen(false)}
+              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm block md:hidden"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl bg-[#0a0b0d] border-t border-white/10 p-6 shadow-2xl max-h-[80vh] overflow-y-auto no-scrollbar block md:hidden text-white"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <span className="font-gilroyBold text-sm uppercase tracking-widest text-white/40">Chapters</span>
+                <button 
+                  onClick={() => setIsMobileTocOpen(false)}
+                  className="p-1 rounded-full hover:bg-white/5 text-white/60 cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="flex flex-col gap-4">
+                {SECTIONS.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      setIsMobileTocOpen(false);
+                      setTimeout(() => {
+                        handleScrollTo(section.id);
+                      }, 300);
+                    }}
+                    className={`flex justify-between items-center text-left py-2 px-3 rounded-lg transition-colors cursor-pointer w-full ${
+                      activeSection === section.id 
+                        ? "bg-white/5 text-white font-bold" 
+                        : "text-white/70 hover:bg-white/5"
+                    }`}
+                  >
+                    <span className="font-gilroyBold text-sm">{section.label}</span>
+                    {activeSection === section.id && <Check size={14} className="text-[#10b981]" />}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Lightbox Zoom Modal for code mockups */}
+      <AnimatePresence>
+        {activeMockupId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveMockupId(null)}
+            className="fixed inset-0 z-55 flex items-center justify-center bg-black/85 backdrop-blur-md cursor-zoom-out p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative max-w-4xl w-full flex items-center justify-center text-white bg-[#0c0d0e] border border-white/10 rounded-2xl p-6 md:p-10 shadow-2xl select-text"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {activeMockupId === "dashboard-mockup" && (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-2">
+                    <span className="font-gilroyBold text-sm text-[#10b981] uppercase tracking-wider">Screen 1: Dual-Pipeline Dashboard</span>
+                    <span className="text-[10px] text-white/40">scout.dev/dashboard</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed mb-4">
+                    This command view shows how auto-swept job listings populate the left lane (Casual Hunt), while selected, high-intent roles you choose to pursue are advanced to the right lane (Serious Mode).
+                  </p>
+                  <Mockup1 />
+                </div>
+              )}
+
+              {activeMockupId === "queue-mockup" && (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-2">
+                    <span className="font-gilroyBold text-sm text-[#10b981] uppercase tracking-wider">Screen 2: Realtime Staging Queue</span>
+                    <span className="text-[10px] text-white/40">scout.dev/sweeps</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed mb-4">
+                    This alert pill floats at the top of the interface. When background sweeps finish, Supabase Realtime delivers counts optimistically, prompting you to merge listings to prevent layout jumps.
+                  </p>
+                  <Mockup2 isZoomed={true} />
+                </div>
+              )}
+
+              {activeMockupId === "url-mockup" && (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-2">
+                    <span className="font-gilroyBold text-sm text-[#10b981] uppercase tracking-wider">Screen 3: On-Demand URL Scouting</span>
+                    <span className="text-[10px] text-white/40">scout.dev/url-scouter</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed mb-4">
+                    Found a job manually? Paste its ATS listing URL. Firecrawl scraping APIs parse the body text, send the raw payload to Groq, and deliver suitability metrics instantly.
+                  </p>
+                  <Mockup3 />
+                </div>
+              )}
+
+              {activeMockupId === "resume-mockup" && (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-2">
+                    <span className="font-gilroyBold text-sm text-[#10b981] uppercase tracking-wider">Screen 4: Sniper Resume Morpher</span>
+                    <span className="text-[10px] text-white/40">scout.dev/resume-morpher</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed mb-4">
+                    Our dynamic layout engine re-evaluates project description bullet points, shifts high-relevance tech keywords to the top, and renders standard ATS-compliant single-column PDF structures immediately.
+                  </p>
+                  <Mockup4 />
+                </div>
+              )}
+
+              {activeMockupId === "shield-mockup" && (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-2">
+                    <span className="font-gilroyBold text-sm text-[#10b981] uppercase tracking-wider">Screen 5: Shield Objections &amp; Gap Analyzer</span>
+                    <span className="text-[10px] text-white/40">scout.dev/shield</span>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed mb-4">
+                    Whenever an AI score returns below 70%, Shield outlines gaps and prepares objections. This guarantees candidates can address technical shortcomings comfortably during screen calls.
+                  </p>
+                  <Mockup5 />
+                </div>
+              )}
+
+              <button
+                onClick={() => setActiveMockupId(null)}
+                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full p-2 cursor-pointer transition-colors shadow-lg flex items-center justify-center"
+                aria-label="Close lightbox"
+              >
+                <X size={16} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </main>
   );
 }

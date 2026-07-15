@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useLenis } from "lenis/react";
 import { 
@@ -21,7 +21,10 @@ import {
   Sliders,
   DollarSign,
   AlertTriangle,
-  ArrowRight
+  ArrowRight,
+  ArrowUpRight,
+  X,
+  Hash
 } from "lucide-react";
 import PageFooter from "@/components/PageFooter";
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
@@ -73,6 +76,38 @@ export default function POSCaseStudy() {
     damping: 30,
     restDelta: 0.001
   });
+
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [isMobileTocOpen, setIsMobileTocOpen] = useState(false);
+
+  useEffect(() => {
+    if (activeImage) {
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+    } else {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    }
+    return () => {
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    };
+  }, [activeImage, lenis]);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    if (lenis) {
+      lenis.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   // Ensure the page always starts at the top when navigated to
   const hasResetScroll = useRef(false);
@@ -167,7 +202,7 @@ export default function POSCaseStudy() {
         <motion.div
           animate={{
             width: isHovered ? 146 : 8,
-            height: isHovered ? 420 : 180,
+            height: isHovered ? 380 : 160,
             backgroundColor: isHovered ? "rgba(248, 237, 209, 0.85)" : "rgba(248, 237, 209, 0)",
             backdropFilter: isHovered ? "blur(20px)" : "blur(0px)",
             borderColor: isHovered ? "rgba(42, 71, 86, 0.12)" : "rgba(42, 71, 86, 0)",
@@ -175,7 +210,12 @@ export default function POSCaseStudy() {
               ? "0 20px 25px -5px rgba(42, 71, 86, 0.1), 0 8px 10px -6px rgba(42, 71, 86, 0.05)" 
               : "0 0px 0px rgba(0,0,0,0)"
           }}
-          transition={{ type: "spring", stiffness: 260, damping: 32, mass: 0.9 }}
+          transition={{
+            type: "spring",
+            stiffness: 220,
+            damping: 28,
+            mass: 0.6
+          }}
           className="rounded-2xl border border-transparent flex flex-col justify-center items-center relative overflow-hidden"
         >
           {/* Inactive Mode: Minimal Progress Bar */}
@@ -184,10 +224,14 @@ export default function POSCaseStudy() {
               opacity: isHovered ? 0 : 1,
               pointerEvents: isHovered ? "none" : "auto",
             }}
-            transition={{ duration: 0.2 }}
+            transition={{ 
+              duration: isHovered ? 0.15 : 0.18,
+              delay: isHovered ? 0 : 0.12,
+              ease: "easeOut"
+            }}
             className="absolute inset-0 flex flex-col justify-center items-center py-4"
           >
-            <div className="w-[2px] h-[140px] bg-text_primary/15 rounded-full relative overflow-hidden">
+            <div className="w-[1.5px] h-[120px] bg-text_primary/18 rounded-full relative overflow-hidden">
               <motion.div
                 style={{ scaleY: scrollYProgress, originY: 0 }}
                 className="absolute top-0 left-0 w-full h-full bg-text_primary rounded-full"
@@ -201,9 +245,13 @@ export default function POSCaseStudy() {
               opacity: isHovered ? 1 : 0,
               pointerEvents: isHovered ? "auto" : "none",
             }}
-            transition={{ duration: 0.2, delay: isHovered ? 0.05 : 0 }}
-            className="w-full h-full flex flex-col justify-between py-6 px-4 relative"
+            transition={{ 
+              duration: isHovered ? 0.2 : 0.12,
+              ease: "easeOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[146px] h-[380px] flex flex-col justify-between py-6 px-4 shrink-0"
           >
+
             {/* Background vertical connector line behind dots */}
             <div className="absolute right-[22px] top-7 bottom-7 w-[1px] bg-text_primary/10 -z-10" />
 
@@ -305,13 +353,17 @@ export default function POSCaseStudy() {
             variants={staggerContainer}
             className="flex flex-col gap-6 md:gap-8"
           >
-            <motion.div variants={fadeInUp} className="flex items-center gap-2">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
               <span className="px-3 py-1 rounded-full text-[10px] font-gilroyBold uppercase tracking-wider bg-accent_highlight text-text_primary border border-text_primary/10 shadow-sm">
                 UX Case Study
               </span>
               <span className="w-1 h-1 rounded-full bg-text_primary/30" />
               <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-text_primary/60">
                 Retail Finance &amp; Ops
+              </span>
+              <span className="w-1 h-1 rounded-full bg-text_primary/30" />
+              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-text_primary/60 flex items-center gap-1">
+                <span>⏱️</span> 8 Min Read
               </span>
             </motion.div>
 
@@ -356,24 +408,18 @@ export default function POSCaseStudy() {
             {/* Case Study Metadata Grid */}
             <motion.div 
               variants={fadeInUp} 
-              className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 border-t border-text_primary/10 pt-8 mt-4 max-w-4xl"
+              className="flex flex-wrap items-center gap-x-12 gap-y-4 mt-8 text-xs md:text-sm border-y border-text_primary/10 py-4 w-full max-w-4xl"
             >
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Role</span>
-                <span className="text-sm font-gilroyBold text-text_primary/80">UX Design &amp; Full-Stack Eng.</span>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Target Device</span>
-                <span className="text-sm font-gilroyBold text-text_primary/80">10&quot; Countertop Register</span>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Core Tech</span>
-                <span className="text-sm font-gilroyBold text-text_primary/80">Next.js, Zustand, Supabase</span>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-text_primary/40 block font-gilroyBold mb-1">Performance</span>
-                <span className="text-sm font-gilroyBold text-text_primary/80">&lt; 12s Checkout Flow</span>
-              </div>
+              {[
+                { label: "Role", value: "Design & Development" },
+                { label: "Timeline", value: "12 Weeks" },
+                { label: "Industry", value: "Retail (Customer-Facing)" }
+              ].map((metric) => (
+                <div key={metric.label} className="flex items-center gap-2">
+                  <span className="text-text_primary text-xs font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
+                  <span className="font-gilroyRegular text-sm text-text_primary/60">{metric.value}</span>
+                </div>
+              ))}
             </motion.div>
           </motion.div>
         </div>
@@ -798,16 +844,19 @@ export default function POSCaseStudy() {
           <span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-text_primary/75 block mb-1.5">10. System Interfaces</span>
           <h2 className="font-gilroyBold text-3xl md:text-5xl text-text_primary tracking-tight mb-4">Introducing my POS</h2>
           
-          <div className="flex flex-col gap-60 mt-12">
+          <div className="flex flex-col gap-24 mt-12">
             
             {/* Screen 1: New Order */}
-            <div id="screen-1" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+            <div id="screen-1" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 1</span>
                 <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">New Order register workspace</h4>
               </div>
               
-              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+              <div 
+                className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212] cursor-zoom-in hover:border-text_primary/35 transition-colors"
+                onClick={() => setActiveImage("/images/pos-panel/new-order.png")}
+              >
                 <img 
                   src="/images/pos-panel/new-order.png" 
                   alt="POS Register Screen Interface" 
@@ -857,13 +906,16 @@ export default function POSCaseStudy() {
             </div>
 
             {/* Screen 2: Dashboard */}
-            <div id="screen-2" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+            <div id="screen-2" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 2</span>
                 <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Analytics Dashboard</h4>
               </div>
               
-              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+              <div 
+                className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212] cursor-zoom-in hover:border-text_primary/35 transition-colors"
+                onClick={() => setActiveImage("/images/pos-panel/dashboard.png")}
+              >
                 <img 
                   src="/images/pos-panel/dashboard.png" 
                   alt="POS Admin Analytics dashboard" 
@@ -912,13 +964,16 @@ export default function POSCaseStudy() {
             </div>
 
             {/* Screen 3: Bill History */}
-            <div id="screen-3" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+            <div id="screen-3" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 3</span>
                 <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Immutable Ledger Log</h4>
               </div>
               
-              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+              <div 
+                className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212] cursor-zoom-in hover:border-text_primary/35 transition-colors"
+                onClick={() => setActiveImage("/images/pos-panel/bill-history.png")}
+              >
                 <img 
                   src="/images/pos-panel/bill-history.png" 
                   alt="POS Transactions ledger Screen" 
@@ -967,13 +1022,16 @@ export default function POSCaseStudy() {
             </div>
 
             {/* Screen 4: Inventory */}
-            <div id="screen-4" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+            <div id="screen-4" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 4</span>
                 <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Catalog Inventory Manager</h4>
               </div>
               
-              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+              <div 
+                className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212] cursor-zoom-in hover:border-text_primary/35 transition-colors"
+                onClick={() => setActiveImage("/images/pos-panel/inventory.png")}
+              >
                 <img 
                   src="/images/pos-panel/inventory.png" 
                   alt="POS Catalog inventory manager screen" 
@@ -1022,13 +1080,16 @@ export default function POSCaseStudy() {
             </div>
 
             {/* Screen 5: Settings */}
-            <div id="screen-5" className="min-h-screen flex flex-col justify-center py-20 gap-8">
+            <div id="screen-5" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-text_primary/50 uppercase block tracking-wider">Screen 5</span>
                 <h4 className="font-gilroyBold text-2xl md:text-3xl text-text_primary">Business Customizations</h4>
               </div>
               
-              <div className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212]">
+              <div 
+                className="w-full overflow-hidden rounded-xl border border-text_primary/10 shadow-lg bg-[#121212] cursor-zoom-in hover:border-text_primary/35 transition-colors"
+                onClick={() => setActiveImage("/images/pos-panel/settings.png")}
+              >
                 <img 
                   src="/images/pos-panel/settings.png" 
                   alt="POS invoice template settings screen" 
@@ -1207,7 +1268,7 @@ export default function POSCaseStudy() {
               Operating a local retail store means my friend has to run around to warehouses, check stocks on shelf displays, and coordinates deliveries. Being stuck behind the checkout counter tablet all day is impossible.
             </p>
             <p>
-              In the next iteration of the project, I plan to develop a companion **mobile application**. This mobile version will sync real-time sales revenue, low-stock notifications, and transactional bill databases via Supabase, allowing him to check dashboard reports and update catalog prices remotely from his phone while on the move.
+              In the next iteration of the project, I plan to develop a companion mobile application. This mobile version will sync real-time sales revenue, low-stock notifications, and transactional bill databases via Supabase, allowing him to check dashboard reports and update catalog prices remotely from his phone while on the move.
             </p>
           </div>
         </motion.div>
@@ -1302,6 +1363,121 @@ export default function POSCaseStudy() {
 
       {/* Global layout page footer */}
       <PageFooter />
+
+      {/* Scroll to top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-text_primary/15 bg-bg/90 backdrop-blur-md text-text_primary/60 hover:text-text_primary hover:border-text_primary/30 transition-all cursor-pointer"
+            aria-label="Scroll to top"
+          >
+            <ArrowUpRight size={16} className="-rotate-45" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Floating mobile ToC button */}
+      <div className="block md:hidden">
+        <button
+          onClick={() => setIsMobileTocOpen(true)}
+          className="fixed bottom-24 right-8 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-text_primary/15 bg-bg/90 backdrop-blur-md text-text_primary/60 hover:text-text_primary hover:border-text_primary/30 transition-all cursor-pointer shadow-md"
+          aria-label="Table of contents"
+        >
+          <Hash size={16} />
+        </button>
+      </div>
+
+      {/* Mobile ToC Drawer */}
+      <AnimatePresence>
+        {isMobileTocOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileTocOpen(false)}
+              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm block md:hidden"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl bg-[#f8edd1] border-t border-text_primary/15 p-6 shadow-2xl max-h-[80vh] overflow-y-auto no-scrollbar block md:hidden"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <span className="font-gilroyBold text-sm uppercase tracking-widest text-text_primary/40">Chapters</span>
+                <button 
+                  onClick={() => setIsMobileTocOpen(false)}
+                  className="p-1 rounded-full hover:bg-text_primary/5 text-text_primary/60 cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="flex flex-col gap-4">
+                {SECTIONS.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      setIsMobileTocOpen(false);
+                      setTimeout(() => {
+                        handleScrollTo(section.id);
+                      }, 300);
+                    }}
+                    className={`flex justify-between items-center text-left py-2 px-3 rounded-lg transition-colors cursor-pointer w-full ${
+                      activeSection === section.id 
+                        ? "bg-text_primary/5 text-text_primary font-bold" 
+                        : "text-text_primary/70 hover:bg-text_primary/5"
+                    }`}
+                  >
+                    <span className="font-gilroyBold text-sm">{section.label}</span>
+                    {activeSection === section.id && <Check size={14} />}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Lightbox Zoom Modal */}
+      <AnimatePresence>
+        {activeImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md cursor-zoom-out p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 10 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative max-w-6xl w-full max-h-[90vh] flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={activeImage}
+                alt="Case study preview"
+                className="max-w-full max-h-[90vh] object-contain rounded-xl border border-white/10 shadow-2xl"
+              />
+              <button
+                onClick={() => setActiveImage(null)}
+                className="absolute -top-12 right-0 md:top-4 md:right-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full p-2 cursor-pointer transition-colors shadow-lg flex items-center justify-center"
+                aria-label="Close lightbox"
+              >
+                <X size={20} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
