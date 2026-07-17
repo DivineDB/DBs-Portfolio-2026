@@ -540,24 +540,12 @@ export default function ScoutCaseStudy() {
             }}
             className="absolute inset-0 flex flex-col justify-center items-center py-4"
           >
-            <motion.div 
-              animate={activeSection === "overview" ? {
-                scaleX: [1, 4.5, 1],
-                opacity: [0.25, 1, 0.25]
-              } : {}}
-              transition={{
-                duration: 0.9,
-                ease: [0.4, 0, 0.2, 1],
-                repeat: 1,
-                repeatDelay: 0.15
-              }}
-              className="w-[3px] h-[120px] bg-white/15 rounded-full relative overflow-hidden origin-center"
-            >
+            <div className="w-[1.5px] h-[120px] bg-white/15 rounded-full relative overflow-hidden">
               <motion.div
                 style={{ scaleY: scrollYProgress, originY: 0 }}
                 className="absolute top-0 left-0 w-full h-full bg-[#10b981] rounded-full"
               />
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Active Hover Mode: Table of Contents */}
@@ -672,17 +660,16 @@ export default function ScoutCaseStudy() {
             variants={staggerContainer}
             className="flex flex-col gap-6 md:gap-8"
           >
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-gilroyBold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/25 shadow-sm">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2 md:gap-3 font-satoshi text-[13px] md:text-sm text-white/80">
+              <span className="font-medium bg-white/10 px-3.5 py-1.5 rounded-full">
                 AI System Design
               </span>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-white/60">
+              <span className="font-medium bg-white/10 px-3.5 py-1.5 rounded-full">
                 Autonomous Job Intelligence
               </span>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-white/60 flex items-center gap-1">
-                <span>⏱️</span> 6 Min Read
+              <span className="flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full">
+                <span className="text-[13px]">⏱️</span>
+                <span className="font-medium">12 Min Read</span>
               </span>
             </motion.div>
 
@@ -695,7 +682,7 @@ export default function ScoutCaseStudy() {
 
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-2xl font-gilroyRegular leading-relaxed text-white/70 max-w-3xl"
+              className="text-base md:text-xl font-gilroyRegular leading-relaxed text-white/80 max-w-3xl"
             >
               An autonomous recruiting agent that crawls ATS platforms, runs dual-stage LLM evaluation pipelines on Groq Cloud, and morphs resumes dynamically to eliminate job application friction.
             </motion.p>
@@ -734,9 +721,9 @@ export default function ScoutCaseStudy() {
                 { label: "Timeline", value: "12 Weeks" },
                 { label: "Industry", value: "HR Tech (Developer Tool)" }
               ].map((metric) => (
-                <div key={metric.label} className="flex items-center gap-2">
-                  <span className="text-white text-xs font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
-                  <span className="font-gilroyRegular text-sm text-white/60">{metric.value}</span>
+                <div key={metric.label} className="flex items-baseline gap-2">
+                  <span className="text-white text-[16px] font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
+                  <span className="font-satoshi font-medium text-[15px] text-white/80">{metric.value}</span>
                 </div>
               ))}
             </motion.div>
@@ -1149,187 +1136,186 @@ export default function ScoutCaseStudy() {
           
           <div className="flex flex-col gap-24 mt-12">
             
-            {/* Screen 1: Dual-Pipeline Dashboard */}
+            {/* Screen 1: Obsidian Pipeline */}
             <div id="screen-1" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 1</span>
-                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Dual-Pipeline Dashboard</h4>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Obsidian Pipeline</h4>
+                <p className="text-sm text-white/50 font-gilroyRegular max-w-2xl">Kanban-style application tracker with four stages — Serious Pipeline, Applied, Interviewing, and Archived. Drag cards across columns to track live application progress.</p>
               </div>
-              
-              {/* Interactive Mockup 1 */}
-              <div 
-                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
-                onClick={() => setActiveMockupId("dashboard-mockup")}
-              >
-                <Mockup1 />
+              <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c0d0e]">
+                <img
+                  src="/images/scout/screen-pipeline.png"
+                  alt="Scout Obsidian Pipeline — Kanban job tracking board"
+                  className="w-full object-cover select-none"
+                  draggable={false}
+                />
               </div>
-
-              {/* Explanations Grid below image */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
                 <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
                   <div className="flex items-center gap-2.5">
                     <Layers size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Dual-Lane Organization</h5>
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Stage-Based Kanban Layout</h5>
                   </div>
                   <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Separates casual automated sweeps from high-intent roles that you actively choose to pitch, reducing cognitive load and visual noise.
+                    Separates applications into four stages — Serious, Applied, Interviewing, and Archived — so you always know where each role stands without scanning spreadsheets.
                   </p>
                 </div>
                 <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
                   <div className="flex items-center gap-2.5">
                     <Sliders size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Groq Suitability Scoring</h5>
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Groq Match Score Badges</h5>
                   </div>
                   <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Calculates a 0–100 matching score for every card, parsing job parameters immediately and displaying them on dynamic, colored badges.
+                    Every card shows a Groq-computed suitability score (e.g. 92%, 70%) so you prioritize high-intent applications and skip low-confidence listings at a glance.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Screen 2: Realtime Staging Queue */}
+            {/* Screen 2: Command Center — Configuration */}
             <div id="screen-2" className="flex flex-col py-10 gap-6">
               <div className="flex flex-col gap-1.5">
                 <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 2</span>
-                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Realtime Staging Queue</h4>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Command Center — Scout Configuration</h4>
+                <p className="text-sm text-white/50 font-gilroyRegular max-w-2xl">Configure your target roles, experience level, and locations. The Sweep Activity Log on the right shows every autonomous crawl run — detections found and listings saved.</p>
               </div>
-              
-              {/* Interactive Mockup 2 */}
-              <div 
-                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
-                onClick={() => setActiveMockupId("queue-mockup")}
-              >
-                <Mockup2 isZoomed={false} />
+              <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c0d0e]">
+                <img
+                  src="/images/scout/screen-command-config.png"
+                  alt="Scout Command Center — Ghost Scouter Configuration and Sweep Activity Log"
+                  className="w-full object-cover select-none"
+                  draggable={false}
+                />
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
                 <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
                   <div className="flex items-center gap-2.5">
                     <Info size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Buffer-Staging Pill</h5>
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Preference-Synced Targeting</h5>
                   </div>
                   <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Buffers background sweeps through Supabase Realtime alerts, notifying the candidate without displacing their focus or shifting lists unexpectedly.
+                    Set target roles, experience bands, and location preferences once. Scout syncs these parameters as the filter blueprint for every automated ghost sweep.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Activity size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Live Sweep Activity Log</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    A timestamped activity panel records every background cron run — detections found and net listings added — giving full transparency into the crawler's output.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 3: Command Center — Identity Profile */}
+            <div id="screen-3" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 3</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Command Center — Identity Profile</h4>
+                <p className="text-sm text-white/50 font-gilroyRegular max-w-2xl">Your professional identity card: salary band, work type, tech arsenal by category, and a full career timeline — all used as the source of truth for resume morphing and scoring.</p>
+              </div>
+              <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c0d0e]">
+                <img
+                  src="/images/scout/screen-command-profile.png"
+                  alt="Scout Command Center — Identity profile with tech arsenal and professional timeline"
+                  className="w-full object-cover select-none"
+                  draggable={false}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <UserCheck size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Tech Arsenal Mapping</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Categorizes your skills across AI/ML, tools, UI frameworks, databases, and languages. These tags feed directly into the LLM scoring and resume bullet-point reordering engine.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Database size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Search Logic Anchors</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Salary band, work type, and company size preferences are persisted as Supabase user profile fields — queried by every sweep to eliminate mismatched listings before they surface.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 4: Casual Hunt */}
+            <div id="screen-4" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 4</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Casual Hunt — Job Grid</h4>
+                <p className="text-sm text-white/50 font-gilroyRegular max-w-2xl">Auto-swept listings displayed in a filterable card grid. Role chips, location, and ATS source are shown on every card alongside a Groq match percentage so you can triage quickly.</p>
+              </div>
+              <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c0d0e]">
+                <img
+                  src="/images/scout/screen-casual-hunt.png"
+                  alt="Scout Casual Hunt — auto-swept job listing grid with match scores"
+                  className="w-full object-cover select-none"
+                  draggable={false}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <Terminal size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Filter Rail + ATS Source Tags</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    A persistent filter chip row lets you narrow by role type, location, and work format without page reloads. ATS source (e.g. Lever, Greenhouse) is labeled on every card.
+                  </p>
+                </div>
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">One-Click Promotion to Pipeline</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    Interesting listings can be promoted from Casual Hunt to the Obsidian Pipeline in a single action, triggering full 70B distillation and outreach generation.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Screen 5: Live ATS Preview */}
+            <div id="screen-5" className="flex flex-col py-10 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 5</span>
+                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Live ATS Preview — Sniper Resume Morpher</h4>
+                <p className="text-sm text-white/50 font-gilroyRegular max-w-2xl">Split-pane view: job details, skill gap analysis, and AI-generated outreach hook on the left — a live PDF preview of the dynamically tailored resume on the right, ready to download.</p>
+              </div>
+              <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c0d0e]">
+                <img
+                  src="/images/scout/screen-ats-preview.png"
+                  alt="Scout Live ATS Preview — tailored resume PDF alongside job detail and skill gap analysis"
+                  className="w-full object-cover select-none"
+                  draggable={false}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
+                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <FileText size={18} className="text-[#10b981]/80" />
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Dynamic Bullet-Point Reordering</h5>
+                  </div>
+                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+                    The 70B model re-ranks resume bullet points to surface the most relevant experience first. The PDF preview updates live so you see the exact ATS-ready output before downloading.
                   </p>
                 </div>
                 <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
                   <div className="flex items-center gap-2.5">
                     <AlertTriangle size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Scheduled Sweeper Logs</h5>
+                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Skill Gap + Objection Shield</h5>
                   </div>
                   <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Integrates sweep counters and run histories, keeping developers informed on system performance and listing match yields.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Screen 3: On-Demand URL Scouting */}
-            <div id="screen-3" className="flex flex-col py-10 gap-6">
-              <div className="flex flex-col gap-1.5">
-                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 3</span>
-                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">On-Demand URL Scouting</h4>
-              </div>
-              
-              {/* Interactive Mockup 3 */}
-              <div 
-                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
-                onClick={() => setActiveMockupId("url-mockup")}
-              >
-                <Mockup3 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <Database size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Instant Firecrawl Parser</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Paste any job URL directly. Firecrawl crawls the document schema, structures the raw HTML blocks, and inputs structured strings to Groq immediately.
-                  </p>
-                </div>
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Automated Qualification Review</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Runs instant evaluation checks verifying visa, base salary limits, and preferred location parameters before indexing cards.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Screen 4: Sniper Resume Morpher */}
-            <div id="screen-4" className="flex flex-col py-10 gap-6">
-              <div className="flex flex-col gap-1.5">
-                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 4</span>
-                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Sniper Resume Morpher</h4>
-              </div>
-              
-              {/* Interactive Mockup 4 */}
-              <div 
-                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
-                onClick={() => setActiveMockupId("resume-mockup")}
-              >
-                <Mockup4 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <Sliders size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Dynamic Bullet-Point Alignment</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Uses `@react-pdf/renderer` layout engines to dynamically prioritize bullet points highlighting the exact technology requirements of the target description.
-                  </p>
-                </div>
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <DollarSign size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">ATS-Optimized Formatting</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Outputs compact, single-column, cleanly structured PDFs on demand to guarantee passing search parsers and automated recruiters.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Screen 5: Shield Objections & Gap Analyzer */}
-            <div id="screen-5" className="flex flex-col py-10 gap-6">
-              <div className="flex flex-col gap-1.5">
-                <span className="font-gilroyBold text-xs text-white/50 uppercase block tracking-wider">Screen 5</span>
-                <h4 className="font-gilroyBold text-2xl md:text-3xl text-white">Shield Objections &amp; Gap Analyzer</h4>
-              </div>
-              
-              {/* Interactive Mockup 5 */}
-              <div 
-                className="w-full cursor-zoom-in hover:opacity-95 transition-opacity"
-                onClick={() => setActiveMockupId("shield-mockup")}
-              >
-                <Mockup5 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 pt-4">
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <Activity size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Objection-Handling Preparation</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Provides suggestions on addressing skill mismatches and frames adjacent capabilities to ensure confident interview discussions.
-                  </p>
-                </div>
-                <div className="pl-4 border-l-2 border-[#10b981]/30 flex flex-col gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 size={18} className="text-[#10b981]/80" />
-                    <h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">Channel-Specific Outreach</h5>
-                  </div>
-                  <p className="text-xs md:text-sm text-white/60 leading-relaxed">
-                    Prepares high-context cold-pitch copies keyed to Email, LinkedIn, or Twitter formatting to skip initial HR queues.
+                    Identifies missing requirements (e.g. Senior UX/UI experience) and generates an AI outreach hook that reframes adjacent skills — turning gaps into confident talking points.
                   </p>
                 </div>
               </div>

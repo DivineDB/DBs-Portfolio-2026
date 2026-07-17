@@ -353,17 +353,16 @@ export default function POSCaseStudy() {
             variants={staggerContainer}
             className="flex flex-col gap-6 md:gap-8"
           >
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-gilroyBold uppercase tracking-wider bg-accent_highlight text-text_primary border border-text_primary/10 shadow-sm">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2 md:gap-3 font-satoshi text-[13px] md:text-sm text-text_primary/80">
+              <span className="font-medium bg-text_primary/5 px-3.5 py-1.5 rounded-full">
                 UX Case Study
               </span>
-              <span className="w-1 h-1 rounded-full bg-text_primary/30" />
-              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-text_primary/60">
+              <span className="font-medium bg-text_primary/5 px-3.5 py-1.5 rounded-full">
                 Retail Finance &amp; Ops
               </span>
-              <span className="w-1 h-1 rounded-full bg-text_primary/30" />
-              <span className="text-[10px] font-gilroyBold uppercase tracking-wider text-text_primary/60 flex items-center gap-1">
-                <span>⏱️</span> 8 Min Read
+              <span className="flex items-center gap-1.5 bg-text_primary/5 px-3.5 py-1.5 rounded-full">
+                <span className="text-[13px]">⏱️</span>
+                <span className="font-medium">8 Min Read</span>
               </span>
             </motion.div>
 
@@ -376,7 +375,7 @@ export default function POSCaseStudy() {
 
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-2xl font-gilroyRegular leading-relaxed text-text_primary/80 max-w-3xl"
+              className="text-base md:text-xl font-gilroyRegular leading-relaxed text-text_primary/80 max-w-3xl"
             >
               A touch-first retail register engine designed to streamline store checkouts under 12 seconds, protect transaction ledger integrity with JSONB snapshots, and guarantee offline resilience.
             </motion.p>
@@ -415,9 +414,9 @@ export default function POSCaseStudy() {
                 { label: "Timeline", value: "12 Weeks" },
                 { label: "Industry", value: "Retail (Customer-Facing)" }
               ].map((metric) => (
-                <div key={metric.label} className="flex items-center gap-2">
-                  <span className="text-text_primary text-xs font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
-                  <span className="font-gilroyRegular text-sm text-text_primary/60">{metric.value}</span>
+                <div key={metric.label} className="flex items-baseline gap-2">
+                  <span className="text-text_primary text-[16px] font-gilroyBold uppercase tracking-wider">{metric.label}:</span>
+                  <span className="font-satoshi font-medium text-[15px] text-text_primary/80">{metric.value}</span>
                 </div>
               ))}
             </motion.div>
