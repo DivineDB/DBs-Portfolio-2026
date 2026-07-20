@@ -92,7 +92,7 @@ export default function WorkPage() {
 						transition={{ duration: 0.8, delay: 0.1 }}
 						className="max-w-2xl text-lg text-text_primary/70 md:text-xl will-change-transform"
 					>
-						A collection of my work done on interfaces and architectures.
+						A collection of my work done across design and tech.
 					</motion.p>
 				</div>
 
@@ -185,7 +185,7 @@ export default function WorkPage() {
 			</section>
 
 			{/* More Builds */}
-			<section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
+			{/* <section className="relative flex min-h-screen w-full flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
 				<div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
 					<h2 className="font-gilroyBold text-4xl text-text_primary md:text-5xl">
 						<HighlightBox className="overflow-hidden inline-flex">
@@ -248,7 +248,7 @@ export default function WorkPage() {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
 
 			<PageFooter />
 		</main>
