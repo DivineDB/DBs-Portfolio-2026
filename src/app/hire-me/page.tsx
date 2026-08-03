@@ -204,9 +204,11 @@ export default function HireMePage() {
 	};
 
 	const handleCopyLink = () => {
-		const url = "https://drive.google.com/file/d/1vUgA7o_6XvnUPN_Hifq-3-viOe_D97XI/view?usp=drive_link";
+		const url =
+			"https://drive.google.com/file/d/1vUgA7o_6XvnUPN_Hifq-3-viOe_D97XI/view?usp=drive_link";
 		if (navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard.writeText(url)
+			navigator.clipboard
+				.writeText(url)
 				.then(() => {
 					setCopied(true);
 					setTimeout(() => setCopied(false), 2000);
@@ -244,22 +246,25 @@ export default function HireMePage() {
 					</div>
 
 					<h1 className="text-5xl font-gilroyBold tracking-tight md:text-7xl">
-					<HighlightBox className="font-gilroyBold tracking-tight overflow-hidden inline-flex">
-						<motion.span
-							initial={{ y: "105%", opacity: 0 }}
-							animate={{ y: "0%", opacity: 1 }}
-							transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-							className="inline-block will-change-transform"
-						>
-							Hire me!
-						</motion.span>
-					</HighlightBox>
-				</h1>
+						<HighlightBox className="font-gilroyBold tracking-tight overflow-hidden inline-flex">
+							<motion.span
+								initial={{ y: "105%", opacity: 0 }}
+								animate={{ y: "0%", opacity: 1 }}
+								transition={{
+									duration: 1.0,
+									ease: [0.16, 1, 0.3, 1],
+									delay: 0.1,
+								}}
+								className="inline-block will-change-transform"
+							>
+								Hire me!
+							</motion.span>
+						</HighlightBox>
+					</h1>
 
 					<p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-700 md:text-lg">
 						If you are a recruiter or someone working at a company who has an
-						opportunity for me that I cannot say no to, then this page is for
-						you.
+						opportunity for me, this page is for you.
 					</p>
 
 					{/* ── Phase 1: Premium zero-shift button row ───────────────────────── */}
