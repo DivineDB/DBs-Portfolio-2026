@@ -1657,7 +1657,7 @@ export default function ScoutCaseStudy() {
 									<div className="flex items-center gap-2.5">
 										<AlertTriangle size={18} className="text-[#10b981]/80" />
 										<h5 className="font-gilroyBold text-base md:text-lg text-white leading-none">
-											Skill Gap + Objection Shield
+											Skill Gap + Hook Generation
 										</h5>
 									</div>
 									<p className="text-xs md:text-sm text-white/60 leading-relaxed">
