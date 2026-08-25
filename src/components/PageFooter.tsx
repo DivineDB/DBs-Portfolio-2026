@@ -83,7 +83,7 @@ export default function PageFooter({ showOfferButton = false }: { showOfferButto
               );
             })}
           </nav>
-          <p className="font-gilroyRegular text-text_primary/40">© 2026 | Divyansh Baghel.</p>
+          <p className="font-gilroyRegular text-current opacity-50">© 2026 | Divyansh Baghel.</p>
         </motion.footer>
       </div>
     </section>

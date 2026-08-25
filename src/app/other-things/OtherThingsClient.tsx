@@ -7,6 +7,7 @@ import Image from "next/image";
 import PageFooter from "@/components/PageFooter";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { FaInstagram } from "react-icons/fa6";
 
 
 /* ─────────────────────────────────────────────
@@ -371,6 +372,21 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                 />
               );
             })}
+          </div>
+
+          {/* Clean Subtle Instagram Text Link aligned right with last image */}
+          <div className="mt-6 mb-8 flex justify-end">
+            <a
+              href="https://www.instagram.com/dbdoesstuff/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[#f8edd1]/45 hover:text-[#f8edd1]/90 transition-colors text-xs font-satoshi font-medium cursor-pointer group"
+            >
+              <FaInstagram className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 transition-opacity" />
+              <span>
+                View more on <strong className="font-semibold underline underline-offset-4 decoration-current/30 group-hover:decoration-current">@dbdoesstuff</strong>
+              </span>
+            </a>
           </div>
         </motion.section>
 

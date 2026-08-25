@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
+import ScrollNudge from "@/components/ScrollNudge";
 import { cn } from "@/lib/cn";
 import confetti from "canvas-confetti";
 
@@ -36,6 +37,7 @@ export default function Home() {
 	const [isBirdHovered, setIsBirdHovered] = useState(false);
 	const [birdMessage, setBirdMessage] = useState("hi...");
 	const [showSocialMenu, setShowSocialMenu] = useState(false);
+	const [isNudgeActive, setIsNudgeActive] = useState(false);
 	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
 	const buildingRef = useRef<HTMLImageElement | null>(null);
@@ -830,7 +832,7 @@ export default function Home() {
 									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
 									aria-label="About Me"
 								>
-									{/* Glow pulse overlay */}
+									{/* Intro Glow pulse overlay */}
 									{playIntro && (
 										<motion.div
 											variants={{
@@ -843,17 +845,34 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay */}
-									{playIntro && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
+									{(playIntro || isNudgeActive) && (
 										<motion.div
-											variants={{
-												hidden: { left: "-150%" },
-												visible: {
-													left: "150%",
-													transition: { duration: 1.2, ease: "easeInOut" },
-												},
-											}}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] pointer-events-none"
+											variants={
+												playIntro
+													? {
+															hidden: { left: "-150%" },
+															visible: {
+																left: "150%",
+																transition: { duration: 1.2, ease: "easeInOut" },
+															},
+														}
+													: undefined
+											}
+											animate={
+												isNudgeActive
+													? { left: ["-150%", "150%"] }
+													: undefined
+											}
+											transition={
+												isNudgeActive
+													? {
+															duration: 1.2,
+															ease: "easeInOut",
+														}
+													: undefined
+											}
+											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -875,7 +894,7 @@ export default function Home() {
 									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
 									aria-label="Selected Work"
 								>
-									{/* Glow pulse overlay */}
+									{/* Intro Glow pulse overlay */}
 									{playIntro && (
 										<motion.div
 											variants={{
@@ -888,17 +907,35 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay */}
-									{playIntro && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
+									{(playIntro || isNudgeActive) && (
 										<motion.div
-											variants={{
-												hidden: { left: "-150%" },
-												visible: {
-													left: "150%",
-													transition: { duration: 1.2, ease: "easeInOut" },
-												},
-											}}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] pointer-events-none"
+											variants={
+												playIntro
+													? {
+															hidden: { left: "-150%" },
+															visible: {
+																left: "150%",
+																transition: { duration: 1.2, ease: "easeInOut" },
+															},
+														}
+													: undefined
+											}
+											animate={
+												isNudgeActive
+													? { left: ["-150%", "150%"] }
+													: undefined
+											}
+											transition={
+												isNudgeActive
+													? {
+															duration: 1.2,
+															ease: "easeInOut",
+															delay: 0.15,
+														}
+													: undefined
+											}
+											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -920,7 +957,7 @@ export default function Home() {
 									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
 									aria-label="Other things I do"
 								>
-									{/* Glow pulse overlay */}
+									{/* Intro Glow pulse overlay */}
 									{playIntro && (
 										<motion.div
 											variants={{
@@ -933,17 +970,35 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay */}
-									{playIntro && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
+									{(playIntro || isNudgeActive) && (
 										<motion.div
-											variants={{
-												hidden: { left: "-150%" },
-												visible: {
-													left: "150%",
-													transition: { duration: 1.2, ease: "easeInOut" },
-												},
-											}}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] pointer-events-none"
+											variants={
+												playIntro
+													? {
+															hidden: { left: "-150%" },
+															visible: {
+																left: "150%",
+																transition: { duration: 1.2, ease: "easeInOut" },
+															},
+														}
+													: undefined
+											}
+											animate={
+												isNudgeActive
+													? { left: ["-150%", "150%"] }
+													: undefined
+											}
+											transition={
+												isNudgeActive
+													? {
+															duration: 1.2,
+															ease: "easeInOut",
+															delay: 0.3,
+														}
+													: undefined
+											}
+											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -965,7 +1020,7 @@ export default function Home() {
 									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
 									aria-label="Hire Me"
 								>
-									{/* Glow pulse overlay */}
+									{/* Intro Glow pulse overlay */}
 									{playIntro && (
 										<motion.div
 											variants={{
@@ -978,17 +1033,35 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay */}
-									{playIntro && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
+									{(playIntro || isNudgeActive) && (
 										<motion.div
-											variants={{
-												hidden: { left: "-150%" },
-												visible: {
-													left: "150%",
-													transition: { duration: 1.2, ease: "easeInOut" },
-												},
-											}}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] pointer-events-none"
+											variants={
+												playIntro
+													? {
+															hidden: { left: "-150%" },
+															visible: {
+																left: "150%",
+																transition: { duration: 1.2, ease: "easeInOut" },
+															},
+														}
+													: undefined
+											}
+											animate={
+												isNudgeActive
+													? { left: ["-150%", "150%"] }
+													: undefined
+											}
+											transition={
+												isNudgeActive
+													? {
+															duration: 1.2,
+															ease: "easeInOut",
+															delay: 0.45,
+														}
+													: undefined
+											}
+											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -1087,6 +1160,9 @@ export default function Home() {
 					</motion.div>
 				</div>
 			</div>
+
+			{/* Interactive Scroll Nudge */}
+			<ScrollNudge onNudgeStateChange={setIsNudgeActive} />
 		</main>
 	);
 }
