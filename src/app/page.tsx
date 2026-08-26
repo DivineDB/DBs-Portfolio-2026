@@ -729,7 +729,17 @@ export default function Home() {
 							!isMounted
 								? { duration: 0 }
 								: playIntro
-									? { duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: 1.5 }
+									? {
+											duration:
+												typeof window !== "undefined" && window.innerWidth < 768
+													? 1.0
+													: 1.8,
+											ease: [0.16, 1, 0.3, 1],
+											delay:
+												typeof window !== "undefined" && window.innerWidth < 768
+													? 0.3
+													: 1.5,
+										}
 									: { duration: 0 }
 						}
 						onAnimationComplete={() => {
@@ -737,7 +747,7 @@ export default function Home() {
 								setAnimationComplete(true);
 							}
 						}}
-						className="building-container relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto md:will-change-[transform,opacity]"
+						className="building-container relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto will-change-[transform,opacity]"
 					>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img
@@ -770,7 +780,19 @@ export default function Home() {
 									!isMounted
 										? { duration: 0 }
 										: playIntro
-											? { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }
+											? {
+													duration:
+														typeof window !== "undefined" &&
+														window.innerWidth < 768
+															? 0.5
+															: 0.8,
+													ease: [0.16, 1, 0.3, 1],
+													delay:
+														typeof window !== "undefined" &&
+														window.innerWidth < 768
+															? 0.2
+															: 0.5,
+												}
 											: { duration: 0 }
 								}
 							>
