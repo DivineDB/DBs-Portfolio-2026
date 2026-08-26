@@ -42,6 +42,7 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 	useEffect(() => {
 		const handleScrollAction = (isScrollDown: boolean) => {
 			if (!isScrollDown) return;
+			if (typeof window !== "undefined" && window.innerWidth < 768) return;
 
 			const now = Date.now();
 			if (now - lastScrollTimeRef.current < 200) return;
@@ -134,7 +135,7 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 					animate={{ opacity: 1, y: 0, scale: 1 }}
 					exit={{ opacity: 0, y: 20, scale: 0.95 }}
 					transition={{ type: "spring", stiffness: 350, damping: 25 }}
-					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto select-none"
+					className="hidden md:block fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto select-none"
 				>
 					<div className="flex items-center gap-3 px-4.5 py-2.5 rounded-full bg-[#2A4756] border border-[#2A4756]/20 text-[#F9FFD9] shadow-xl shadow-[#2A4756]/20 backdrop-blur-md">
 						{nextPage ? (
