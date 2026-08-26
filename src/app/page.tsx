@@ -421,16 +421,16 @@ export default function Home() {
 					<motion.div
 						initial="hidden"
 						animate="visible"
-						variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+						variants={{ visible: { transition: { staggerChildren: typeof window !== "undefined" && window.innerWidth < 768 ? 0.06 : 0.15 } } }}
 						className="flex flex-col justify-center flex-grow pointer-events-auto"
 					>
 						<motion.span
 							variants={{
-								hidden: { opacity: 0, y: 20 },
+								hidden: { opacity: 0, y: 12 },
 								visible: {
 									opacity: 1,
 									y: 0,
-									transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
 								},
 							}}
 							className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/40 mb-2.5 select-none"
@@ -440,11 +440,11 @@ export default function Home() {
 
 						<motion.div
 							variants={{
-								hidden: { opacity: 0, y: 20 },
+								hidden: { opacity: 0, y: 12 },
 								visible: {
 									opacity: 1,
 									y: 0,
-									transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
 								},
 							}}
 							className="flex flex-row items-baseline gap-[10px] mb-2.5 flex-wrap"
@@ -462,11 +462,11 @@ export default function Home() {
 
 						<motion.h2
 							variants={{
-								hidden: { opacity: 0, y: 20 },
+								hidden: { opacity: 0, y: 12 },
 								visible: {
 									opacity: 1,
 									y: 0,
-									transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
 								},
 							}}
 							className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/40 tracking-tight mb-[42px] select-none"
@@ -476,11 +476,11 @@ export default function Home() {
 
 						<motion.div
 							variants={{
-								hidden: { opacity: 0, y: 20 },
+								hidden: { opacity: 0, y: 12 },
 								visible: {
 									opacity: 1,
 									y: 0,
-									transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
 								},
 							}}
 							className="flex gap-[30px] md:gap-[50px]"
@@ -507,7 +507,10 @@ export default function Home() {
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
-						transition={{ delay: 0.8, duration: 1 }}
+						transition={{
+							delay: typeof window !== "undefined" && window.innerWidth < 768 ? 0.3 : 0.8,
+							duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 1,
+						}}
 						className="flex flex-col gap-[21px] pointer-events-auto"
 					>
 						<div className="flex items-center gap-3">
@@ -693,36 +696,24 @@ export default function Home() {
 						key={playIntro ? "intro-building" : "static-building"}
 						initial={
 							!isMounted || playIntro
-								? {
-										clipPath: "inset(100% 0% 0% 0%)",
-										y: 30,
-										scale: 0.98,
-										opacity: 0,
-									}
+								? typeof window !== "undefined" && window.innerWidth < 768
+									? { opacity: 0, y: 40 }
+									: { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }
 								: { clipPath: "none", y: 0, scale: 1, opacity: 1 }
 						}
 						animate={
 							!isMounted
-								? {
-										clipPath: "inset(100% 0% 0% 0%)",
-										y: 30,
-										scale: 0.98,
-										opacity: 0,
-									}
+								? typeof window !== "undefined" && window.innerWidth < 768
+									? { opacity: 0, y: 40 }
+									: { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }
 								: playIntro
 									? buildingLoaded
-										? {
-												clipPath: "inset(0% 0% 0% 0%)",
-												y: 0,
-												scale: 1,
-												opacity: 1,
-											}
-										: {
-												clipPath: "inset(100% 0% 0% 0%)",
-												y: 30,
-												scale: 0.98,
-												opacity: 0,
-											}
+										? typeof window !== "undefined" && window.innerWidth < 768
+											? { opacity: 1, y: 0 }
+											: { clipPath: "inset(0% 0% 0% 0%)", y: 0, scale: 1, opacity: 1 }
+										: typeof window !== "undefined" && window.innerWidth < 768
+											? { opacity: 0, y: 40 }
+											: { clipPath: "inset(100% 0% 0% 0%)", y: 30, scale: 0.98, opacity: 0 }
 									: { clipPath: "none", y: 0, scale: 1, opacity: 1 }
 						}
 						transition={
@@ -747,6 +738,7 @@ export default function Home() {
 								setAnimationComplete(true);
 							}
 						}}
+						style={typeof window !== "undefined" && window.innerWidth < 768 ? { willChange: "transform, opacity" } : {}}
 						className="building-container relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto will-change-[transform,opacity]"
 					>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
