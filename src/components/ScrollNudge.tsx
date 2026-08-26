@@ -92,28 +92,10 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 			if (e.deltaY > 0) handleScrollAction(true);
 		};
 
-		const handleTouchStart = (e: TouchEvent) => {
-			touchStartYRef.current = e.touches[0].clientY;
-		};
-
-		const handleTouchMove = (e: TouchEvent) => {
-			if (touchStartYRef.current === null) return;
-			const currentY = e.touches[0].clientY;
-			const deltaY = touchStartYRef.current - currentY;
-			if (deltaY > 15) {
-				handleScrollAction(true);
-				touchStartYRef.current = currentY;
-			}
-		};
-
 		window.addEventListener("wheel", handleWheel, { passive: true });
-		window.addEventListener("touchstart", handleTouchStart, { passive: true });
-		window.addEventListener("touchmove", handleTouchMove, { passive: true });
 
 		return () => {
 			window.removeEventListener("wheel", handleWheel);
-			window.removeEventListener("touchstart", handleTouchStart);
-			window.removeEventListener("touchmove", handleTouchMove);
 			if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
 		};
 	}, [router]);

@@ -18,7 +18,6 @@ import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
 import ScrollNudge from "@/components/ScrollNudge";
 import { cn } from "@/lib/cn";
-import confetti from "canvas-confetti";
 
 export default function Home() {
 	const [time, setTime] = useState("");
@@ -44,7 +43,8 @@ export default function Home() {
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
 	const buildingRef = useRef<HTMLImageElement | null>(null);
 
-	const triggerCelebration = (count: number) => {
+	const triggerCelebration = async (count: number) => {
+		const confetti = (await import("canvas-confetti")).default;
 		confetti({
 			particleCount: 150,
 			spread: 80,
@@ -717,7 +717,7 @@ export default function Home() {
 						<img
 							ref={buildingRef}
 							src="/images/Building.svg"
-							className="w-full h-full pointer-events-auto"
+							className="w-full h-full pointer-events-none select-none touch-pan-y"
 							alt="Interactive Building"
 							onLoad={() => setBuildingLoaded(true)}
 						/>
@@ -817,6 +817,25 @@ export default function Home() {
 									setIsBirdHovered(false);
 								}, 300); // 300ms delay before disappearing
 							}}
+							onFocus={() => {
+								const greetings = [
+									"hi...",
+									"sup?",
+									"peek-a-boo!",
+									"looking at me?",
+									"need help?",
+									"coo coo!",
+									"what's cooking?",
+								];
+								const randomGreeting =
+									greetings[Math.floor(Math.random() * greetings.length)];
+								setBirdMessage(randomGreeting);
+								setIsBirdHovered(true);
+							}}
+							onBlur={() => setIsBirdHovered(false)}
+							tabIndex={0}
+							role="button"
+							aria-label="Interactive Bird"
 							className="bird-container pointer-events-auto absolute top-[8.8%] left-[7.7%] z-30 w-[17%] h-auto cursor-pointer hidden md:block"
 						>
 							<InteractiveBird className="w-full h-auto" />
@@ -877,7 +896,7 @@ export default function Home() {
 							>
 								<Link
 									href="/about"
-									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
+									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2F991] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2A4756] transition-all duration-300"
 									aria-label="About Me"
 								>
 									{/* Intro Glow pulse overlay */}
@@ -940,7 +959,7 @@ export default function Home() {
 							>
 								<Link
 									href="/work"
-									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
+									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2F991] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2A4756] transition-all duration-300"
 									aria-label="Selected Work"
 								>
 									{/* Intro Glow pulse overlay */}
@@ -1004,7 +1023,7 @@ export default function Home() {
 							>
 								<Link
 									href="/other-things"
-									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
+									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2F991] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2A4756] transition-all duration-300"
 									aria-label="Other things I do"
 								>
 									{/* Intro Glow pulse overlay */}
@@ -1068,7 +1087,7 @@ export default function Home() {
 							>
 								<Link
 									href="/hire-me"
-									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md transition-all duration-300"
+									className="relative overflow-hidden pointer-events-auto building-window w-full h-full block rounded-md border border-[#2A4756]/0 bg-[#A2F991]/5 hover:bg-[#A2F991]/25 hover:border-[#2A4756]/15 hover:shadow-lg hover:shadow-[#A2F991]/10 hover:scale-[1.02] active:scale-[0.98] active:bg-[#A2F991]/35 active:border-[#2A4756]/20 active:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2F991] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2A4756] transition-all duration-300"
 									aria-label="Hire Me"
 								>
 									{/* Intro Glow pulse overlay */}

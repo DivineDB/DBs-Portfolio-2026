@@ -19,7 +19,7 @@ export default function MobileCommandTrigger() {
       transition={{ type: "spring", stiffness: 500, damping: 15 }}
       className="
         md:hidden
-        fixed bottom-6 left-1/2 -translate-x-1/2 z-[60]
+        fixed bottom-[max(1.5rem,env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 z-[60]
         flex items-center gap-2.5
         min-w-[180px] h-[44px] px-5
         rounded-full

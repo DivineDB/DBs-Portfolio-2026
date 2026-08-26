@@ -31,6 +31,19 @@ const gilroyBold = localFont({
   display: "swap",
 });
 
+const satoshi = localFont({
+  src: [
+    { path: "../../public/fonts/Satoshi-Light.woff2", weight: "300", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Black.woff2", weight: "900", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Divyansh Baghel — Design Engineer",
   description: "Portfolio of Divyansh Baghel, Design Engineer.",
@@ -47,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} h-full`}
+      className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} ${satoshi.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

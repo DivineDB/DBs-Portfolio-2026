@@ -1,56 +1,6 @@
 @import "tailwindcss";
 @config "./tailwind.config.ts";
 
-@font-face {
-  font-family: "Satoshi";
-  src:
-    url("/fonts/Satoshi-Light.woff2") format("woff2"),
-    url("/fonts/Satoshi-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Satoshi";
-  src:
-    url("/fonts/Satoshi-Regular.woff2") format("woff2"),
-    url("/fonts/Satoshi-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Satoshi";
-  src:
-    url("/fonts/Satoshi-Medium.woff2") format("woff2"),
-    url("/fonts/Satoshi-Medium.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Satoshi";
-  src:
-    url("/fonts/Satoshi-Bold.woff2") format("woff2"),
-    url("/fonts/Satoshi-Bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Satoshi";
-  src:
-    url("/fonts/Satoshi-Black.woff2") format("woff2"),
-    url("/fonts/Satoshi-Black.woff") format("woff");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 @theme inline {
   --color-bg: #f8edd1;
   --color-background: #f8edd1;
@@ -65,7 +15,7 @@
   --color-about_body: #4a5568;
   --font-gilroyRegular: var(--font-gilroy-regular), sans-serif;
   --font-gilroyBold: var(--font-gilroy-bold), sans-serif;
-  --font-satoshi: "Satoshi", sans-serif;
+  --font-satoshi: var(--font-satoshi), sans-serif;
   --font-playfairDisplayItalic: var(--font-playfair-display), serif;
 }
 
@@ -80,6 +30,8 @@ html,
 body {
   min-height: 100%;
   position: relative;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -116,6 +68,14 @@ body::-webkit-scrollbar,
 /* Prevent any rogue element from causing horizontal scroll on mobile */
 body {
   overflow-x: hidden;
+}
+
+/* Universal high-contrast focus-visible highlight for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #2A4756 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(162, 249, 145, 0.85) !important;
+  border-radius: 6px;
 }
 
 /* ── Touch-device: neutralise sticky :hover states ────────────────────────── */

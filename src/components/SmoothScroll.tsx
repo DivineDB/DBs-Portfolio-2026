@@ -1,14 +1,23 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 interface SmoothScrollProps {
   children: React.ReactNode;
 }
 
+const emptySubscribe = () => () => {};
+
 export default function SmoothScroll({ children }: SmoothScrollProps) {
-  const [isTouch, setIsTouch] = useState(false);
+  const isMobileOrTouch = useSyncExternalStore(
+    emptySubscribe,
+    () =>
+      typeof window !== "undefined" &&
+      (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+        window.innerWidth < 768),
+    () => false
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -16,22 +25,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       if ("scrollRestoration" in window.history) {
         window.history.scrollRestoration = "manual";
       }
-      // Instantly scroll to top on reload/load
-      window.scrollTo(0, 0);
-
-      const checkTouch = () => {
-        setIsTouch(
-          window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-            window.innerWidth < 768
-        );
-      };
-      checkTouch();
-      window.addEventListener("resize", checkTouch);
-      return () => window.removeEventListener("resize", checkTouch);
     }
   }, []);
 
-  if (isTouch) {
+  if (isMobileOrTouch) {
     return <>{children}</>;
   }
 
