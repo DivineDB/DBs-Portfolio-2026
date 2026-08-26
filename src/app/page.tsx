@@ -38,6 +38,8 @@ export default function Home() {
 	const [birdMessage, setBirdMessage] = useState("hi...");
 	const [showSocialMenu, setShowSocialMenu] = useState(false);
 	const [isNudgeActive, setIsNudgeActive] = useState(false);
+	const [isPeriodicShine, setIsPeriodicShine] = useState(false);
+	const isShineActive = isNudgeActive || isPeriodicShine;
 	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
 	const buildingRef = useRef<HTMLImageElement | null>(null);
@@ -220,6 +222,52 @@ export default function Home() {
 		if (buildingRef.current && buildingRef.current.complete) {
 			setBuildingLoaded(true);
 		}
+	}, []);
+
+	useEffect(() => {
+		let shineTimer: NodeJS.Timeout;
+		const interval = setInterval(() => {
+			setIsPeriodicShine(true);
+			shineTimer = setTimeout(() => {
+				setIsPeriodicShine(false);
+			}, 2000);
+		}, 20000);
+
+		return () => {
+			clearInterval(interval);
+			if (shineTimer) clearTimeout(shineTimer);
+		};
+	}, []);
+
+	useEffect(() => {
+		let birdTimer: NodeJS.Timeout;
+		const interval = setInterval(() => {
+			const greetings = [
+				"hi...",
+				"sup?",
+				"peek-a-boo!",
+				"looking at me?",
+				"need help?",
+				"coo coo!",
+				"what's cooking?",
+				"tweet tweet! ✨",
+				"working hard?",
+				"having fun?",
+			];
+			const randomGreeting =
+				greetings[Math.floor(Math.random() * greetings.length)];
+			setBirdMessage(randomGreeting);
+			setIsBirdHovered(true);
+
+			birdTimer = setTimeout(() => {
+				setIsBirdHovered(false);
+			}, 3500);
+		}, 25000);
+
+		return () => {
+			clearInterval(interval);
+			if (birdTimer) clearTimeout(birdTimer);
+		};
 	}, []);
 
 	const testMilestone = (count: number) => {
@@ -845,9 +893,10 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
-									{(playIntro || isNudgeActive) && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge & Periodic) */}
+									{(playIntro || isShineActive) && (
 										<motion.div
+											initial={playIntro ? undefined : { left: "-150%" }}
 											variants={
 												playIntro
 													? {
@@ -860,19 +909,19 @@ export default function Home() {
 													: undefined
 											}
 											animate={
-												isNudgeActive
+												isShineActive
 													? { left: ["-150%", "150%"] }
 													: undefined
 											}
 											transition={
-												isNudgeActive
+												isShineActive
 													? {
 															duration: 1.2,
 															ease: "easeInOut",
 														}
 													: undefined
 											}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
+											className="absolute top-0 bottom-0 -left-[150%] w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -907,9 +956,10 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
-									{(playIntro || isNudgeActive) && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge & Periodic) */}
+									{(playIntro || isShineActive) && (
 										<motion.div
+											initial={playIntro ? undefined : { left: "-150%" }}
 											variants={
 												playIntro
 													? {
@@ -922,12 +972,12 @@ export default function Home() {
 													: undefined
 											}
 											animate={
-												isNudgeActive
+												isShineActive
 													? { left: ["-150%", "150%"] }
 													: undefined
 											}
 											transition={
-												isNudgeActive
+												isShineActive
 													? {
 															duration: 1.2,
 															ease: "easeInOut",
@@ -935,7 +985,7 @@ export default function Home() {
 														}
 													: undefined
 											}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
+											className="absolute top-0 bottom-0 -left-[150%] w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -970,9 +1020,10 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
-									{(playIntro || isNudgeActive) && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge & Periodic) */}
+									{(playIntro || isShineActive) && (
 										<motion.div
+											initial={playIntro ? undefined : { left: "-150%" }}
 											variants={
 												playIntro
 													? {
@@ -985,12 +1036,12 @@ export default function Home() {
 													: undefined
 											}
 											animate={
-												isNudgeActive
+												isShineActive
 													? { left: ["-150%", "150%"] }
 													: undefined
 											}
 											transition={
-												isNudgeActive
+												isShineActive
 													? {
 															duration: 1.2,
 															ease: "easeInOut",
@@ -998,7 +1049,7 @@ export default function Home() {
 														}
 													: undefined
 											}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
+											className="absolute top-0 bottom-0 -left-[150%] w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
@@ -1033,9 +1084,10 @@ export default function Home() {
 											className="absolute inset-0 bg-[#A2F991] pointer-events-none"
 										/>
 									)}
-									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge) */}
-									{(playIntro || isNudgeActive) && (
+									{/* Shine sweeping diagonal line overlay (Intro & Scroll Nudge & Periodic) */}
+									{(playIntro || isShineActive) && (
 										<motion.div
+											initial={playIntro ? undefined : { left: "-150%" }}
 											variants={
 												playIntro
 													? {
@@ -1048,12 +1100,12 @@ export default function Home() {
 													: undefined
 											}
 											animate={
-												isNudgeActive
+												isShineActive
 													? { left: ["-150%", "150%"] }
 													: undefined
 											}
 											transition={
-												isNudgeActive
+												isShineActive
 													? {
 															duration: 1.2,
 															ease: "easeInOut",
@@ -1061,7 +1113,7 @@ export default function Home() {
 														}
 													: undefined
 											}
-											className="absolute top-0 bottom-0 w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
+											className="absolute top-0 bottom-0 -left-[150%] w-[60%] bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-[-20deg] pointer-events-none"
 										/>
 									)}
 								</Link>
