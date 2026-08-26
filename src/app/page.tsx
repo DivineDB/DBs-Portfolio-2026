@@ -296,7 +296,7 @@ export default function Home() {
 	};
 
 	return (
-		<main className="relative w-full min-h-screen md:h-screen overflow-y-auto md:overflow-hidden bg-background">
+		<main className="relative w-full min-h-screen md:h-screen overflow-x-hidden md:overflow-hidden bg-background">
 			{/* A subtle, animated noise overlay for texture */}
 			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
@@ -402,7 +402,7 @@ export default function Home() {
 			</div>
 
 			{/* The main grid container */}
-			<div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-8 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
+			<div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-5 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
 				{/* Phase 1: Unified Left Column */}
 				<div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between min-h-[75vh] md:min-h-[85vh] md:h-full pt-16 pb-6 md:py-10 z-20 pointer-events-none">
 					{/* TOP / CENTER: Hero Text */}
