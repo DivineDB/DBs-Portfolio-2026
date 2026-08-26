@@ -225,6 +225,15 @@ function TldrContent() {
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Story");
   const [greetingIndex, setGreetingIndex] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -232,6 +241,13 @@ export default function AboutPage() {
     }, 2500);
     return () => clearInterval(interval);
   }, []);
+
+  const scrollToNextSection = () => {
+    const el = document.getElementById("about-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
     <main className="w-full bg-bg font-gilroyRegular text-text_primary">
@@ -307,24 +323,27 @@ export default function AboutPage() {
         </div>
 
         <motion.div
-          className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-text_primary/50 will-change-transform"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: scrolled ? 0 : 1,
+            pointerEvents: scrolled ? "none" : "auto",
+          }}
+          transition={{ duration: 0.3 }}
+          className="pointer-events-auto cursor-pointer absolute bottom-10 left-1/2 -translate-x-1/2 text-text_primary/30 hover:text-text_primary/60 transition-colors"
+          onClick={scrollToNextSection}
         >
-          <span className="font-gilroyBold text-xs tracking-[0.2em] uppercase">Scroll Down</span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 0 }}
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="will-change-transform"
           >
-            <ArrowDown size={18} strokeWidth={1.5} />
+            <ArrowDown size={16} strokeWidth={1.5} />
           </motion.div>
         </motion.div>
       </section>
 
       {/* Section 2 — About */}
-      <section className="relative w-full px-6 md:px-12 py-20">
+      <section id="about-section" className="relative w-full px-6 md:px-12 py-20">
         <div className="mx-auto max-w-[1000px] flex flex-col gap-10">
           <div className="flex flex-row items-end justify-between border-b border-text_primary/10 pb-4">
             <motion.h2

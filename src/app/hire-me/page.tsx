@@ -3,7 +3,7 @@
 import { MotionInView } from "@/components/hire-me/motion-in-view";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PageFooter from "@/components/PageFooter";
 import {
 	SiFigma,
@@ -184,6 +184,22 @@ function TechCard({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HireMePage() {
 	const [copied, setCopied] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 30);
+		};
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
+	const scrollToNextSection = () => {
+		const el = document.getElementById("tech-stack");
+		if (el) {
+			el.scrollIntoView({ behavior: "smooth" });
+		}
+	};
 
 	const fallbackCopyText = (text: string) => {
 		const textArea = document.createElement("textarea");
@@ -331,25 +347,27 @@ export default function HireMePage() {
 
 				{/* Scroll indicator */}
 				<motion.div
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.8, duration: 0.5, ease: "easeOut" }}
-					className="pointer-events-none absolute bottom-8 left-1/2 hidden md:flex -translate-x-1/2 flex-col items-center gap-2 text-[#2A4756]/50"
+					initial={{ opacity: 0 }}
+					animate={{
+						opacity: scrolled ? 0 : 1,
+						pointerEvents: scrolled ? "none" : "auto",
+					}}
+					transition={{ duration: 0.3 }}
+					className="pointer-events-auto cursor-pointer absolute bottom-10 left-1/2 -translate-x-1/2 text-text_primary/30 hover:text-text_primary/60 transition-colors"
+					onClick={scrollToNextSection}
 				>
-					<span className="font-gilroyBold text-xs uppercase tracking-[0.2em]">
-						Scroll Down
-					</span>
 					<motion.div
-						animate={{ y: [0, 6, 0] }}
-						transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+						animate={{ y: [0, 5, 0] }}
+						transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+						className="will-change-transform"
 					>
-						<ArrowDown size={18} strokeWidth={1.5} />
+						<ArrowDown size={16} strokeWidth={1.5} />
 					</motion.div>
 				</motion.div>
 			</section>
 
 			{/* ══ Section 2: Bento Tech Stack ══════════════════════════════════════════ */}
-			<section className="px-6 md:px-12">
+			<section id="tech-stack" className="px-6 md:px-12">
 				<MotionInView className="mx-auto w-full max-w-[1200px] py-24 md:py-32">
 					<div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 						<div>

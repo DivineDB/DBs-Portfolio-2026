@@ -39,6 +39,15 @@ export default function Home() {
 	const [isNudgeActive, setIsNudgeActive] = useState(false);
 	const [isPeriodicShine, setIsPeriodicShine] = useState(false);
 	const isShineActive = isNudgeActive || isPeriodicShine;
+	const [scrolled, setScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 30);
+		};
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
 	const buildingRef = useRef<HTMLImageElement | null>(null);
@@ -203,7 +212,8 @@ export default function Home() {
 				minute: "2-digit",
 				hour12: false,
 			};
-			setTime(new Intl.DateTimeFormat("en-US", options).format(new Date()));
+			const newTime = new Intl.DateTimeFormat("en-US", options).format(new Date());
+			setTime((prev) => (prev === newTime ? prev : newTime));
 		};
 		updateTime();
 		const interval = setInterval(updateTime, 1000);
@@ -225,6 +235,7 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
+		if (typeof window !== "undefined" && window.innerWidth < 768) return;
 		let shineTimer: NodeJS.Timeout;
 		const interval = setInterval(() => {
 			setIsPeriodicShine(true);
@@ -240,6 +251,7 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
+		if (typeof window !== "undefined" && window.innerWidth < 768) return;
 		let birdTimer: NodeJS.Timeout;
 		const interval = setInterval(() => {
 			const greetings = [
@@ -296,7 +308,7 @@ export default function Home() {
 	};
 
 	return (
-		<main className="relative w-full min-h-screen md:h-screen overflow-x-hidden md:overflow-hidden bg-background">
+		<main className="relative w-full min-h-[100dvh] md:h-screen overflow-x-hidden md:overflow-hidden bg-background">
 			{/* A subtle, animated noise overlay for texture */}
 			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
 
@@ -402,7 +414,7 @@ export default function Home() {
 			</div>
 
 			{/* The main grid container */}
-			<div className="w-full max-w-[1600px] min-h-screen md:h-full mx-auto px-5 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
+			<div className="w-full max-w-[1600px] min-h-[100dvh] md:h-full mx-auto px-5 md:px-16 grid grid-cols-12 gap-8 relative pb-20 md:pb-0">
 				{/* Phase 1: Unified Left Column */}
 				<div className="col-span-12 md:col-span-6 md:col-start-2 flex flex-col justify-between min-h-[75vh] md:min-h-[85vh] md:h-full pt-16 pb-6 md:py-10 z-20 pointer-events-none">
 					{/* TOP / CENTER: Hero Text */}
@@ -635,7 +647,15 @@ export default function Home() {
 						</span>
 
 						{/* Animated mobile scroll indicator */}
-						<div className="md:hidden flex justify-center w-full mt-6 animate-bounce">
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{
+								opacity: scrolled ? 0 : 1,
+								pointerEvents: scrolled ? "none" : "auto",
+							}}
+							transition={{ duration: 0.3 }}
+							className="md:hidden flex justify-center w-full mt-6"
+						>
 							<button
 								onClick={() => {
 									const buildingEl = document.getElementById(
@@ -645,15 +665,21 @@ export default function Home() {
 										buildingEl.scrollIntoView({ behavior: "smooth" });
 									}
 								}}
-								className="pointer-events-auto flex flex-col items-center gap-1 text-[#2A4756]/45 hover:text-[#2A4756]/65 transition-colors focus:outline-none"
+								className="pointer-events-auto flex flex-col items-center gap-1.5 text-[#2A4756]/45 hover:text-[#2A4756]/70 active:scale-95 transition-all focus:outline-none cursor-pointer"
 								aria-label="Scroll to explore interactive building"
 							>
 								<span className="text-[10px] font-satoshi font-semibold uppercase tracking-wider">
 									Scroll to Explore
 								</span>
-								<ArrowDown size={14} strokeWidth={2.5} />
+								<motion.div
+									animate={{ y: [0, 5, 0] }}
+									transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+									className="will-change-transform"
+								>
+									<ArrowDown size={14} strokeWidth={2} />
+								</motion.div>
 							</button>
-						</div>
+						</motion.div>
 					</motion.div>
 				</div>
 
@@ -711,7 +737,7 @@ export default function Home() {
 								setAnimationComplete(true);
 							}
 						}}
-						className="building-container relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto will-change-[transform,opacity]"
+						className="building-container relative h-auto md:h-[96vh] pointer-events-none select-none flex items-end w-full aspect-[611/996] md:aspect-auto md:will-change-[transform,opacity]"
 					>
 						{/* eslint-disable-next-line @next/next/no-img-element */}
 						<img

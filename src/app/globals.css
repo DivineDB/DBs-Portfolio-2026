@@ -34,6 +34,14 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+@media (max-width: 767px) {
+  html,
+  body {
+    scroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
+  }
+}
+
 body {
   @apply bg-bg text-text_primary antialiased font-gilroyRegular;
 }
@@ -175,7 +183,12 @@ html.lenis body {
 
 .noise-overlay {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  animation: noise-shift 0.4s steps(4) infinite;
+}
+
+@media (min-width: 768px) {
+  .noise-overlay {
+    animation: noise-shift 0.4s steps(4) infinite;
+  }
 }
 
 /* Responsive window overlay text styling — positioned directly on the building image */
