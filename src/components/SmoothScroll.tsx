@@ -40,7 +40,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
           lerp: 0.1,
           duration: 0.9,
           smoothWheel: false,   // wheel isn't used on touch, skip it
-          smoothTouch: false,   // native iOS scroll is already GPU-composited
           touchMultiplier: 1.8, // natural feel on touch screens
           infinite: false,
           // Prevent Lenis from fighting the browser's own momentum
