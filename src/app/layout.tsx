@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -50,6 +50,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

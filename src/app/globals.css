@@ -32,6 +32,9 @@ body {
   position: relative;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
+  /* GPU: promote the entire document stacking context */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 @media (max-width: 767px) {
@@ -71,6 +74,9 @@ body::-webkit-scrollbar,
   scrollbar-width: none !important;
   /* Remove iOS tap blue flash — active: states provide feedback instead */
   -webkit-tap-highlight-color: transparent;
+  /* Smooth font rendering on GPU-composited layers */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Prevent any rogue element from causing horizontal scroll on mobile */
@@ -168,21 +174,26 @@ html.lenis body {
 
 /* Animated Noise Texture */
 @keyframes noise-shift {
-  0% { transform: translate(0, 0); }
-  10% { transform: translate(-1%, -1%); }
-  20% { transform: translate(-2%, 1%); }
-  30% { transform: translate(1%, -2%); }
-  40% { transform: translate(-1%, 3%); }
-  50% { transform: translate(-2%, 1%); }
-  60% { transform: translate(3%, 0); }
-  70% { transform: translate(2%, 1%); }
-  80% { transform: translate(-1%, -1%); }
-  90% { transform: translate(2%, -3%); }
-  100% { transform: translate(0, 0); }
+  /* Use translate3d so the browser keeps this on the GPU compositor */
+  0%   { transform: translate3d(0, 0, 0); }
+  10%  { transform: translate3d(-1%, -1%, 0); }
+  20%  { transform: translate3d(-2%, 1%, 0); }
+  30%  { transform: translate3d(1%, -2%, 0); }
+  40%  { transform: translate3d(-1%, 3%, 0); }
+  50%  { transform: translate3d(-2%, 1%, 0); }
+  60%  { transform: translate3d(3%, 0, 0); }
+  70%  { transform: translate3d(2%, 1%, 0); }
+  80%  { transform: translate3d(-1%, -1%, 0); }
+  90%  { transform: translate3d(2%, -3%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 .noise-overlay {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  /* Own compositor layer — animation never paints on the CPU */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @media (min-width: 768px) {
@@ -262,4 +273,80 @@ html.has-visited .window-text {
   opacity: 1 !important;
 }
 
+/* ── GPU Acceleration ──────────────────────────────────────────────────────
+   Promote every element that participates in CSS or JS animations to its own
+   GPU compositor layer.  This prevents layout/paint on every frame and keeps
+   animations silky-smooth on both mobile (60 Hz) and desktop (120 Hz).
+   ─────────────────────────────────────────────────────────────────────────── */
 
+/* Framer-motion animated wrappers */
+.building-container,
+.boy-container,
+.bird-container,
+.window-hotspot {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Fixed overlays (toast, nudge, scroll indicators) */
+[class*="fixed"],
+[class*="absolute"][class*="inset"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Bounce / infinite animations (scroll arrows, pulse icons) */
+.animate-bounce,
+.animate-pulse {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Lenis scroll wrapper — keep on its own layer during scroll momentum */
+[data-lenis-container] {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Mobile: force GPU compositing for every element with will-change-transform */
+.will-change-transform {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Highlight-sticker hover scale — stays composited */
+.highlight-sticker::after {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Image cards with scale hover (work page project images) */
+.group\/article img,
+.building-container img {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Scroll-driven opacity animations (scrolled-fade elements) */
+[class*="transition-"] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Viewport meta tag advisory: ensure the browser honours GPU layers on iOS */
+@supports (-webkit-overflow-scrolling: touch) {
+  * {
+    /* Prevent sub-pixel rendering glitches on Safari/WebKit */
+    -webkit-transform: translateZ(0);
+  }
+}

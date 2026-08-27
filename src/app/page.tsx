@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { HighlightBox } from "@/components/ui/highlight-box";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
 	Coffee,
 	Sun,
@@ -18,6 +18,57 @@ import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
 import ScrollNudge from "@/components/ScrollNudge";
 import { cn } from "@/lib/cn";
+
+// ─── Stable variant constants ────────────────────────────────────────────────
+// Defined at module level so they are never recreated on re-render.
+// This prevents Framer Motion from re-computing transitions on every clock tick.
+
+/** Container: staggers children. Mobile uses tighter stagger for faster feel. */
+const heroContainerVariantsDesktop: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+};
+
+const heroContainerVariantsMobile: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+
+/** Each text row fades + slides up. Only opacity+transform — both compositor-safe. */
+const heroChildVariantsDesktop: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const heroChildVariantsMobile: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    // Shorter, snappier on mobile — less work for the compositor
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+/** Footer / clock fade-in — simpler, opacity only on mobile for max perf */
+const footerVariantsDesktop = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { delay: 0.8, duration: 1 },
+} as const;
+
+const footerVariantsMobile = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { delay: 0.25, duration: 0.35 },
+} as const;
+// ─────────────────────────────────────────────────────────────────────────────
+
+const emptySubscribe = () => () => {};
 
 export default function Home() {
 	const [time, setTime] = useState("");
@@ -40,6 +91,24 @@ export default function Home() {
 	const [isPeriodicShine, setIsPeriodicShine] = useState(false);
 	const isShineActive = isNudgeActive || isPeriodicShine;
 	const [scrolled, setScrolled] = useState(false);
+
+	// Read once on mount — stable across re-renders so variants stay referentially equal
+	const isMobile = useSyncExternalStore(
+		emptySubscribe,
+		() =>
+			typeof window !== "undefined" &&
+			(window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+				window.innerWidth < 768),
+		() => false,
+	);
+
+	const heroContainerVariants = isMobile
+		? heroContainerVariantsMobile
+		: heroContainerVariantsDesktop;
+	const heroChildVariants = isMobile
+		? heroChildVariantsMobile
+		: heroChildVariantsDesktop;
+	const footerVars = isMobile ? footerVariantsMobile : footerVariantsDesktop;
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -421,32 +490,27 @@ export default function Home() {
 					<motion.div
 						initial="hidden"
 						animate="visible"
-						variants={{ visible: { transition: { staggerChildren: typeof window !== "undefined" && window.innerWidth < 768 ? 0.06 : 0.15 } } }}
+						variants={heroContainerVariants}
+						// Promote the whole block to a GPU layer so children animate
+						// without triggering layout on the main thread
+						style={{
+							willChange: "opacity, transform",
+							transform: "translateZ(0)",
+							backfaceVisibility: "hidden",
+						}}
 						className="flex flex-col justify-center flex-grow pointer-events-auto"
 					>
 						<motion.span
-							variants={{
-								hidden: { opacity: 0, y: 12 },
-								visible: {
-									opacity: 1,
-									y: 0,
-									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
-								},
-							}}
+							variants={heroChildVariants}
+							style={{ willChange: "opacity, transform" }}
 							className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/40 mb-2.5 select-none"
 						>
 							Hey, I&apos;m
 						</motion.span>
 
 						<motion.div
-							variants={{
-								hidden: { opacity: 0, y: 12 },
-								visible: {
-									opacity: 1,
-									y: 0,
-									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
-								},
-							}}
+							variants={heroChildVariants}
+							style={{ willChange: "opacity, transform" }}
 							className="flex flex-row items-baseline gap-[10px] mb-2.5 flex-wrap"
 						>
 							<h1 className="text-[36px] md:text-[54px] font-satoshi font-bold tracking-tight text-[#2A4756] leading-none select-none">
@@ -461,28 +525,16 @@ export default function Home() {
 						</motion.div>
 
 						<motion.h2
-							variants={{
-								hidden: { opacity: 0, y: 12 },
-								visible: {
-									opacity: 1,
-									y: 0,
-									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
-								},
-							}}
+							variants={heroChildVariants}
+							style={{ willChange: "opacity, transform" }}
 							className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/40 tracking-tight mb-[42px] select-none"
 						>
 							Design Engineer
 						</motion.h2>
 
 						<motion.div
-							variants={{
-								hidden: { opacity: 0, y: 12 },
-								visible: {
-									opacity: 1,
-									y: 0,
-									transition: { duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 0.8, ease: [0.16, 1, 0.3, 1] },
-								},
-							}}
+							variants={heroChildVariants}
+							style={{ willChange: "opacity, transform" }}
 							className="flex gap-[30px] md:gap-[50px]"
 						>
 							<a
@@ -505,12 +557,8 @@ export default function Home() {
 
 					{/* BOTTOM: Footer & Clock */}
 					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{
-							delay: typeof window !== "undefined" && window.innerWidth < 768 ? 0.3 : 0.8,
-							duration: typeof window !== "undefined" && window.innerWidth < 768 ? 0.4 : 1,
-						}}
+						{...footerVars}
+						style={{ willChange: "opacity" }}
 						className="flex flex-col gap-[21px] pointer-events-auto"
 					>
 						<div className="flex items-center gap-3">

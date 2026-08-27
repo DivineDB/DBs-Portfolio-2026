@@ -10,7 +10,7 @@ interface SmoothScrollProps {
 const emptySubscribe = () => () => {};
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
-  const isMobileOrTouch = useSyncExternalStore(
+  const isMobile = useSyncExternalStore(
     emptySubscribe,
     () =>
       typeof window !== "undefined" &&
@@ -28,10 +28,31 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     }
   }, []);
 
-  if (isMobileOrTouch) {
-    return <>{children}</>;
+  // Mobile / touch — use a native-momentum Lenis config.
+  // GPU-backed via Lenis's rAF loop; touchMultiplier makes swipes feel snappy.
+  if (isMobile) {
+    return (
+      <ReactLenis
+        root
+        options={{
+          // Let native browser inertia handle momentum on iOS; lenis only
+          // applies lerp so scrolling stays on the compositor thread.
+          lerp: 0.1,
+          duration: 0.9,
+          smoothWheel: false,   // wheel isn't used on touch, skip it
+          smoothTouch: false,   // native iOS scroll is already GPU-composited
+          touchMultiplier: 1.8, // natural feel on touch screens
+          infinite: false,
+          // Prevent Lenis from fighting the browser's own momentum
+          gestureOrientation: "vertical",
+        }}
+      >
+        {children}
+      </ReactLenis>
+    );
   }
 
+  // Desktop — butter-smooth GPU-accelerated wheel scroll via Lenis
   return (
     <ReactLenis
       root
@@ -39,6 +60,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         lerp: 0.08,
         duration: 1.2,
         smoothWheel: true,
+        wheelMultiplier: 1.0,   // standard wheel speed
+        touchMultiplier: 2.0,   // fast trackpad swipes
+        infinite: false,
+        gestureOrientation: "vertical",
       }}
     >
       {children}

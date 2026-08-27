@@ -27,9 +27,9 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 	const showNudgeRef = useRef<boolean>(false);
 	const scrollStepRef = useRef<number>(0); // 0 = hidden, 1 = first scroll, 2 = second scroll, 3 = navigation
 	const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
-	const lastScrollTimeRef = useRef<number>(0);
-	const touchStartYRef = useRef<number | null>(null);
 	const isNavigatingRef = useRef<boolean>(false);
+	const isLockedRef = useRef<boolean>(false);
+	const lockTimerRef = useRef<NodeJS.Timeout | null>(null);
 
 	const updateNudgeState = (active: boolean) => {
 		showNudgeRef.current = active;
@@ -40,13 +40,8 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 	};
 
 	useEffect(() => {
-		const handleScrollAction = (isScrollDown: boolean) => {
-			if (!isScrollDown) return;
+		const handleScrollAction = () => {
 			if (typeof window !== "undefined" && window.innerWidth < 768) return;
-
-			const now = Date.now();
-			if (now - lastScrollTimeRef.current < 200) return;
-			lastScrollTimeRef.current = now;
 
 			const currentPath = window.location.pathname;
 			let targetPage = PAGES_ORDER[0];
@@ -65,7 +60,7 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 						updateNudgeState(false);
 						scrollStepRef.current = 0;
 						setNextPage(null);
-					}, 3500);
+					}, 4000);
 				} else if (scrollStepRef.current === 2) {
 					scrollStepRef.current = 3;
 					if (!isNavigatingRef.current) {
@@ -84,12 +79,25 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 					updateNudgeState(false);
 					scrollStepRef.current = 0;
 					setNextPage(null);
-				}, 3000);
+				}, 4000);
 			}
 		};
 
 		const handleWheel = (e: WheelEvent) => {
-			if (e.deltaY > 0) handleScrollAction(true);
+			// Require a minimum scroll threshold to ignore minor accidental trackpad movement
+			if (e.deltaY < 15) return;
+
+			// If locked out from recent scroll action, swallow all scroll/inertia events
+			if (isLockedRef.current) return;
+
+			// Lock out further events for 700ms so a single physical swipe never triggers >1 step
+			isLockedRef.current = true;
+			if (lockTimerRef.current) clearTimeout(lockTimerRef.current);
+			lockTimerRef.current = setTimeout(() => {
+				isLockedRef.current = false;
+			}, 700);
+
+			handleScrollAction();
 		};
 
 		window.addEventListener("wheel", handleWheel, { passive: true });
@@ -97,6 +105,7 @@ export default function ScrollNudge({ onNudgeStateChange }: ScrollNudgeProps) {
 		return () => {
 			window.removeEventListener("wheel", handleWheel);
 			if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+			if (lockTimerRef.current) clearTimeout(lockTimerRef.current);
 		};
 	}, [router]);
 

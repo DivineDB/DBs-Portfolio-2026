@@ -151,7 +151,15 @@ export default function InteractiveBird({ className }: InteractiveBirdProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={{ overflow: "visible" }}
+      style={{
+        overflow: "visible",
+        // GPU-accelerate the bird: keeps rAF pupil updates off the main thread
+        willChange: "transform",
+        transform: "translateZ(0)",
+        backfaceVisibility: "hidden",
+        // Prevent pupil state changes from causing reflows in parent elements
+        contain: "layout style paint",
+      }}
     >
       {/* 1. Render the original bird SVG body synchronously (no delay between eyes and body) */}
       <image href="/images/bird.svg" width="104" height="108" />

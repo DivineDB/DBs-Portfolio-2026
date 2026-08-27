@@ -29,6 +29,8 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
         aria-hidden
         width={183}
         height={59}
+        loading="eager"
+        priority
         className="pointer-events-none absolute inset-0 h-full w-full"
       />
     </span>
