@@ -93,7 +93,7 @@ const PHOTO_ALTS: Record<string, string> = {
 
 export default function OtherThingsPage() {
   const imagesDir = path.join(process.cwd(), "public", "images", "gallery");
-  let photos: { src: string; alt: string; isLandscape: boolean }[] = [];
+    let photos: { src: string; alt: string; isLandscape: boolean; width?: number; height?: number }[] = [];
 
   try {
     const files = fs.readdirSync(imagesDir);
@@ -114,6 +114,8 @@ export default function OtherThingsPage() {
             .replace("photography-", "")
             .replace(".jpg", "")}`,
         isLandscape,
+        width: dims?.width,
+        height: dims?.height,
       };
     });
 

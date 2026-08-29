@@ -1,14 +1,22 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, Variants } from "framer-motion";
+import { createPortal } from "react-dom";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  AnimatePresence,
+  Variants,
+  MotionConfig,
+} from "framer-motion";
 import { useLenis } from "lenis/react";
 import Image from "next/image";
 import PageFooter from "@/components/PageFooter";
 import { HighlightBox } from "@/components/hire-me/highlight-box";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaInstagram } from "react-icons/fa6";
-
 
 /* ─────────────────────────────────────────────
    Shared animation variant helpers
@@ -22,12 +30,12 @@ const sectionVariant: Variants = {
   },
 };
 
-
-
 type PhotoItem = {
   src: string;
   alt: string;
   isLandscape?: boolean;
+  width?: number;
+  height?: number;
 };
 
 interface OtherThingsClientProps {
@@ -35,7 +43,7 @@ interface OtherThingsClientProps {
 }
 
 /* ─────────────────────────────────────────────
-   Parallax Photo Card Component
+   Parallax Photo Card Component (Grid)
 ───────────────────────────────────────────── */
 function ParallaxPhotoCard({
   item,
@@ -54,15 +62,8 @@ function ParallaxPhotoCard({
     offset: ["start end", "end start"],
   });
 
-  // Mathematically calculated translation range to prevent empty spaces:
-  // For height = 116% and top = -8%, range [-6.8%, 6.8%] is fully safe.
-  // We map the active translation to the middle 70% of scroll progress [0.15, 0.85]
-  // to make the parallax feel more intense and active while the image is in the center viewport.
-  const y = useTransform(
-    scrollYProgress,
-    [0, 0.15, 0.85, 1],
-    ["-6.8%", "-6.8%", "6.8%", "6.8%"]
-  );
+  // Continuous deep parallax vertical movement across page scroll
+  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
 
   return (
     <motion.div
@@ -78,45 +79,296 @@ function ParallaxPhotoCard({
     >
       <motion.div
         style={{ y }}
-        className="absolute -top-[8%] left-0 w-full h-[116%] will-change-transform transform-gpu"
+        className="absolute -top-[12%] left-0 w-full h-[124%] will-change-transform transform-gpu"
       >
         <Image
           src={item.src}
           alt={item.alt}
           fill
-          // Landscape images in a 9:16 portrait container need the full original
-          // pixel data to avoid blur — Next.js would serve a width-sized crop
-          // that's far too narrow to cover the container's height.
-          {...(item.isLandscape
-            ? { unoptimized: true }
-            : {
-                quality: 95,
-                sizes: "(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 34vw",
-              })}
+          quality={97}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
           className={`object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             item.src.includes("photography-bff77c8e55")
               ? "scale-[0.90] group-hover:scale-[0.95]"
               : "group-hover:scale-[1.04]"
           }`}
-          priority={i < 9}
+          priority={i < 4}
+          loading={i < 4 ? undefined : "lazy"}
         />
       </motion.div>
     </motion.div>
   );
 }
 
+/* ─────────────────────────────────────────────
+   World-Class Infinite Gallery Carousel Modal
+───────────────────────────────────────────── */
+function CarouselModal({
+  photos,
+  initialIndex,
+  closeSlideshow,
+  scrollOffset,
+}: {
+  photos: PhotoItem[];
+  initialIndex: number;
+  closeSlideshow: () => void;
+  scrollOffset: number;
+}) {
+  const [index, setIndex] = useState(initialIndex);
+  const [direction, setDirection] = useState(0);
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const filmstripTrackRef = useRef<HTMLDivElement>(null);
+
+  const nextSlide = useCallback(() => {
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % photos.length);
+  }, [photos.length]);
+
+  const prevSlide = useCallback(() => {
+    setDirection(-1);
+    setIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  }, [photos.length]);
+
+  // Preload adjacent images for infinite loop
+  useEffect(() => {
+    if (photos.length === 0) return;
+    const nextIdx = (index + 1) % photos.length;
+    const prevIdx = (index - 1 + photos.length) % photos.length;
+    const img1 = new window.Image();
+    img1.src = photos[nextIdx].src;
+    const img2 = new window.Image();
+    img2.src = photos[prevIdx].src;
+  }, [index, photos]);
+
+  // Reliable scroll centering math (Fixed CSS Scroll Lock bug)
+  useEffect(() => {
+    const track = filmstripTrackRef.current;
+    const activeEl = thumbnailRefs.current[index];
+    if (track && activeEl) {
+      const containerWidth = track.clientWidth;
+      const activeLeft = activeEl.offsetLeft;
+      const activeWidth = activeEl.clientWidth;
+      const targetScrollLeft = activeLeft - containerWidth / 2 + activeWidth / 2;
+
+      track.scrollTo({
+        left: targetScrollLeft,
+        behavior: "smooth",
+      });
+    }
+  }, [index]);
+
+  // Keyboard navigation (Esc to exit, Arrow keys for infinite loop)
+  useEffect(() => {
+    function handleKeyPress(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") {
+        prevSlide();
+      } else if (e.key === "ArrowRight") {
+        nextSlide();
+      } else if (e.key === "Escape") {
+        closeSlideshow();
+      }
+    }
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [nextSlide, prevSlide, closeSlideshow]);
+
+  return (
+    <MotionConfig transition={{ type: "spring", bounce: 0 }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.22 }}
+        onClick={closeSlideshow}
+        className="fixed inset-0 z-[999999] w-screen h-screen bg-[#050607]/90 backdrop-blur-3xl flex flex-col justify-between p-3 sm:p-6 select-none cursor-pointer overflow-hidden isolate"
+        style={{
+          position: "fixed",
+          top: `${scrollOffset}px`,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: 999999,
+        }}
+        data-lenis-prevent
+      >
+        {/* Soft Ambient Center Vignette Glow */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)] z-0" />
+
+        {/* Top Floating Glass Bar */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="w-full flex justify-between items-center z-50 px-2 sm:px-4 py-2 cursor-default flex-shrink-0"
+        >
+          {/* Subtle Minimal Counter */}
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs font-medium tracking-widest text-white/80 bg-white/[0.06] backdrop-blur-xl border border-white/10 px-3.5 py-1.5 rounded-full shadow-sm">
+              {index + 1} / {photos.length}
+            </span>
+          </div>
+
+          {/* Minimal Floating Close Button */}
+          <button
+            onClick={closeSlideshow}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/[0.08] hover:bg-white/[0.18] active:scale-90 border border-white/15 backdrop-blur-xl flex items-center justify-center text-white/80 hover:text-white transition-all cursor-pointer shadow-lg"
+            aria-label="Close gallery"
+          >
+            <X size={17} />
+          </button>
+        </div>
+
+        {/* Center Gallery Stage (Clicking background closes modal) */}
+        <div
+          onClick={closeSlideshow}
+          className="relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden my-auto py-2 cursor-pointer z-10"
+        >
+          {/* Floating Left Arrow */}
+          <motion.button
+            whileHover={{ opacity: 1, scale: 1.12 }}
+            whileTap={{ scale: 0.88 }}
+            className="absolute left-2 sm:left-6 md:left-10 top-1/2 -mt-5 sm:-mt-6 z-50 w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/75 active:scale-90 backdrop-blur-2xl border border-white/15 text-white cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all"
+            onClick={(e) => {
+              e.stopPropagation();
+              prevSlide();
+            }}
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          </motion.button>
+
+          {/* Main Slide Image (Unrounded Corners, True High-Quality Resolution) */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-h-[76vh] sm:max-h-[82vh] max-w-[90vw] sm:max-w-[85vw] flex items-center justify-center cursor-default z-10 p-1"
+          >
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.img
+                key={index}
+                src={photos[index]?.src}
+                alt={photos[index]?.alt || "Photo"}
+                custom={direction}
+                variants={{
+                  enter: (dir: number) => ({
+                    opacity: 0,
+                    scale: 0.96,
+                    x: dir > 0 ? 70 : dir < 0 ? -70 : 0,
+                  }),
+                  center: {
+                    opacity: 1,
+                    scale: 1,
+                    x: 0,
+                  },
+                  exit: (dir: number) => ({
+                    opacity: 0,
+                    scale: 0.96,
+                    x: dir > 0 ? -70 : 70,
+                  }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.35}
+                onDragEnd={(e, { offset }) => {
+                  if (offset.x < -30) {
+                    nextSlide();
+                  } else if (offset.x > 30) {
+                    prevSlide();
+                  }
+                }}
+                className="max-h-[76vh] sm:max-h-[82vh] max-w-[90vw] sm:max-w-[85vw] w-auto h-auto object-contain rounded-none shadow-[0_35px_90px_-15px_rgba(0,0,0,0.95)] pointer-events-auto select-none will-change-transform transform-gpu"
+              />
+            </AnimatePresence>
+          </div>
+
+          {/* Floating Right Arrow */}
+          <motion.button
+            whileHover={{ opacity: 1, scale: 1.12 }}
+            whileTap={{ scale: 0.88 }}
+            className="absolute right-2 sm:right-6 md:right-10 top-1/2 -mt-5 sm:-mt-6 z-50 w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/75 active:scale-90 backdrop-blur-2xl border border-white/15 text-white cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all"
+            onClick={(e) => {
+              e.stopPropagation();
+              nextSlide();
+            }}
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          </motion.button>
+        </div>
+
+        {/* Floating iOS Filmstrip Glass Bar (Fixed CSS Scroll Lock Bug with End Padding) */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="w-full pt-1 pb-3 px-2 z-50 select-none flex flex-col items-center gap-1.5 flex-shrink-0 cursor-default"
+        >
+          <div
+            ref={filmstripTrackRef}
+            className="w-full max-w-xl sm:max-w-3xl bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-full py-2 sm:py-2.5 overflow-x-auto no-scrollbar flex items-center justify-start scroll-smooth shadow-[0_15px_35px_rgba(0,0,0,0.6)]"
+          >
+            <div className="flex items-center gap-3 sm:gap-4 min-w-max h-11 sm:h-13 px-6 sm:px-8">
+              {photos.map((item, i) => {
+                const isActive = i === index;
+                return (
+                  <motion.button
+                    key={item.src}
+                    ref={(el) => {
+                      thumbnailRefs.current[i] = el;
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDirection(i > index ? 1 : -1);
+                      setIndex(i);
+                    }}
+                    animate={{
+                      scale: isActive ? 1.25 : 1,
+                      opacity: isActive ? 1 : 0.35,
+                    }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className={`relative flex-shrink-0 h-9 sm:h-11 w-auto transition-all duration-200 cursor-pointer overflow-hidden rounded-none ${
+                      isActive ? "z-30" : "hover:opacity-90 hover:scale-110"
+                    }`}
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      className={`h-full w-auto object-contain rounded-none transition-all duration-300 ${
+                        isActive ? "grayscale-0 contrast-100" : "grayscale contrast-110"
+                      }`}
+                      loading="lazy"
+                    />
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+
+          <span className="sm:hidden text-[9px] font-satoshi tracking-widest text-white/30 uppercase mt-0.5">
+            swipe to navigate
+          </span>
+        </div>
+      </motion.div>
+    </MotionConfig>
+  );
+}
+
 export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [direction, setDirection] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const [scrollOffset, setScrollOffset] = useState(0);
   const lenis = useLenis();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsAtTop(window.scrollY < 80);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Init status
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -137,44 +389,16 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
     ["#2a4756", "#2a4756", "#f8edd1", "#f8edd1"]
   );
 
-  const nextSlide = useCallback(() => {
-    setDirection(1);
-    setActiveIndex((prev) => (prev === null ? null : (prev + 1) % photos.length));
-  }, [photos.length]);
-
-  const prevSlide = useCallback(() => {
-    setDirection(-1);
-    setActiveIndex((prev) => (prev === null ? null : (prev - 1 + photos.length) % photos.length));
-  }, [photos.length]);
+  const openSlideshow = useCallback((index: number) => {
+    setScrollOffset(window.scrollY);
+    setActiveIndex(index);
+  }, []);
 
   const closeSlideshow = useCallback(() => {
     setActiveIndex(null);
   }, []);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeSlideshow();
-    }
-  };
-
-  useEffect(() => {
-    if (activeIndex === null) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") {
-        nextSlide();
-      } else if (e.key === "ArrowLeft") {
-        prevSlide();
-      } else if (e.key === "Escape") {
-        closeSlideshow();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, nextSlide, prevSlide, closeSlideshow]);
-
-  // Sync scrollbar and button colors dynamically to the document root based on scroll progress (active dark theme check)
+  // Sync scrollbar and button colors dynamically based on scroll progress
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (typeof window !== "undefined") {
       if (activeIndex !== null) return;
@@ -188,7 +412,6 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
         isDark ? "#121212" : "transparent"
       );
       
-      // Sync buttons to dark mode
       document.documentElement.style.setProperty(
         "--button-bg",
         isDark ? "#1e1e1e" : "#f8edd1"
@@ -213,39 +436,20 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
     }
   });
 
-  // Prevent scroll when slideshow is open
+  // Lock body scroll cleanly when slideshow is open
   useEffect(() => {
     if (activeIndex !== null) {
-      document.documentElement.classList.add("lenis-stopped");
       document.body.style.overflow = "hidden";
-      document.documentElement.style.setProperty("--scrollbar-thumb", "transparent");
-      document.documentElement.style.setProperty("--scrollbar-track", "transparent");
       if (lenis) lenis.stop();
     } else {
-      document.documentElement.classList.remove("lenis-stopped");
       document.body.style.overflow = "";
-      // Restore scrollbar thumb based on active theme color
-      const progress = scrollYProgress.get();
-      const isDark = progress >= 0.08;
-      document.documentElement.style.setProperty(
-        "--scrollbar-thumb",
-        isDark ? "#333333" : "rgba(42, 71, 86, 0.2)"
-      );
-      document.documentElement.style.setProperty(
-        "--scrollbar-track",
-        isDark ? "#121212" : "transparent"
-      );
-      const bg = bgColor.get();
-      document.body.style.backgroundColor = bg;
-      document.documentElement.style.backgroundColor = bg;
       if (lenis) lenis.start();
     }
     return () => {
-      document.documentElement.classList.remove("lenis-stopped");
       document.body.style.overflow = "";
       if (lenis) lenis.start();
     };
-  }, [activeIndex, lenis, textColor, bgColor, scrollYProgress]);
+  }, [activeIndex, lenis]);
 
   // Clean up scrollbar styles on unmount
   useEffect(() => {
@@ -296,7 +500,7 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
           A collection of visual storytelling and movement.
         </motion.p>
 
-        {/* ── Photography Gallery ── */}
+        {/* ── Photography Gallery Grid ── */}
         <motion.section
           ref={galleryRef}
           variants={sectionVariant}
@@ -354,8 +558,6 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
 
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
             {photos.map((item, i) => {
-              // On mobile (2-col grid), hide the last item when total count is odd
-              // so the grid always ends with a complete row.
               const isOrphanOnMobile =
                 photos.length % 2 !== 0 && i === photos.length - 1;
 
@@ -365,16 +567,13 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                   item={item}
                   i={i}
                   isOrphanOnMobile={isOrphanOnMobile}
-                  onClick={() => {
-                    setDirection(0);
-                    setActiveIndex(i);
-                  }}
+                  onClick={() => openSlideshow(i)}
                 />
               );
             })}
           </div>
 
-          {/* Clean Subtle Instagram Text Link aligned right with last image */}
+          {/* Clean Subtle Instagram Text Link */}
           <div className="mt-6 mb-8 flex justify-end">
             <a
               href="https://www.instagram.com/dbdoesstuff/"
@@ -392,128 +591,24 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
 
       </div>
 
-      {/* ── Slideshow Modal ── */}
-      <AnimatePresence>
-        {activeIndex !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-[100] bg-[#0c1214]/95 backdrop-blur-2xl flex flex-col justify-between p-6 select-none"
-            data-lenis-prevent
-          >
-            {/* Top Navigation Row */}
-            <div className="w-full flex justify-end items-center z-10 px-4">
-              <button
-                onClick={closeSlideshow}
-                className="p-3 -mr-3 text-white/60 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full hover:bg-white/5 active:bg-white/10"
-                aria-label="Close slideshow"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Middle Main Content */}
-            <div 
-              onClick={handleBackdropClick}
-              className="relative flex-grow flex items-center justify-center w-full"
-            >
-              {/* Prev Button */}
-              <button
-                onClick={prevSlide}
-                className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 p-3 text-white/40 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full bg-white/5 hover:bg-white/10 items-center justify-center"
-                aria-label="Previous slide"
-              >
-                <ChevronLeft size={24} />
-              </button>
-
-              {/* Slide Container with drag gestures */}
-              <div 
-                onClick={handleBackdropClick}
-                className="relative w-full h-full flex items-center justify-center overflow-hidden"
-              >
-                <AnimatePresence initial={false} custom={direction}>
-                  <motion.div
-                    key={activeIndex}
-                    custom={direction}
-                    variants={{
-                      enter: (dir: number) => ({
-                        scale: dir === 0 ? 0.96 : (dir > 0 ? 1.04 : 0.96),
-                        opacity: 0,
-                        x: dir * 50,
-                      }),
-                      center: {
-                        scale: 1,
-                        opacity: 1,
-                        x: 0,
-                      },
-                      exit: (dir: number) => ({
-                        scale: dir > 0 ? 0.96 : 1.04,
-                        opacity: 0,
-                        x: dir * -50,
-                      }),
-                    }}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: "spring", stiffness: 220, damping: 26 },
-                      scale: { type: "spring", stiffness: 220, damping: 26 },
-                      opacity: { duration: 0.25, ease: "easeInOut" },
-                    }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.6}
-                    onDragEnd={(e, { offset }) => {
-                      const swipeThreshold = 50;
-                      if (offset.x < -swipeThreshold) {
-                        nextSlide();
-                      } else if (offset.x > swipeThreshold) {
-                        prevSlide();
-                      }
-                    }}
-                    onClick={handleBackdropClick}
-                    className="absolute inset-0 w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing will-change-[transform,opacity] transform-gpu"
-                  >
-                    <Image
-                      src={photos[activeIndex].src}
-                      alt={photos[activeIndex].alt}
-                      fill
-                      quality={97}
-                      sizes="100vw"
-                      priority
-                      className="object-contain rounded-2xl md:rounded-3xl pointer-events-none select-none"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Next Button */}
-              <button
-                onClick={nextSlide}
-                className="hidden md:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 p-3 text-white/40 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full bg-white/5 hover:bg-white/10 items-center justify-center"
-                aria-label="Next slide"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-
-            {/* Bottom Photo Count + Mobile Swipe Hint */}
-            <div className="w-full flex flex-col items-center gap-1 py-2 z-10 select-none">
-              <span className="font-satoshi text-[10px] tracking-[0.2em] text-white/40 uppercase">
-                {activeIndex + 1} / {photos.length}
-              </span>
-              <span className="md:hidden font-satoshi text-[9px] tracking-widest text-white/20 uppercase">
-                swipe to navigate
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* ── Footer ── */}
       <PageFooter />
+
+      {/* ── World-Class Gallery Carousel Modal Portal ── */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {activeIndex !== null && (
+              <CarouselModal
+                photos={photos}
+                initialIndex={activeIndex}
+                closeSlideshow={closeSlideshow}
+                scrollOffset={scrollOffset}
+              />
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </motion.main>
   );
 }
