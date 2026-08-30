@@ -107,12 +107,10 @@ function CarouselModal({
   photos,
   initialIndex,
   closeSlideshow,
-  scrollOffset,
 }: {
   photos: PhotoItem[];
   initialIndex: number;
   closeSlideshow: () => void;
-  scrollOffset: number;
 }) {
   const [index, setIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
@@ -183,7 +181,7 @@ function CarouselModal({
         className="fixed inset-0 z-[999999] w-screen h-screen bg-[#050607]/90 backdrop-blur-3xl flex flex-col justify-between p-3 sm:p-6 select-none cursor-pointer overflow-hidden isolate"
         style={{
           position: "fixed",
-          top: `${scrollOffset}px`,
+          top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
@@ -390,7 +388,6 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
   );
 
   const openSlideshow = useCallback((index: number) => {
-    setScrollOffset(window.scrollY);
     setActiveIndex(index);
   }, []);
 
@@ -603,7 +600,6 @@ export default function OtherThingsClient({ photos }: OtherThingsClientProps) {
                 photos={photos}
                 initialIndex={activeIndex}
                 closeSlideshow={closeSlideshow}
-                scrollOffset={scrollOffset}
               />
             )}
           </AnimatePresence>,
