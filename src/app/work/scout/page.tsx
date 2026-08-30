@@ -885,7 +885,7 @@ export default function ScoutCaseStudy() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "0px 0px -100px 0px" }}
 					transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-					className="min-h-screen flex flex-col justify-center py-20"
+					className="py-20 flex flex-col"
 				>
 					<span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">
 						01. Executive Summary
@@ -923,7 +923,7 @@ export default function ScoutCaseStudy() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "0px 0px -100px 0px" }}
 					transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-					className="min-h-screen flex flex-col justify-center py-20"
+					className="py-20 flex flex-col"
 				>
 					<span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">
 						02. Empathy &amp; Context
@@ -963,7 +963,7 @@ export default function ScoutCaseStudy() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "0px 0px -100px 0px" }}
 					transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-					className="min-h-screen flex flex-col justify-center py-20"
+					className="py-20 flex flex-col"
 				>
 					<span className="font-gilroyBold text-xs uppercase tracking-[0.18em] text-white/70 block mb-1.5">
 						03. Field Observations
@@ -1679,7 +1679,7 @@ export default function ScoutCaseStudy() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "0px 0px -100px 0px" }}
 					transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-					className="min-h-screen flex flex-col justify-center py-20"
+					className="py-20 flex flex-col"
 				>
 					<span className="font-gilroyBold text-xs text-white/70 font-bold block tracking-[0.18em] mb-1.5 uppercase">
 						11. Technical Infrastructure
@@ -1811,7 +1811,7 @@ export default function ScoutCaseStudy() {
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, margin: "0px 0px -100px 0px" }}
 					transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-					className="min-h-screen flex flex-col justify-center py-20"
+					className="py-20 flex flex-col"
 				>
 					<span className="font-gilroyBold text-xs text-white/70 font-bold block tracking-[0.18em] mb-1.5 uppercase">
 						12. Database Schema
