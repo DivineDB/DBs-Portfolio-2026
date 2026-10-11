@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Playfair_Display } from "next/font/google";
+import { Playfair_Display, Work_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SmoothScroll from "../components/SmoothScroll";
 import CommandPaletteLoader from "../components/CommandPaletteLoader";
@@ -13,6 +13,13 @@ const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   style: "italic",
   variable: "--font-playfair-display",
+});
+
+const workSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-work-sans",
+  display: "swap",
 });
 
 const gilroyRegular = localFont({
@@ -66,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} ${satoshi.variable} h-full`}
+      className={`${gilroyRegular.variable} ${gilroyBold.variable} ${playfairDisplay.variable} ${satoshi.variable} ${workSans.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

@@ -181,6 +181,43 @@ export default function WorkPage() {
 							</div>
 						</motion.article>
 					))}
+
+					{/* ── Coming Soon Section ── */}
+					<motion.div
+						initial={{ opacity: 0, y: 30 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+						transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+						className="mt-12 p-8 md:p-12 rounded-[28px] bg-gradient-to-br from-[#F9FFD9]/60 via-[#F6F4EB]/40 to-[#FFFDF5]/70 border border-[#EADFC3] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden shadow-sm"
+					>
+						<div className="flex flex-col gap-3 max-w-xl z-10">
+							<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2A4756]/10 border border-[#2A4756]/15 text-[#2A4756] text-xs font-satoshi font-semibold w-fit">
+								<span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+								<span>In the Lab • Q4 2026</span>
+							</div>
+
+							<h3 className="font-gilroyBold text-2xl md:text-3xl text-text_primary tracking-tight">
+								More Case Studies & Shader Experiments Coming Soon
+							</h3>
+
+							<p className="font-satoshi text-sm md:text-base text-about_body/80 leading-relaxed">
+								Currently documenting case studies on spatial canvas interactions, design systems, and WebGL physics shaders.
+							</p>
+
+							<div className="flex flex-wrap gap-2 pt-2 font-satoshi text-xs text-[#2A4756]/80">
+								<span className="px-3 py-1 rounded-full bg-white/60 border border-[#EADFC3]">Spatial WebGL Engine</span>
+								<span className="px-3 py-1 rounded-full bg-white/60 border border-[#EADFC3]">Physics Motion Lab</span>
+								<span className="px-3 py-1 rounded-full bg-white/60 border border-[#EADFC3]">Design System Tokens</span>
+							</div>
+						</div>
+
+						<div className="shrink-0 flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/80 border border-[#EADFC3] text-2xl shadow-inner select-none z-10">
+							🚀
+						</div>
+
+						{/* Subtle background glow */}
+						<div className="absolute -bottom-12 -right-12 w-56 h-56 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+					</motion.div>
 				</div>
 			</section>
 

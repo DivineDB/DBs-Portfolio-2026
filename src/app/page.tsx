@@ -17,6 +17,7 @@ import {
 import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa6";
 import InteractiveBird from "@/components/InteractiveBird";
 import ScrollNudge from "@/components/ScrollNudge";
+import InteractiveBackgroundCanvas from "@/components/InteractiveBackgroundCanvas";
 import { cn } from "@/lib/cn";
 
 // ─── Stable variant constants ────────────────────────────────────────────────
@@ -110,12 +111,16 @@ export default function Home() {
 		: heroChildVariantsDesktop;
 	const footerVars = isMobile ? footerVariantsMobile : footerVariantsDesktop;
 
+	const [mousePos, setMousePos] = useState({ x: 50, y: 40 });
+
 	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 30);
+		const handleMouseMove = (e: MouseEvent) => {
+			const x = (e.clientX / window.innerWidth) * 100;
+			const y = (e.clientY / window.innerHeight) * 100;
+			setMousePos({ x, y });
 		};
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
+		window.addEventListener("mousemove", handleMouseMove, { passive: true });
+		return () => window.removeEventListener("mousemove", handleMouseMove);
 	}, []);
 	const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 	const socialMenuRef = useRef<HTMLDivElement | null>(null);
@@ -378,8 +383,8 @@ export default function Home() {
 
 	return (
 		<main className="relative w-full min-h-[100dvh] md:h-screen overflow-x-hidden md:overflow-hidden bg-background">
-			{/* A subtle, animated noise overlay for texture */}
-			<div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay noise-overlay"></div>
+			{/* ── Interactive Canvas Background ── */}
+			<InteractiveBackgroundCanvas />
 
 			{/* Achievement Toast (Center of screen) */}
 			<AnimatePresence>
@@ -503,7 +508,7 @@ export default function Home() {
 						<motion.span
 							variants={heroChildVariants}
 							style={{ willChange: "opacity, transform" }}
-							className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/40 mb-2.5 select-none"
+							className="text-[16px] md:text-[18px] font-satoshi font-medium text-[#2A4756]/75 mb-2.5 select-none"
 						>
 							Hey, I&apos;m
 						</motion.span>
@@ -527,7 +532,7 @@ export default function Home() {
 						<motion.h2
 							variants={heroChildVariants}
 							style={{ willChange: "opacity, transform" }}
-							className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/40 tracking-tight mb-[42px] select-none"
+							className="text-[18px] md:text-[20px] font-satoshi font-normal text-[#2A4756]/75 tracking-tight mb-[42px] select-none"
 						>
 							Design Engineer
 						</motion.h2>
@@ -568,7 +573,7 @@ export default function Home() {
 								layout
 								transition={{ type: "spring", stiffness: 300, damping: 25 }}
 								style={{ borderRadius: "9999px" }}
-								className={`h-[36px] flex justify-center items-center bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] transition-all select-none shadow-[#2a4756]/5 relative ${
+								className={`h-[36px] flex justify-center items-center bg-[#F9FFD9]/75 backdrop-blur-md border border-[#EADFC3]/90 text-[#26393A] transition-all select-none shadow-sm shadow-[#2a4756]/5 relative ${
 									showSocialMenu ? "w-[185px] px-3.5" : "w-[122px]"
 								}`}
 							>
@@ -684,7 +689,7 @@ export default function Home() {
 										}),
 									)
 								}
-								className="h-[36px] px-4 hidden md:flex items-center gap-2 rounded-full bg-[#F9FFD9] border border-[#EADFC3] text-[#26393A] text-[13px] font-satoshi font-medium transition-transform hover:scale-105 active:scale-95 focus:outline-none select-none cursor-pointer"
+								className="h-[36px] px-4 hidden md:flex items-center gap-2 rounded-full bg-[#F9FFD9]/75 backdrop-blur-md border border-[#EADFC3]/90 text-[#26393A] text-[13px] font-satoshi font-medium transition-all hover:scale-105 active:scale-95 focus:outline-none select-none cursor-pointer shadow-sm shadow-[#2a4756]/5"
 								aria-label="Open command palette"
 							>
 								<span className="opacity-50 text-[11px]">Press</span>
@@ -793,9 +798,39 @@ export default function Home() {
 						<img
 							ref={buildingRef}
 							src="/images/Building.svg"
-							className="w-full h-full pointer-events-none select-none touch-pan-y"
+							className="w-full h-full pointer-events-none select-none touch-pan-y filter drop-shadow-[0_16px_36px_rgba(42,31,14,0.14)] drop-shadow-[0_2px_12px_rgba(255,243,220,0.22)]"
 							alt="Interactive Building"
 							onLoad={() => setBuildingLoaded(true)}
+						/>
+
+						{/* ☀️ Sunlight Reflection & Golden Sheen Overlay */}
+						<div
+							className="absolute inset-0 pointer-events-none z-20 transition-opacity duration-300"
+							style={{
+								background: `
+									radial-gradient(
+										600px circle at ${mousePos.x}% ${mousePos.y}%,
+										rgba(255, 243, 220, 0.48) 0%,
+										rgba(255, 220, 150, 0.18) 45%,
+										transparent 75%
+									),
+									linear-gradient(
+										135deg,
+										rgba(255, 248, 230, 0.22) 0%,
+										rgba(255, 225, 160, 0.08) 60%,
+										transparent 100%
+									)
+								`,
+								mixBlendMode: "soft-light",
+								WebkitMaskImage: "url('/images/Building.svg')",
+								maskImage: "url('/images/Building.svg')",
+								WebkitMaskSize: "contain",
+								maskSize: "contain",
+								WebkitMaskRepeat: "no-repeat",
+								maskRepeat: "no-repeat",
+								WebkitMaskPosition: "bottom center",
+								maskPosition: "bottom center",
+							}}
 						/>
 
 						<div className="pointer-events-none absolute top-[45.2%] md:top-[42.5%] left-[23%] md:left-[24.5%] z-30 h-auto w-[28%] overflow-hidden">

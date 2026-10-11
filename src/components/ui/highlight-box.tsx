@@ -31,7 +31,7 @@ export function HighlightBox({ children, className, textClassName }: HighlightBo
         height={59}
         loading="eager"
         priority
-        className="pointer-events-none absolute inset-0 h-full w-full"
+        className="pointer-events-none absolute inset-0 h-full w-full rounded-[6px] opacity-95 transition-transform duration-300 group-hover:scale-[1.02]"
       />
     </span>
   );
